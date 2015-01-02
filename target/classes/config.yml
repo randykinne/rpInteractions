@@ -1,0 +1,9 @@
+mysql:
+  hostname: ''
+  port: 3306
+  username: ''
+  password: ''
+  database: 'randompvp'
+  table: 'punishments'
+server-name: ''
+sync-interval: 1m

@@ -1,0 +1,19 @@
+main: RandomPvP.Core.RPICore
+version: 1.0
+name: RPI
+author: Randomizer27
+database: true
+
+commands:
+  ban:
+    description: ban
+  kick:
+    description: kick
+  mute:
+    description: mute
+  unban:
+    description: unban
+  unmute:
+    description: unmute
+  history:
+    description: history
