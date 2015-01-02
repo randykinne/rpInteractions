@@ -63,7 +63,7 @@ public class RPlayer {
             ResultSet set = stmt.executeQuery();
 
             if (set.next()) {
-                setRank(Rank.valueOf(set.getString("rank").toUpperCase()));
+                setRank(Rank.valueOf(set.getString("rank").toUpperCase()), false);
                 setCredits(set.getInt("credits"));
                 setRPID(set.getInt("rpid"));
                 /*if (!getIP().equalsIgnoreCase(set.getString("ip"))) {
@@ -181,18 +181,20 @@ public class RPlayer {
         return ip;
     }
 
-    public void setRank(Rank rank) {
+    public void setRank(Rank rank, boolean saveData) {
         this.rank = rank;
-        saveData();
+        if (saveData) {
+            saveData();
+        }
     }
     public Rank getRank() {
         return rank;
     }
     public boolean isStaff() {
-        return (getRank().has(Rank.MOD) || getRank().has(Rank.SUPPORT) || getRank().has(Rank.ADMIN) || getRank().has(Rank.OWNER));
+        return (getRank().has(Rank.MOD));
     }
     public boolean isVIP() {
-        return (getRank().has(Rank.VIP) || getRank().has(Rank.BUILDER));
+        return (getRank().has(Rank.VIP));
     }
     public boolean isDonator() {
         return (getRank().has(Rank.PREMIUM));

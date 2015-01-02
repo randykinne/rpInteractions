@@ -54,7 +54,8 @@ public class JoinListener implements Listener {
                         manager.loadActivePunishmentsFor(id);
                         PunishmentManager.Punishment punishment;
                         if ((punishment = manager.hasActivePunishment(id, PunishmentManager.PunishmentType.BAN)) != null) {
-                            e.disallow(AsyncPlayerPreLoginEvent.Result.KICK_BANNED, Punishments.formatBanMessage(String.valueOf(punishment.getId()), punishment.getAdmin(), punishment.getReason(), NumberUtil.translateDuration(punishment.getExpires())));
+                            e.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_BANNED);
+                            e.setKickMessage(Punishments.formatBanMessage(String.valueOf(punishment.getId()), punishment.getAdmin(), punishment.getReason(), NumberUtil.translateDuration(punishment.getExpires())));
                             allowed = false;
                         }
                     }
@@ -64,7 +65,8 @@ public class JoinListener implements Listener {
                             if (new OfflineRPlayer(e.getName(), e.getUniqueId()).getRank().has(ServerToggles.getRankRequired())) {
                                 allowed = true;
                             } else {
-                                e.disallow(AsyncPlayerPreLoginEvent.Result.KICK_WHITELIST, Punishments.formatKickMessage("You need " + ServerToggles.getRankRequired().getTag() + "to join this server!"));
+                                e.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_WHITELIST);
+                                e.setKickMessage(Punishments.formatKickMessage("You need " + ServerToggles.getRankRequired().getTag() + "to join this server!"));
                                 allowed = false;
                             }
                         }
@@ -76,7 +78,8 @@ public class JoinListener implements Listener {
 
                 } else {
                     allowed = false;
-                    e.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, Punishments.formatKickMessage("Could not load player data! :("));
+                    e.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_OTHER);
+                    e.setKickMessage(Punishments.formatKickMessage("Could not load player data! :("));
                 }
 
             }
