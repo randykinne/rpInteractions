@@ -117,10 +117,10 @@ public class OfflineRPlayer {
         return rank;
     }
     public boolean isStaff() {
-        return (getRank().has(Rank.MOD) || getRank().has(Rank.SUPPORT) || getRank().has(Rank.ADMIN) || getRank().has(Rank.OWNER));
+        return (getRank().has(Rank.MOD));
     }
     public boolean isVIP() {
-        return (getRank().has(Rank.VIP) || getRank().has(Rank.BUILDER));
+        return (getRank().has(Rank.VIP));
     }
     public boolean isDonator() {
         return (getRank().has(Rank.PREMIUM));

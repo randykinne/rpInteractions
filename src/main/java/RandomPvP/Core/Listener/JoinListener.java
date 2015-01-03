@@ -102,14 +102,6 @@ public class JoinListener implements Listener {
         } else {
             e.setJoinMessage("§2§l>> " + pl.getRankedName(false));
         }
-
-        if (pl.getRank().has(Rank.ADMIN)) {
-            try {
-                ServerAdminInfo.sendServerInfo(pl);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
     }
 
 }

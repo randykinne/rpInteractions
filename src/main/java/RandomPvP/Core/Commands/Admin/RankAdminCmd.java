@@ -38,14 +38,14 @@ public class RankAdminCmd {
                     RPlayer target = RPlayerManager.getInstance().getPlayer(Bukkit.getPlayer(args.getString(1)));
                     if (args.getString(0).equalsIgnoreCase("set")) {
                         if (Rank.valueOf(args.getString(2).toUpperCase()) != null) {
-                            target.setRank(Rank.valueOf(args.getString(2).toUpperCase()));
+                            target.setRank(Rank.valueOf(args.getString(2).toUpperCase()), true);
                             target.message("§6§l>> §eYour rank has been set to " + target.getRank().getName() + "§e.");
                             pl.message("§6§l>> §eSet " + target.getRankedName(false) + "§e to " + target.getRank().getName());
                         } else {
                             throw new CommandException("Available ranks: " + String.valueOf(Arrays.asList(Rank.values())).replace("[", "").replace("]", ""));
                         }
                     } else if (args.getString(0).equalsIgnoreCase("unset")) {
-                        target.setRank(Rank.PLAYER);
+                        target.setRank(Rank.PLAYER, true);
                         target.message("§6§l>> §eYour rank has been set to " + target.getRank().getName() + "§e.");
                         pl.message("§6§l>> §eUnset " + target.getRankedName(false) + " §e's rank.");
                     } else {

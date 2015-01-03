@@ -30,6 +30,7 @@ public class QuitListener implements Listener {
             if (pl.getTeam() != null) {
                 TeamManager.leaveTeam(pl, pl.getTeam());
             }
+
             pl.saveData();
 
             if (pl.isVIP()) {

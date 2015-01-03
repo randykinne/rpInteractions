@@ -14,7 +14,15 @@ import org.bukkit.ChatColor;
  */
 public enum Rank {
 
-    PLAYER(0, "PLAYER", "", ChatColor.GRAY), PREMIUM(1, "PREMIUM", "Premium ", ChatColor.AQUA), VIP(2, "VIP", "VIP ", ChatColor.YELLOW), BUILDER(3, "BUILDER", "Builder ", ChatColor.DARK_GREEN), MOD(4, "MOD", "MOD ", ChatColor.DARK_PURPLE), DEV(5, "DEV", "DEV ", ChatColor.DARK_RED), ADMIN(6, "ADMIN", "ADMIN ", ChatColor.RED), OWNER(7, "OWNER", "OWNER ", ChatColor.DARK_RED);
+    PLAYER(0, "PLAYER", "", ChatColor.GRAY),
+    PREMIUM(1, "PREMIUM", "Premium ", ChatColor.AQUA),
+    VIP(2, "VIP", "VIP ", ChatColor.YELLOW),
+    BUILDER(3, "BUILDER", "Builder ", ChatColor.DARK_GREEN),
+    MOD(4, "MOD", "MOD ", ChatColor.DARK_PURPLE),
+    ADMIN(5, "ADMIN", "ADMIN ", ChatColor.RED),
+    DEV(6, "DEV", "DEV ", ChatColor.GOLD),
+    OWNER(7, "OWNER", "OWNER ", ChatColor.DARK_RED);
+
     String rank;
     String name;
     ChatColor color;

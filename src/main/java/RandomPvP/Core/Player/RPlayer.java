@@ -4,7 +4,10 @@ import RandomPvP.Core.Data.MySQL;
 import RandomPvP.Core.Game.Team.Team;
 import RandomPvP.Core.Player.Rank.Rank;
 import RandomPvP.Core.Player.Scoreboard.RandomPvPScoreboard;
+import RandomPvP.Core.Punishment.PunishmentManager;
+import RandomPvP.Core.Punishment.Punishments;
 import RandomPvP.Core.RPICore;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -51,6 +54,7 @@ public class RPlayer {
     RandomPvPScoreboard board;
     boolean hasSTFUEnabled = false;
     boolean hasWarningPending = false;
+    int warnings = 0;
 
 
     public RPlayer(String name, UUID id) {
@@ -200,6 +204,15 @@ public class RPlayer {
         return (getRank().has(Rank.PREMIUM));
     }
 
+    public int getWarnings() {
+        return warnings;
+    }
+
+    public void addWarning() {
+        this.warnings = getWarnings() + 1;
+        setHasWarningPending(true);
+    }
+
     public boolean hasWarningPending() { return hasWarningPending; }
     public void setHasWarningPending(boolean warningPending) { this.hasWarningPending = warningPending; }
 
@@ -209,7 +222,12 @@ public class RPlayer {
         message("§4║   §7§o" + message );
         message("§4║   §cPlease type§8 §8§l[ §7/rdpvp §8§l] §cto acknowledge this warning." );
         message("§4╚══════════════════════════════════");
-        setHasWarningPending(true);
+        if (hasWarningPending || getWarnings() >= 1) {
+            PunishmentManager.Punishment punish = RPICore.getInstance().getPunishmentManager().addPunishment(PunishmentManager.PunishmentType.KICK, getUUID(), null, System.currentTimeMillis(), 0, Bukkit.getServerName(), message);
+            getPlayer().kickPlayer(Punishments.formatKickMessage(message));
+        } else {
+            addWarning();
+        }
     }
 
     public void toggleSTFU() {
