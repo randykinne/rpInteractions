@@ -273,8 +273,10 @@ public class RPlayer {
         if (getTeam() != null) {
             return getTeam().getType() == Team.Type.Participating;
         }
-        return (canInteract);
+
+        return canInteract;
     }
+
     public void setCanInteract(boolean interact) {
         this.canInteract = interact;
     }

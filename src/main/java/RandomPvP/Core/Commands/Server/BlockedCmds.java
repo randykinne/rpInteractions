@@ -1,6 +1,8 @@
-package RandomPvP.Core.AntiCheat;
+package RandomPvP.Core.Commands.Server;
 
-import RandomPvP.Core.Player.RPlayer;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 /**
  * ***************************************************************************************
@@ -12,9 +14,13 @@ import RandomPvP.Core.Player.RPlayer;
  * Thanks.
  * ***************************************************************************************
  */
-public interface Cheat {
+public class BlockedCmds implements Listener {
 
-    public String getName();
-    public boolean isPvPRelated();
-    public void check(RPlayer player);
+    @EventHandler
+    public void onCommand(PlayerCommandPreprocessEvent e) {
+        if (e.getMessage().startsWith("/me") || e.getMessage().contains("minecraft")) {
+            e.setCancelled(true);
+            e.getPlayer().sendMessage("§4§l>> §7I don't think so!");
+        }
+    }
 }

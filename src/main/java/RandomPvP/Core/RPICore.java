@@ -1,5 +1,7 @@
 package RandomPvP.Core;
 
+import RandomPvP.Core.AntiCheat.KillAura.AntiAura;
+import RandomPvP.Core.AntiCheat.KillAura.AuraCheck;
 import RandomPvP.Core.Chat.ChatHandler;
 import RandomPvP.Core.Commands.Admin.BroadcastAdminCmd;
 import RandomPvP.Core.Commands.Admin.OpCmd;
@@ -34,6 +36,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.HashMap;
+import java.util.Random;
+import java.util.UUID;
 
 
 /**
@@ -64,6 +69,32 @@ public class RPICore extends JavaPlugin {
         return manager;
     }
 
+    public HashMap<UUID, AuraCheck> running = new HashMap<>();
+    public HashMap<UUID, Long> lastHit = new HashMap<>();
+    public boolean notifyPermission;
+    public boolean randomCheckOnFight;
+    public boolean worldPvpCheck;
+    public boolean iCanHasPVP = false;
+    public boolean isRegistered;
+    public boolean customCommandToggle;
+    public boolean visOrInvisible;
+    public boolean visCmd;
+    public static boolean silentBan;
+    public String typeCmd;
+    public String type;
+    public String customCommand;
+    public static String banMessage;
+    public static String kickMessage;
+    public int minToAutoRun;
+    public int count = 0;
+    public int maxToCheck;
+    public int fightTimeDelay;
+    public static int runEvery;
+    public static int total;
+    public static int autoBanCount;
+    public long fightTimeDelayTrue;
+    public static final Random RANDOM = new Random();
+
     void initialize() {
 
         config = new Configuration(this);
@@ -79,6 +110,8 @@ public class RPICore extends JavaPlugin {
         pm.registerEvents(new DeathListener(), this);
         pm.registerEvents(new ModPanelCmd(), this);
         pm.registerEvents(new QuitListener(), this);
+        pm.registerEvents(new AntiAura(), this);
+        pm.registerEvents(new BlockedCmds(), this);
 
         setupCommands();
         getCommand("kick").setExecutor(handler);
@@ -134,6 +167,46 @@ public class RPICore extends JavaPlugin {
         }
         */
 
+        this.saveDefaultConfig();
+        total = this.getConfig().getInt("settings.amountOfFakePlayers", 16);
+        autoBanCount = this.getConfig().getInt("settings.autoBanOnXPlayers", 3);
+        silentBan = this.getConfig().getBoolean("settings.silentBan", true);
+        runEvery = this.getConfig().getInt("settings.runEvery", 2400);
+        banMessage = this.getConfig().getString("messages.banMessage", "ANTI-AURA: Passed threshold");
+        kickMessage = this.getConfig().getString("messages.kickMessage", "ANTI-AURA: Passed threshold");
+        type = this.getConfig().getString("settings.defaultType", "running");
+        customCommandToggle = this.getConfig().getBoolean("customBanCommand.enable", false);
+        customCommand = this.getConfig().getString("customBanCommand.command", "ban %player");
+        visOrInvisible = this.getConfig().getBoolean("settings.invisibility", false);
+        minToAutoRun = this.getConfig().getInt("settings.min-players-to-autorun", 5);
+        worldPvpCheck = this.getConfig().getBoolean("player-checks.world", true);
+        maxToCheck = this.getConfig().getInt("player-checks.max-to-check", 10);
+        notifyPermission = this.getConfig().getBoolean("settings.notify-users-with-permission", false);
+        randomCheckOnFight = this.getConfig().getBoolean("player-checks.on-pvp.enabled", true);
+        fightTimeDelay = this.getConfig().getInt("player-checks.on-pvp.time-delay", 60);
+
+        fightTimeDelayTrue = fightTimeDelay * 1000L;
+
+
+
+        if(!(type.equalsIgnoreCase("running") || type.equalsIgnoreCase("standing"))) {
+            type = "running";
+        }
+
+        if(this.getConfig().getBoolean("settings.randomlyRun")) {
+            Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+                @Override
+                public void run() {
+                    if(RPlayerManager.getInstance().getOnlinePlayers().size() > minToAutoRun) {
+                        if(worldPvpCheck) {
+                            new AntiAura().findPlayerWorld();
+                        } else {
+                            new AntiAura().checkExecute(new AntiAura().getRandomPlayer().getName());
+                        }
+                    }
+                }
+            }, 800L, runEvery);
+        }
     }
 
     private void setupCommands() {
@@ -165,6 +238,7 @@ public class RPICore extends JavaPlugin {
         cmdRegister.register(STFUCmd.class); // MOD
         cmdRegister.register(TeamCommand.class); // GAME
         cmdRegister.register(TeleportCmd.class); // MOD
+        cmdRegister.register(TeleportBringCmd.class); //MOD
         cmdRegister.register(WarningCmd.class); // MOD
         cmdRegister.register(WhereAmICommand.class); // GAME
 

@@ -3,17 +3,22 @@ version: 1.0
 name: RPI
 author: Randomizer27
 database: true
+depend: [ProtocolLib]
 
 commands:
   ban:
-    description: ban
+        description: ban
   kick:
-    description: kick
+        description: kick
   mute:
-    description: mute
+        description: mute
   unban:
-    description: unban
+        description: unban
   unmute:
-    description: unmute
+        description: unmute
   history:
-    description: history
+        description: history
+  auracheck:
+        description: Check if player has aura hack
+        usage: /<command> <nickname> (running/standing) (invisible/visible) - checks for aura hack
+        aliases: [ac]

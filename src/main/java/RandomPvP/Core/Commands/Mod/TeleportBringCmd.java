@@ -19,17 +19,18 @@ import org.bukkit.entity.Player;
  * Thanks.
  * ***************************************************************************************
  */
-public class TeleportCmd {
+public class TeleportBringCmd {
 
-    @Command(aliases = { "tp", "teleport" }, usage = "[player] -", desc = "Teleports players", min = 1, max = 1)
+    @Command(aliases = { "bring", "tphere" }, usage = "<player>", desc = "Teleports a player to your location", min = 1)
     public static void teleport(final CommandContext args, CommandSender sender) throws CommandException {
         if (sender instanceof Player) {
             RPlayer pl = RPlayerManager.getInstance().getPlayer((Player) sender);
-            if (pl.isStaff() || pl.getTeam().getName().equalsIgnoreCase("Spectators")) {
+            if (pl.isStaff()) {
                 if (Bukkit.getPlayer(args.getString(0)) != null) {
                     RPlayer target = RPlayerManager.getInstance().getPlayer(Bukkit.getPlayer(args.getString(0)));
-                    pl.getPlayer().teleport(target.getPlayer().getLocation());
-                    pl.message("§8§l>> §eYou have teleported to " + target.getRankedName(false) + "§e.");
+                    target.getPlayer().teleport(pl.getPlayer().getLocation());
+                    pl.message("§6§l>> §eYou have teleported" + target.getRankedName(false) + " to you.");
+                    target.message("§6§l>> §eYou have been teleported to " + pl.getRankedName(false) + "§e.");
                 }
             } else {
                 throw new CommandException("§7You need to be §oMod §7to use this command.");
