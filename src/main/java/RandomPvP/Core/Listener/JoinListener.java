@@ -43,11 +43,7 @@ public class JoinListener implements Listener {
         new BukkitRunnable() {
             public void run() {
                 boolean allowed = true;
-                UUID id = UUIDCache.getUUID(e.getName());
-
-                if (id == null) {
-                    id = e.getUniqueId();
-                }
+                UUID id = e.getUniqueId();
 
                 if (id != null) {
                     if (ServerToggles.checkForBan()) {

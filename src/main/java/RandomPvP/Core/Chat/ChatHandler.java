@@ -61,7 +61,7 @@ public class ChatHandler implements Listener {
                 e.setCancelled(true);
 
                 if (!pl.hasSTFUEnabled()) {
-                    RPStaff.sendStaffMessage(pl.getRankedName(true) + "§8: §6" + message.replace("!", ""), true);
+                    RPStaff.sendStaffMessage(pl.getRankedName(true) + "§8: §b" + message.replace("!", ""), true);
                 }
             }
 
