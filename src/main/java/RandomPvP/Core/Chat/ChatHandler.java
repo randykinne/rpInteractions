@@ -37,8 +37,8 @@ public class ChatHandler implements Listener {
 
         RPlayer pl = RPlayerManager.getInstance().getPlayer(e.getPlayer());
 
-        PunishmentManager.Punishment punishment;
-        if ((punishment = manager.hasActivePunishment(pl.getUUID(), PunishmentManager.PunishmentType.MUTE)) != null) {
+        PunishmentManager.Punishment punishment = manager.hasActivePunishment(pl.getUUID(), PunishmentManager.PunishmentType.MUTE);
+        if (punishment != null) {
             e.setCancelled(true);
             e.getPlayer().sendMessage("§4§l>> §7Shh! You are muted for " + punishment.getReason() + ".");
         } else {

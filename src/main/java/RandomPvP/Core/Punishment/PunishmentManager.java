@@ -370,6 +370,7 @@ public class PunishmentManager {
                 return punishment;
             }
         }
+
         return null;
     }
 

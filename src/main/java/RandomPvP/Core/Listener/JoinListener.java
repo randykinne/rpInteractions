@@ -48,8 +48,8 @@ public class JoinListener implements Listener {
                 if (id != null) {
                     if (ServerToggles.checkForBan()) {
                         manager.loadActivePunishmentsFor(id);
-                        PunishmentManager.Punishment punishment;
-                        if ((punishment = manager.hasActivePunishment(id, PunishmentManager.PunishmentType.BAN)) != null) {
+                        PunishmentManager.Punishment punishment = manager.hasActivePunishment(id, PunishmentManager.PunishmentType.BAN);
+                        if (punishment != null) {
                             e.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_BANNED);
                             e.setKickMessage(Punishments.formatBanMessage(String.valueOf(punishment.getId()), punishment.getAdmin(), punishment.getReason(), NumberUtil.translateDuration(punishment.getExpires())));
                             allowed = false;
