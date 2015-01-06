@@ -1,14 +1,10 @@
 package RandomPvP.Core.Chat;
 
-import RandomPvP.Core.Game.GameManager;
 import RandomPvP.Core.Player.RPlayer;
 import RandomPvP.Core.Player.RPlayerManager;
-import RandomPvP.Core.Player.Rank.Rank;
 import RandomPvP.Core.Player.UUIDCache;
-import RandomPvP.Core.Punishment.PunishmentManager;
 import RandomPvP.Core.Util.RPStaff;
 import RandomPvP.Core.Util.ServerToggles;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -25,50 +21,38 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
  * ***************************************************************************************
  */
 public class ChatHandler implements Listener {
-    private PunishmentManager manager;
-
-    public ChatHandler(PunishmentManager manager) {
-        this.manager = manager;
-    }
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
 
 
         RPlayer pl = RPlayerManager.getInstance().getPlayer(e.getPlayer());
-
-        PunishmentManager.Punishment punishment = manager.hasActivePunishment(pl.getUUID(), PunishmentManager.PunishmentType.MUTE);
-        if (punishment != null) {
-            e.setCancelled(true);
-            e.getPlayer().sendMessage("§4§l>> §7Shh! You are muted for " + punishment.getReason() + ".");
-        } else {
-            String message = e.getMessage();
-            String standardFormat = pl.getDisplayName(true) + "§8: §f" + message;
-            String format;
-            if (pl.getTeam() != null) {
-                if (pl.getTeam().isShownInChat()) {
-                    format = "§8[" + pl.getTeam().getColor() + pl.getTeam().getName() + "§8] " + pl.getDisplayName(true) + "§8: §f" + message;
-                } else {
-                    format = standardFormat;
-                }
+        String message = e.getMessage();
+        String standardFormat = pl.getDisplayName(true) + "§8: §f" + message;
+        String format;
+        if (pl.getTeam() != null) {
+            if (pl.getTeam().isShownInChat()) {
+                format = "§8[" + pl.getTeam().getColor() + pl.getTeam().getName() + "§8] " + pl.getDisplayName(true) + "§8: §f" + message;
             } else {
                 format = standardFormat;
             }
+        } else {
+            format = standardFormat;
+        }
 
-            e.setFormat(String.format(format));
+        e.setFormat(String.format(format));
 
-            if (message.startsWith("!") && pl.isStaff()) {
-                e.setCancelled(true);
+        if (message.startsWith("!") && pl.isStaff()) {
+            e.setCancelled(true);
 
-                if (!pl.hasSTFUEnabled()) {
-                    RPStaff.sendStaffMessage(pl.getRankedName(true) + "§8: §b" + message.replace("!", ""), true);
-                }
+            if (!pl.hasSTFUEnabled()) {
+                RPStaff.sendStaffMessage(pl.getRankedName(true) + "§8: §b" + message.replace("!", ""), true);
             }
+        }
 
-            if (!ServerToggles.isChatEnabled() && !pl.isVIP()) {
-                e.setCancelled(true);
-                pl.message("§4§l>> §7Shh! You may not speak when chat is disabled!");
-            }
+        if (!ServerToggles.isChatEnabled() && !pl.isVIP()) {
+            e.setCancelled(true);
+            pl.message("§4§l>> §7Shh! You may not speak when chat is disabled!");
         }
 
         if (!e.isCancelled()) {

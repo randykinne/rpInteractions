@@ -5,10 +5,6 @@ import RandomPvP.Core.Player.RPlayer;
 import RandomPvP.Core.Player.RPlayerManager;
 import RandomPvP.Core.Player.Rank.Rank;
 import RandomPvP.Core.Player.UUIDCache;
-import RandomPvP.Core.Punishment.PunishmentManager.Punishment;
-import RandomPvP.Core.Punishment.PunishmentManager;
-import RandomPvP.Core.Punishment.Util;
-import RandomPvP.Core.Util.NumberUtil;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandException;
@@ -30,11 +26,6 @@ import java.util.UUID;
  * ***************************************************************************************
  */
 public class LookupCmd {
-    private static PunishmentManager manager;
-
-    public LookupCmd(PunishmentManager manager) {
-        this.manager = manager;
-    }
 
     static RPlayer player = null;
     static String displayname = "hi";
@@ -97,24 +88,6 @@ public class LookupCmd {
                     sender.sendMessage("§f - §7Health: §8" + player.getPlayer().getHealthScale());
                     //sender.sendMessage("§f - §7Location: §8" + String.valueOf(NumberUtil.trimNumber(player.getPlayer().getLocation().getX())) + ", " + String.valueOf(NumberUtil.trimNumber(player.getPlayer().getLocation().getY())) + ", " + String.valueOf(NumberUtil.trimNumber(player.getPlayer().getLocation().getZ())));
                     sender.sendMessage("§f - §7Gamemode: §8" + player.getPlayer().getGameMode().toString());
-                }
-
-
-                if (manager.getAllPunishmentsFor(id).size() > 0) {
-                    sender.sendMessage("§4§lPunishments: §6(" + manager.getAllPunishmentsFor(id).size() + ")");
-                    for (Punishment punishment : manager.getAllPunishmentsFor(id)) {
-                        String modifier = "";
-                        String message = "§a#" + modifier + punishment.getId() + " " + ChatColor.GRAY + modifier + Util.formatTimestamp(punishment.getCreated()) + " §8> " + ChatColor.WHITE + modifier + punishment.getType().getName() + " by " + ChatColor.GRAY + modifier + (punishment.getAdmin() == null ? "§4AutoModerator" : new OfflineRPlayer(UUIDCache.getName(punishment.getAdmin()), punishment.getAdmin()).getRankedName(false) + modifier +"§8: §7§n" + punishment.getReason());
-                        if (punishment.hasExpired()) {
-                            modifier = "§m";
-                        }
-                        sender.sendMessage(message);
-
-
-
-                    }
-                } else {
-                    sender.sendMessage("§a§lNo punishments on record.");
                 }
             } else {
                 sender.sendMessage("§4§l>> §7Player not found in database.");

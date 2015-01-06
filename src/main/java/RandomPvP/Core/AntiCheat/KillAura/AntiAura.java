@@ -16,18 +16,16 @@ import java.util.logging.Level;
 import RandomPvP.Core.AntiCheat.KillAura.Packet.WrapperPlayClientUseEntity;
 import RandomPvP.Core.Player.RPlayer;
 import RandomPvP.Core.Player.RPlayerManager;
-import RandomPvP.Core.Punishment.PunishmentManager;
-import RandomPvP.Core.Punishment.Punishments;
 import RandomPvP.Core.RPICore;
 import RandomPvP.Core.Util.RPStaff;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
-import org.bukkit.BanList;
+import com.sk89q.minecraft.util.commands.Command;
+import com.sk89q.minecraft.util.commands.CommandContext;
+import com.sk89q.minecraft.util.commands.CommandException;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -38,22 +36,22 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 
-public class AntiAura implements Listener, CommandExecutor {
+public class AntiAura implements Listener {
 
-    private HashMap<UUID, AuraCheck> running = new HashMap<>();
+    private static HashMap<UUID, AuraCheck> running = new HashMap<>();
     private HashMap<UUID, Long> lastHit = new HashMap<>();
-    private boolean notifyPermission = RPICore.getInstance().notifyPermission;
+    private static boolean notifyPermission = RPICore.getInstance().notifyPermission;
     private boolean randomCheckOnFight = RPICore.getInstance().randomCheckOnFight;
     private boolean worldPvpCheck = RPICore.getInstance().worldPvpCheck;
     private boolean iCanHasPVP = RPICore.getInstance().iCanHasPVP;
-    private boolean isRegistered = RPICore.getInstance().isRegistered;
-    private boolean customCommandToggle = RPICore.getInstance().customCommandToggle;
-    private boolean visOrInvisible = RPICore.getInstance().visOrInvisible;
-    private boolean visCmd = RPICore.getInstance().visCmd;
+    private static boolean isRegistered = RPICore.getInstance().isRegistered;
+    private static boolean customCommandToggle = RPICore.getInstance().customCommandToggle;
+    private static boolean visOrInvisible = RPICore.getInstance().visOrInvisible;
+    private static boolean visCmd = RPICore.getInstance().visCmd;
     private static boolean silentBan = RPICore.getInstance().silentBan;
-    private String typeCmd = RPICore.getInstance().typeCmd;
-    private String type = RPICore.getInstance().type;
-    private String customCommand = RPICore.getInstance().customCommand;
+    private static String typeCmd = RPICore.getInstance().typeCmd;
+    private static String type = RPICore.getInstance().type;
+    private static String customCommand = RPICore.getInstance().customCommand;
     private static String banMessage = RPICore.getInstance().banMessage;
     private static String kickMessage = RPICore.getInstance().kickMessage;
     private int minToAutoRun = RPICore.getInstance().minToAutoRun;
@@ -97,7 +95,7 @@ public class AntiAura implements Listener, CommandExecutor {
         org.bukkit.Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "auracheck " + player);
     }
 
-    public void register() {
+    public static void register() {
         ProtocolLibrary.getProtocolManager().addPacketListener(
                 new PacketAdapter(RPICore.getInstance(), WrapperPlayClientUseEntity.TYPE) {
                     @Override
@@ -111,7 +109,7 @@ public class AntiAura implements Listener, CommandExecutor {
                     }
 
                 });
-        this.isRegistered = true;
+        isRegistered = true;
     }
 
     public void unregister() {
@@ -131,85 +129,95 @@ public class AntiAura implements Listener, CommandExecutor {
         return null;
     }
 
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length < 1) {
-            return false;
+    @Command(aliases = { "auracheck", "ac" }, desc = "Checks for kill aura", usage = "<player> <standing/running> <visible/invisible>", min = 3, max = 3)
+    public static void command(final CommandContext args, CommandSender sender) throws CommandException {
+        boolean allowed = false;
+        if (sender instanceof Player) {
+            RPlayer pl = RPlayerManager.getInstance().getPlayer((Player) sender);
+            if (pl.isStaff()) {
+                allowed = true;
+            } else {
+                allowed = false;
+                throw new CommandException("You must be Mod to use this command!");
+            }
+        } else {
+            allowed = true;
         }
 
-        Player player = Bukkit.getPlayer(args[0]);
-        if (player == null) {
-            sender.sendMessage("§4§l>> §7Player is not online.");
-            return true;
-        }
+        if (allowed) {
 
-        if (!isRegistered) {
-            this.register();
-        }
+            Player player = Bukkit.getPlayer(args.getString(0));
+            if (player == null) {
+                throw new CommandException("§4§l>> §7Player is not online.");
+            }
 
-        if(args.length >= 2) {
-            if(args[1].equalsIgnoreCase("standing") || args[1].equalsIgnoreCase("running")) {
-                typeCmd = args[1];
+            if (!isRegistered) {
+                register();
+            }
+
+            if (args.argsLength() >= 2) {
+                if (args.getString(1).equalsIgnoreCase("standing") || args.getString(1).equalsIgnoreCase("running")) {
+                    typeCmd = args.getString(1);
+                } else {
+                    typeCmd = type;
+                }
             } else {
                 typeCmd = type;
             }
-        } else {
-            typeCmd = type;
-        }
 
-        if(args.length >= 3) {
-            if(args[2].equalsIgnoreCase("visible") || args[2].equalsIgnoreCase("invisible")) {
-                if(args[2].equalsIgnoreCase("visible")) {
-                    visCmd = false;
+            if (args.argsLength() >= 3) {
+                if (args.getString(2).equalsIgnoreCase("visible") || args.getString(2).equalsIgnoreCase("invisible")) {
+                    if (args.getString(2).equalsIgnoreCase("visible")) {
+                        visCmd = false;
+                    } else {
+                        visCmd = true;
+                    }
                 } else {
-                    visCmd = true;
+                    visCmd = visOrInvisible;
                 }
             } else {
                 visCmd = visOrInvisible;
             }
-        } else {
-            visCmd = visOrInvisible;
+
+            AuraCheck check = new AuraCheck(new AntiAura(), player);
+            running.put(player.getUniqueId(), check);
+
+            check.invoke(sender, typeCmd, visCmd, new AuraCheck.Callback() {
+                @Override
+                public void done(long started, long finished, AbstractMap.SimpleEntry<Integer, Integer> result, CommandSender invoker, Player player) {
+                    if (invoker instanceof Player && !((Player) invoker).isOnline()) {
+                        return;
+                    }
+
+                    invoker.sendMessage("§6§l>> " + ChatColor.YELLOW + "Aura check on " + player.getName() + " result: Killed " + result.getKey() + " out of " + result.getValue());
+                    double timeTaken = finished != Long.MAX_VALUE ? (int) ((finished - started) / 1000) : ((double) RPICore.getInstance().getConfig().getInt("settings.ticksToKill", 10) / 20);
+
+                    invoker.sendMessage("§6§l>> " + ChatColor.YELLOW + "Check length: " + timeTaken + " seconds.");
+                    if (result.getKey() >= autoBanCount) {
+                        if (notifyPermission) {
+                            RPStaff.sendStaffMessage("(AutoModerator) Banning player " + player.getName() + "for going beyond AntiAura threshold.", false);
+                        }
+
+                        Bukkit.getLogger().log(Level.INFO, "Banning player {0} for going beyond AntiAura threshold.", player.getName());
+                        if (!customCommandToggle) {
+                        } else {
+                            String disposableCommand = customCommand;
+                            if (customCommand.contains("%player")) {
+                                disposableCommand = disposableCommand.replace("%player", player.getName());
+                            }
+                            if (customCommand.contains("%count")) {
+                                disposableCommand = disposableCommand.replace("%count", result.getKey() + "");
+                            }
+
+                            org.bukkit.Bukkit.dispatchCommand(Bukkit.getConsoleSender(), disposableCommand);
+                        }
+                        if (!silentBan && !customCommandToggle) {
+                            player.kickPlayer(("Cheating (Hacked Client/KillAura)"));
+                        }
+                    }
+                }
+            });
         }
-
-        AuraCheck check = new AuraCheck(this, player);
-        running.put(player.getUniqueId(), check);
-
-        check.invoke(sender, typeCmd, visCmd, new AuraCheck.Callback() {
-            @Override
-            public void done(long started, long finished, AbstractMap.SimpleEntry<Integer, Integer> result, CommandSender invoker, Player player) {
-                if (invoker instanceof Player && !((Player) invoker).isOnline()) {
-                    return;
-                }
-
-                invoker.sendMessage("§6§l>> " + ChatColor.YELLOW + "Aura check on " + player.getName() + " result: killed " + result.getKey() + " out of " + result.getValue());
-                double timeTaken = finished != Long.MAX_VALUE ? (int) ((finished - started) / 1000) : ((double) RPICore.getInstance().getConfig().getInt("settings.ticksToKill", 10) / 20);
-                invoker.sendMessage("§6§l>> " + ChatColor.YELLOW + "Check length: " + timeTaken + " seconds.");
-                if(result.getKey() >= autoBanCount) {
-                    if(notifyPermission) {
-                        RPStaff.sendStaffMessage("(AutoModerator) Banning player " + player.getName() + "for going beyond AntiAura threshold.", false);
-                    }
-
-                    Bukkit.getLogger().log(Level.INFO, "Banning player {0} for going beyond AntiAura threshold.", player.getName());
-                    if(!customCommandToggle) {
-                        RPICore.getInstance().getPunishmentManager().addPunishment(PunishmentManager.PunishmentType.BAN, player.getUniqueId(), null, System.currentTimeMillis(), RPICore.getInstance().getPunishmentManager().PUNISHMENT_EXPIRE_NEVER, Bukkit.getServerName(), "Cheating (Hacked Client/KillAura)");
-                    } else {
-                        String disposableCommand = customCommand;
-                        if(customCommand.contains("%player")) {
-                            disposableCommand = disposableCommand.replace("%player", player.getName());
-                        }
-                        if(customCommand.contains("%count")) {
-                            disposableCommand = disposableCommand.replace("%count", result.getKey() + "");
-                        }
-
-                        org.bukkit.Bukkit.dispatchCommand(Bukkit.getConsoleSender(), disposableCommand);
-                    }
-                    if(!silentBan && !customCommandToggle) {
-                        player.kickPlayer(Punishments.formatKickMessage(kickMessage));
-                    }
-                }
-            }
-        });
-        return true;
     }
 
     @EventHandler

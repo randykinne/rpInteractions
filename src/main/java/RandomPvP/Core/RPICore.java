@@ -19,10 +19,6 @@ import RandomPvP.Core.Listener.JoinListener;
 import RandomPvP.Core.Listener.QuitListener;
 import RandomPvP.Core.Player.RPlayerManager;
 import RandomPvP.Core.Player.UUIDCache;
-import RandomPvP.Core.Punishment.Configuration;
-import RandomPvP.Core.Punishment.Database;
-import RandomPvP.Core.Punishment.PunishmentManager;
-import RandomPvP.Core.Punishment.command.CommandHandler;
 import RandomPvP.Core.Util.RPStaff;
 import com.sk89q.bukkit.util.CommandsManagerRegistration;
 import com.sk89q.minecraft.util.commands.*;
@@ -57,17 +53,7 @@ public class RPICore extends JavaPlugin {
 
     private CommandsManager<CommandSender> commands;
 
-    private Configuration config;
-    private Database database;
-    private PunishmentManager manager;
-    private CommandHandler handler;
-    private LookupCmd cmd;
-    private int nextId = 1;
-
-    public Database getPunishmentDatabase() { return database; }
-    public PunishmentManager getPunishmentManager() {
-        return manager;
-    }
+    private int nextId = 0;
 
     public HashMap<UUID, AuraCheck> running = new HashMap<>();
     public HashMap<UUID, Long> lastHit = new HashMap<>();
@@ -97,16 +83,9 @@ public class RPICore extends JavaPlugin {
 
     void initialize() {
 
-        config = new Configuration(this);
-        database = new Database(this, config);
-        database.connect();
-        manager = new PunishmentManager(this, config, database);
-        handler = new CommandHandler(manager);
-        cmd = new LookupCmd(manager);
-
         PluginManager pm = Bukkit.getPluginManager();
-        pm.registerEvents(new JoinListener(manager), this);
-        pm.registerEvents(new ChatHandler(manager), this);
+        pm.registerEvents(new JoinListener(), this);
+        pm.registerEvents(new ChatHandler(), this);
         pm.registerEvents(new DeathListener(), this);
         pm.registerEvents(new ModPanelCmd(), this);
         pm.registerEvents(new QuitListener(), this);
@@ -114,11 +93,6 @@ public class RPICore extends JavaPlugin {
         pm.registerEvents(new BlockedCmds(), this);
 
         setupCommands();
-        getCommand("kick").setExecutor(handler);
-        getCommand("ban").setExecutor(handler);
-        getCommand("unban").setExecutor(handler);
-        getCommand("mute").setExecutor(handler);
-        getCommand("unmute").setExecutor(handler);
 
         RPStaff.nagStaffMembers();
 
@@ -181,7 +155,7 @@ public class RPICore extends JavaPlugin {
         minToAutoRun = this.getConfig().getInt("settings.min-players-to-autorun", 5);
         worldPvpCheck = this.getConfig().getBoolean("player-checks.world", true);
         maxToCheck = this.getConfig().getInt("player-checks.max-to-check", 10);
-        notifyPermission = this.getConfig().getBoolean("settings.notify-users-with-permission", false);
+        notifyPermission = true;
         randomCheckOnFight = this.getConfig().getBoolean("player-checks.on-pvp.enabled", true);
         fightTimeDelay = this.getConfig().getInt("player-checks.on-pvp.time-delay", 60);
 
@@ -219,6 +193,7 @@ public class RPICore extends JavaPlugin {
 
         CommandsManagerRegistration cmdRegister = new CommandsManagerRegistration(this, this.commands);
         //Register your commands here
+        cmdRegister.register(AntiAura.class); //ANTICHEAT
         cmdRegister.register(BroadcastAdminCmd.class); // ADMIN
         cmdRegister.register(CreditsCommand.class); //GAME
         cmdRegister.register(GamemodeCmd.class); // MOD-BUILDER
@@ -283,10 +258,6 @@ public class RPICore extends JavaPlugin {
         for (int i = 0; i<RPlayerManager.getInstance().getOnlinePlayers().size(); i++) {
             RPlayerManager.getInstance().getOnlinePlayers().remove(i);
         }
-
-        manager.forceUpdate();
-        database.disconnect();
-        manager.stop();
 
         instance = null;
 

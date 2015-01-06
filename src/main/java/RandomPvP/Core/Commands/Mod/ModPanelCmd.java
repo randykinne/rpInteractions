@@ -35,20 +35,16 @@ public class ModPanelCmd implements Listener {
     @EventHandler
     public void onClick(InventoryClickEvent e) {
         RPlayer pl = RPlayerManager.getInstance().getPlayer((Player) e.getWhoClicked());
-        Bukkit.broadcastMessage("0");
         if (e.getClickedInventory().getTitle().equalsIgnoreCase("§5Moderator Panel")) {
             if (e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§6§lRank Whitelist") || e.getCurrentItem().getType() == Material.NAME_TAG) {
-                Bukkit.broadcastMessage("1");
                 openRankWhitelistInv(pl);
             } else if (e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§6§lToggle Chat")) {
-                Bukkit.broadcastMessage("2");
                 Bukkit.getServer().dispatchCommand(pl.getPlayer(), "silencechat");
                 pl.getPlayer().closeInventory();
             } else if (e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§6§lToggle Build/Edit Mode")) {
-                Bukkit.broadcastMessage("3");
                 ServerToggles.setEditMode(!ServerToggles.isEditMode());
                 pl.getPlayer().closeInventory();
-                Bukkit.broadcastMessage("§5§l>> " + pl.getRankedName(false) + " §btoggled BUILD mode to" + String.valueOf(ServerToggles.isEditMode()) + ".");
+                Bukkit.broadcastMessage("§6§l>> " + pl.getRankedName(false) + " §etoggled BUILD mode to " + String.valueOf(ServerToggles.isEditMode()) + ".");
             }
 
             e.setCancelled(true);
@@ -57,7 +53,7 @@ public class ModPanelCmd implements Listener {
                 openModPanel(pl);
             } else if (e.getCurrentItem().getType() == Material.WOOL) {
                 ServerToggles.setRankRequired(Rank.valueOf(e.getCurrentItem().getItemMeta().getLore().get(0).replace("§0", "")));
-                Bukkit.broadcastMessage("§5§l>> " + pl.getRankedName(false) + " §bset the minimum rank to §l" + Rank.valueOf(e.getCurrentItem().getItemMeta().getLore().get(0).replace("§0", "")).getName() + "§b.");
+                Bukkit.broadcastMessage("§6§l>> " + pl.getRankedName(false) + " §eset the minimum rank to §l" + Rank.valueOf(e.getCurrentItem().getItemMeta().getLore().get(0).replace("§0", "")).getName() + "§b.");
             }
             e.setCancelled(true);
         }

@@ -3,12 +3,7 @@ package RandomPvP.Core.Listener;
 
 import RandomPvP.Core.Game.GameManager;
 import RandomPvP.Core.Player.*;
-import RandomPvP.Core.Player.Rank.Rank;
-import RandomPvP.Core.Punishment.PunishmentManager;
-import RandomPvP.Core.Punishment.PunishmentManager.Punishment;
-import RandomPvP.Core.Punishment.Punishments;
 import RandomPvP.Core.RPICore;
-import RandomPvP.Core.System.Info.ServerAdminInfo;
 import RandomPvP.Core.Util.*;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
@@ -32,12 +27,6 @@ import java.util.UUID;
  */
 public class JoinListener implements Listener {
 
-    private PunishmentManager manager;
-
-    public JoinListener(PunishmentManager manager) {
-        this.manager = manager;
-    }
-
     @EventHandler
     public void onLogin(final AsyncPlayerPreLoginEvent e) {
         new BukkitRunnable() {
@@ -46,23 +35,12 @@ public class JoinListener implements Listener {
                 UUID id = e.getUniqueId();
 
                 if (id != null) {
-                    if (ServerToggles.checkForBan()) {
-                        manager.loadActivePunishmentsFor(id);
-                        PunishmentManager.Punishment punishment = manager.hasActivePunishment(id, PunishmentManager.PunishmentType.BAN);
-                        if (punishment != null) {
-                            e.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_BANNED);
-                            e.setKickMessage(Punishments.formatBanMessage(String.valueOf(punishment.getId()), punishment.getAdmin(), punishment.getReason(), NumberUtil.translateDuration(punishment.getExpires())));
-                            allowed = false;
-                        }
-                    }
-
-                    if (allowed) {
                         if (ServerToggles.hasRankWhitelist()) {
                             if (new OfflineRPlayer(e.getName(), e.getUniqueId()).getRank().has(ServerToggles.getRankRequired())) {
                                 allowed = true;
                             } else {
                                 e.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_WHITELIST);
-                                e.setKickMessage(Punishments.formatKickMessage("You need " + ServerToggles.getRankRequired().getTag() + "to join this server!"));
+                                e.setKickMessage("You need " + ServerToggles.getRankRequired().getTag() + "to join this server!");
                                 allowed = false;
                             }
                         }
@@ -70,12 +48,11 @@ public class JoinListener implements Listener {
                         if (allowed) {
                             e.allow();
                         }
-                    }
 
                 } else {
                     allowed = false;
                     e.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_OTHER);
-                    e.setKickMessage(Punishments.formatKickMessage("Could not load player data! :("));
+                    e.setKickMessage("Could not load player data! :(");
                 }
 
             }

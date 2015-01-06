@@ -29,7 +29,7 @@ public class TeleportCmd {
                 if (Bukkit.getPlayer(args.getString(0)) != null) {
                     RPlayer target = RPlayerManager.getInstance().getPlayer(Bukkit.getPlayer(args.getString(0)));
                     pl.getPlayer().teleport(target.getPlayer().getLocation());
-                    pl.message("§8§l>> §eYou have teleported to " + target.getRankedName(false) + "§e.");
+                    pl.message("§6§l>> §eYou have teleported to " + target.getRankedName(false) + "§e.");
                 }
             } else {
                 throw new CommandException("§7You need to be §oMod §7to use this command.");

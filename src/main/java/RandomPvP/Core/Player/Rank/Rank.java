@@ -14,7 +14,7 @@ import org.bukkit.ChatColor;
  */
 public enum Rank {
 
-    PLAYER(0, "PLAYER", "", ChatColor.GRAY),
+    PLAYER(0, "PLAYER", "", ChatColor.BLUE),
     PREMIUM(1, "PREMIUM", "Premium ", ChatColor.AQUA),
     VIP(2, "VIP", "VIP ", ChatColor.YELLOW),
     BUILDER(3, "BUILDER", "Builder ", ChatColor.DARK_GREEN),

@@ -29,7 +29,7 @@ public class TeleportBringCmd {
                 if (Bukkit.getPlayer(args.getString(0)) != null) {
                     RPlayer target = RPlayerManager.getInstance().getPlayer(Bukkit.getPlayer(args.getString(0)));
                     target.getPlayer().teleport(pl.getPlayer().getLocation());
-                    pl.message("§6§l>> §eYou have teleported" + target.getRankedName(false) + " to you.");
+                    pl.message("§6§l>> §eYou have teleported " + target.getRankedName(false) + " §eto you.");
                     target.message("§6§l>> §eYou have been teleported to " + pl.getRankedName(false) + "§e.");
                 }
             } else {
