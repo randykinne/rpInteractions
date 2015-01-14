@@ -36,7 +36,7 @@ public class LookupCmd {
     static String IP = null;
     static int rpid;
 
-    @Command(aliases = {"lookup", "info"}, desc = "Returns info about a player", max = 1, min = 1)
+    @Command(aliases = {"pinfo", "who"}, desc = "Returns info about a player", max = 1, min = 1)
     public static void lookup(final CommandContext args, CommandSender sender) throws CommandException {
         boolean allowed = false;
         boolean isnull = true;

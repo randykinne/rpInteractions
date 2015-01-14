@@ -3,6 +3,8 @@ package RandomPvP.Core.Game.Team;
 import RandomPvP.Core.Game.GameManager;
 import RandomPvP.Core.Game.Team.Exception.TeamException;
 import RandomPvP.Core.Player.RPlayer;
+import RandomPvP.Core.Player.RPlayerManager;
+import RandomPvP.Core.RPICore;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.SetMultimap;
 
@@ -93,6 +95,19 @@ public class TeamManager {
             if (team.getMaxSize() == -1 || team.getPlayers().size() < team.getMaxSize()) {
                 team.addPlayer(player);
                 player.message("§3§l>> §7You have joined " + team.getColor() + team.getName() + "§7.");
+                if (team.isHidden() && !RPICore.getInstance().list.isVisible(player.getPlayer())) {
+                    RPICore.getInstance().list.hidePlayer(player.getPlayer());
+                } else {
+                    RPICore.getInstance().list.showPlayer(player.getPlayer());
+                }
+
+                for (RPlayer pl : RPlayerManager.getInstance().getOnlinePlayers()) {
+                    if (team.getType() == Team.Type.Observing) {
+                        pl.getPlayer().hidePlayer(player.getPlayer());
+                    } else {
+                        pl.getPlayer().showPlayer(player.getPlayer());
+                    }
+                }
             } else {
                 throw new TeamException(player, team.getColor() + team.getName() + "§7 is full!");
             }

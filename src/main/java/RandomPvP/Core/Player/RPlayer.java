@@ -40,7 +40,6 @@ public class RPlayer {
     }
     Player player;
     String name;
-    String display_name;
     UUID uuid;
     int rpid = nextId;
     String ip = "0.0.0.0";
@@ -119,10 +118,11 @@ public class RPlayer {
     }
 
     public void setPlayer(Player player) {
-        this.player = player;
-        this.name = player.getName();
-        this.display_name = player.getDisplayName();
-        setIP(player.getAddress().toString().replace("/", ""));
+        if (player != null && player.isOnline()) {
+            this.player = player;
+            this.name = player.getName();
+            setIP(player.getAddress().toString().replace("/", ""));
+        }
 
     }
     public Player getPlayer() {
@@ -134,21 +134,23 @@ public class RPlayer {
     }
 
     public String getDisplayName(boolean hasTag) {
+        //CONFUSING
+
         // if has tag
         if (hasTag) {
-            // if team sets display name and has tag
+            // if team sets color and has tag
             if (getTeam() != null && getTeam().setsTeamDisplayNameColor()) {
-                return getRank().getTag() + getTeam().getColor() + display_name;
+                return getRank().getTag() + getTeam().getColor() + name;
             } else {
                 // if team doesn't and has tag
-                return getRank().getTag() + ChatColor.GRAY + display_name;
+                return getRankedName(true);
             }
         } else {
             // if team sets color but doesn't have tag
             if (getTeam() != null && getTeam().setsTeamDisplayNameColor()) {
-                return getTeam().getColor() + display_name;
+                return getTeam().getColor() + name;
             } else {
-                return ChatColor.GRAY+ display_name;
+                return getRankedName(false);
             }
         }
     }
@@ -187,6 +189,12 @@ public class RPlayer {
         if (saveData) {
             saveData();
         }
+
+        new BukkitRunnable() {
+            public void run() {
+                RandomPvPScoreboard.updateScoreboard(true);
+            }
+        }.runTaskLater(RPICore.getInstance(), 5L);
     }
     public Rank getRank() {
         return rank;
@@ -244,8 +252,15 @@ public class RPlayer {
     }
 
     public void addCredits(int credits, String reason) {
-        this.credits = getCredits() + credits;
-            message("§2§l>> §a§lCredits§8: §b" + credits + " §8- §7" + reason);
+        int credAdded = credits;
+        if (isDonator()) {
+            credAdded = credits * 2;
+            reason = reason + " §b§lx2 Premium Bonus!";
+        }
+
+        this.credits = getCredits() + credAdded;
+
+        message("§2§l>> §a+" + credAdded + " Credits! §8| §7" + reason);
     }
     public void removeCredits(int credits, String reason) {
         this.credits = getCredits() - credits;
@@ -295,7 +310,7 @@ public class RPlayer {
         if (server.equalsIgnoreCase("Hub")) {
             server = "H1";
         }
-        System.out.println("Sending " + getName() + " to " + server);
+
         try {
             out.writeUTF("Connect");
             out.writeUTF(server);

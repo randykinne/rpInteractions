@@ -4,12 +4,14 @@ import RandomPvP.Core.Game.GameManager;
 import RandomPvP.Core.Game.Team.TeamManager;
 import RandomPvP.Core.Player.RPlayer;
 import RandomPvP.Core.Player.RPlayerManager;
+import RandomPvP.Core.RPICore;
 import RandomPvP.Core.Util.RPStaff;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * ***************************************************************************************
@@ -25,17 +27,23 @@ public class QuitListener implements Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
-            RPlayer pl = RPlayerManager.getInstance().getPlayer(e.getPlayer());
+
+            final RPlayer pl = RPlayerManager.getInstance().getPlayer(e.getPlayer());
 
             if (pl.getTeam() != null) {
                 TeamManager.leaveTeam(pl, pl.getTeam());
             }
 
-            pl.saveData();
+            new BukkitRunnable() {
+                public void run() {
+                    pl.saveData();
+                }
+            }.runTaskAsynchronously(RPICore.getInstance());
+
 
             if (pl.isVIP()) {
                 e.setQuitMessage(null);
-                RPStaff.sendVIPMessage(pl.getRankedName(false) + " §7left " + GameManager.getGame().getPrimaryColor() + Bukkit.getServerName() + "§7.", true);
+                RPStaff.sendVIPMessage(pl.getRankedName(false) + " §7left§7.", false);
             } else {
                 e.setQuitMessage("§4§l<< " + pl.getRankedName(false));
             }

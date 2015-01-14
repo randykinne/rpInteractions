@@ -1,13 +1,9 @@
 package RandomPvP.Core.Game.Team;
 
 import RandomPvP.Core.Player.RPlayer;
-import RandomPvP.Core.Player.RPlayerManager;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * ***************************************************************************************
@@ -31,8 +27,10 @@ public class Team {
     boolean allowFriendlyFire = false;
     boolean canSeeFriendlyInvisibles = false;
     boolean teamDisplayNameColor = true;
+    boolean usesCustomChatChannel = false;
 
     private Map<String, RPlayer> members = new HashMap<>();
+
     public void addPlayer(RPlayer player) {
         if (!members.containsValue(player)) {
             members.put(player.getName(), player);

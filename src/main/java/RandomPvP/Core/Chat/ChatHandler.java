@@ -27,39 +27,43 @@ public class ChatHandler implements Listener {
 
 
         RPlayer pl = RPlayerManager.getInstance().getPlayer(e.getPlayer());
-        String message = e.getMessage();
-        String standardFormat = pl.getDisplayName(true) + "§8: §f" + message;
-        String format;
-        if (pl.getTeam() != null) {
-            if (pl.getTeam().isShownInChat()) {
-                format = "§8[" + pl.getTeam().getColor() + pl.getTeam().getName() + "§8] " + pl.getDisplayName(true) + "§8: §f" + message;
+        if (pl != null) {
+            String message = e.getMessage();
+            String standardFormat = pl.getDisplayName(true) + "§8: §f" + message;
+            String format;
+            if (pl.getTeam() != null) {
+                if (pl.getTeam().isShownInChat()) {
+                    format = "§8[" + pl.getTeam().getColor() + pl.getTeam().getName() + "§8] " + pl.getDisplayName(true) + "§8: §f" + message;
+                } else {
+                    format = standardFormat;
+                }
             } else {
                 format = standardFormat;
             }
-        } else {
-            format = standardFormat;
-        }
 
-        e.setFormat(String.format(format));
+            e.setFormat(String.format(format));
 
-        if (message.startsWith("!") && pl.isStaff()) {
-            e.setCancelled(true);
+            if (message.startsWith("!") && pl.isStaff()) {
+                e.setCancelled(true);
 
-            if (!pl.hasSTFUEnabled()) {
-                RPStaff.sendStaffMessage(pl.getRankedName(true) + "§8: §b" + message.replace("!", ""), true);
+                if (!pl.hasSTFUEnabled()) {
+                    RPStaff.sendStaffMessage(pl.getRankedName(true) + "§8: §3" + message.replace("!", ""), true);
+                }
             }
-        }
 
-        if (!ServerToggles.isChatEnabled() && !pl.isVIP()) {
+            if (!ServerToggles.isChatEnabled() && !pl.isVIP()) {
+                e.setCancelled(true);
+                pl.message("§4§l>> §7Shh! You may not speak when chat is disabled!");
+            }
+
+            if (!e.isCancelled()) {
+                String msg = e.getMessage();
+                Player sender = e.getPlayer();
+                String query = "INSERT INTO chatlog (uuid,message) VALUES ('" + UUIDCache.getUUID(sender.getName()) + "','" + msg + "')";
+                ChatLogger.logChat(query);
+            }
+        } else {
             e.setCancelled(true);
-            pl.message("§4§l>> §7Shh! You may not speak when chat is disabled!");
-        }
-
-        if (!e.isCancelled()) {
-            String msg = e.getMessage();
-            Player sender = e.getPlayer();
-            String query = "INSERT INTO chatlog (uuid,message) VALUES ('" + UUIDCache.getUUID(sender.getName()) + "','" + msg + "')";
-            ChatLogger.logChat(query);
         }
     }
 }

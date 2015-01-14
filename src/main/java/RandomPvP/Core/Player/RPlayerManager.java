@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class RPlayerManager {
 
     private static RPlayerManager instance;
-    ConcurrentHashMap<Player, RPlayer> players = new ConcurrentHashMap<>();
+    ConcurrentHashMap<UUID, RPlayer> players = new ConcurrentHashMap<>();
 
     public static RPlayerManager getInstance() {
         if (instance == null) {
@@ -27,18 +27,30 @@ public class RPlayerManager {
         return instance;
     }
 
-    public void addPlayer(Player p, RPlayer pl) {
-        if (p != null) {
-            pl.setPlayer(p);
-            players.putIfAbsent(p, pl);
+    public void addPlayer(RPlayer pl) {
+        if (pl != null) {
+            players.putIfAbsent(pl.getUUID(), pl);
         }
     }
 
     public RPlayer getPlayer(Player p) {
         RPlayer player = null;
-        for (Player pl: players.keySet()) {
-            if (pl.getUniqueId() == p.getUniqueId()) {
-                player = players.get(pl);
+
+        for (UUID id: players.keySet()) {
+            if (id == p.getUniqueId()) {
+                player = players.get(id);
+            }
+        }
+
+        return player;
+    }
+
+    public RPlayer getPlayer(UUID id) {
+        RPlayer player = null;
+
+        for (UUID od: players.keySet()) {
+            if (od == id) {
+                player = players.get(id);
             }
         }
 
@@ -46,17 +58,17 @@ public class RPlayerManager {
     }
 
     public void removePlayer(Player p) {
-        final RPlayer value = players.get(p);
+        final RPlayer value = players.get(p.getUniqueId());
         if (value != null) {
-            players.remove(p);
+            players.remove(p.getUniqueId());
         }
     }
 
     public void removePlayer(RPlayer pl) {
-        if (getPlayer(pl.getPlayer()) != null) {
-            players.remove(pl);
+        RPlayer value = players.get(pl.getUUID());
+        if (value != null) {
+            players.remove(pl.getUUID());
         }
-
     }
 
     public Collection<RPlayer> getOnlinePlayers() {
@@ -64,7 +76,7 @@ public class RPlayerManager {
         if (players.values().size() != 0) {
             for (RPlayer pl : players.values()) {
                 if (pl != null) {
-                    if (pl.getPlayer().isOnline()) {
+                    if (pl.getPlayer() != null) {
                         online.add(pl);
                     } else {
                         removePlayer(pl);

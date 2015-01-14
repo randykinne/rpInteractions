@@ -37,6 +37,8 @@ public interface Game {
     public int getMaxPlayers();
     public int getMinPlayers();
 
+    public int getBufferOverflow();
+
 
 
 }

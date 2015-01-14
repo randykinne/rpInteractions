@@ -1,130 +1,133 @@
 package RandomPvP.Core.Player.Scoreboard;
-import java.util.AbstractMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
+import RandomPvP.Core.Game.GameManager;
+import RandomPvP.Core.Game.Team.*;
 import RandomPvP.Core.Player.RPlayer;
 import RandomPvP.Core.Player.RPlayerManager;
+import RandomPvP.Core.Player.Rank.Rank;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.Team;
+import org.bukkit.scoreboard.*;
 
-import com.google.common.base.Preconditions;
-import com.google.common.base.Splitter;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import org.bukkit.scoreboard.Team;
 
 public class RandomPvPScoreboard {
 
-    private Scoreboard scoreboard;
-    private Objective obj;
-
-    private String title;
-    private Map<String, Integer> scores;
-    private List<Team> teams;
-
-    public RandomPvPScoreboard(String title) {
-        this.scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-        this.title = title;
-        this.scores = Maps.newLinkedHashMap();
-        this.teams = Lists.newArrayList();
+    public static void updateScoreboard(boolean force) {
+        // Its in lobby so everyone needs their own scoreboards
+        for (RPlayer p : RPlayerManager.getInstance().getOnlinePlayers()) {
+            updateScorebard(p.getPlayer(), force);
+        }
     }
 
-    public void blankLine() {
-        add(" ");
+    public static void updateScorebard(Player p, boolean force) {
+        if (!p.isOnline() || p.isDead()) {
+            return;
+        }
+        if (RPlayerManager.getInstance().getPlayer(p) == null || RPlayerManager.getInstance().getPlayer(p).getPlayer() == null)
+            return;
+
+        Scoreboard sb = Bukkit.getScoreboardManager().getNewScoreboard();
+        if (p.getScoreboard() != null && !force) {
+            sb = p.getScoreboard();
+            if (sb.getObjective(DisplaySlot.SIDEBAR) != null) {
+                sb.getObjective(DisplaySlot.SIDEBAR).unregister();
+            }
+        }
+
+        Objective obj = sb.registerNewObjective("info", "dummy");
+        obj.setDisplaySlot(DisplaySlot.SIDEBAR);
+        obj.setDisplayName("");
+
+        sb = assignPlayerTeams(sb);
+        if (force || p.getScoreboard() == null) {
+            p.setScoreboard(sb);
+        }
     }
 
-    public void add(String text) {
-        add(text, null);
+    public static ChatColor getRandomColor(int line) {
+        if (line == 3)
+            return ChatColor.AQUA;
+        if (line == 6)
+            return ChatColor.LIGHT_PURPLE;
+        if (line == 9)
+            return ChatColor.GREEN;
+        if (line == 12)
+            return ChatColor.RED;
+
+        return ChatColor.BLUE;
     }
 
-    public void add(String text, Integer score) {
-        Preconditions.checkArgument(text.length() < 48, "text cannot be over 48 characters in length");
-        text = fixDuplicates(text);
-        scores.put(text, score);
-    }
-
-    private String fixDuplicates(String text) {
-        while (scores.containsKey(text))
-            text += "§r";
-        if (text.length() > 48)
-            text = text.substring(0, 47);
-        return text;
-    }
-
-    public void update(String text, Integer score) {
-        if (scores.containsKey(text)) {
-            scores.put(text, score);
-            for (Team t : teams) {
-                if (t.getName().equalsIgnoreCase(text)) {
-                    t.unregister();
+    public static Scoreboard assignPlayerTeams(Scoreboard scoreboard) {
+        if (scoreboard.getTeams().isEmpty()) {
+            for (Rank tag : Rank.values()) {
+                // In game so register these extra teams
+                for (RandomPvP.Core.Game.Team.Team t : TeamManager.getTeams().values()) {
+                    scoreboard.registerNewTeam(tag.name() + t.getColor().name()).setPrefix(
+                            (tag != Rank.PLAYER ? (tag.getName()) : "") + t.getColor());
                 }
+
+                scoreboard.registerNewTeam(tag.name()).setPrefix((tag != Rank.PLAYER ? (tag.getTag() + ChatColor.RESET + "") : ""));
+            }
+        }
+        // Setup scoreboard
+        for (RPlayer pl : RPlayerManager.getInstance().getOnlinePlayers()) {
+            Player p = pl.getPlayer();
+            if (p == null || !p.isOnline() || RPlayerManager.getInstance().getPlayer(p) == null || RPlayerManager.getInstance().getPlayer(p).getPlayer() == null)
+                continue;
+            Team team = null;
+            // Its starting so make it just the reg rank with no color.
+            if (pl.getTeam() != null || !GameManager.getState().getName().equalsIgnoreCase("Lobby")) {
+                team = scoreboard.getTeam(RPlayerManager.getInstance().getPlayer(p).getRank().name());
+            } else {
+                team = scoreboard.getTeam(RPlayerManager.getInstance().getPlayer(p).getRank().name() + RPlayerManager.getInstance().getPlayer(p).getTeam().getColor().name());
+            }
+            if (team == null) {
+                team = scoreboard.getTeam(Rank.PLAYER.getName());
             }
 
-            Map.Entry<Team, String> team = createTeam(text);
-            OfflinePlayer player = Bukkit.getOfflinePlayer(team.getValue());
-            if (team.getKey() != null)
-                team.getKey().addPlayer(player);
-            obj.getScore(text).setScore(score);
-
+            team.setCanSeeFriendlyInvisibles(false);
+            if (!team.hasEntry(p.getName())) {
+                team.addPlayer(p);
+            }
         }
-    }
-
-    private Map.Entry<Team, String> createTeam(String text) {
-        String result = "";
-        if (text.length() <= 16)
-            return new AbstractMap.SimpleEntry<>(null, text);
-        Team team = scoreboard.registerNewTeam("text-" + scoreboard.getTeams().size());
-        Iterator<String> iterator = Splitter.fixedLength(16).split(text).iterator();
-        team.setPrefix(iterator.next());
-        result = iterator.next();
-        if (text.length() > 32)
-            team.setSuffix(iterator.next());
-        teams.add(team);
-        return new AbstractMap.SimpleEntry<>(team, result);
-    }
-
-    public void build() {
-        Objective obj = scoreboard.registerNewObjective((title.length() > 16 ? title.substring(0, 15) : title), "dummy");
-        obj.setDisplayName(title);
-        obj.setDisplaySlot(DisplaySlot.SIDEBAR);
-
-        int index = scores.size();
-
-        for (Map.Entry<String, Integer> text : scores.entrySet()) {
-            Map.Entry<Team, String> team = createTeam(text.getKey());
-            Integer score = text.getValue() != null ? text.getValue() : index;
-            OfflinePlayer player = new ScoreboardPlayerUtil(team.getValue());
-            if (team.getKey() != null)
-                team.getKey().addPlayer(player);
-            obj.getScore(player).setScore(score);
-            index -= 1;
-        }
-    }
-
-    public void reset() {
-        title = null;
-        scores.clear();
-        for (Team t : teams)
-            t.unregister();
-        teams.clear();
-    }
-
-    public Scoreboard getScoreboard() {
         return scoreboard;
     }
 
-    public void send(Player... players) {
-        for (Player p : players) {
-            p.setScoreboard(scoreboard);
-            RPlayer pl = RPlayerManager.getInstance().getPlayer(p);
-            pl.setScoreboard(this);
-        }
+    private static String score(String name) {
+        return name;
     }
 
+    public static class ScoreboardLines {
+
+        private Objective obj;
+        private String[] lines;
+
+        public ScoreboardLines(Objective obj, int size) {
+            this.obj = obj;
+            this.lines = new String[size];
+        }
+
+        public void addLine(String line, int lineNumber) {
+            this.lines[lineNumber] = line;
+        }
+
+        public void build() {
+            int i = lines.length;
+            for (String line : this.lines) {
+                if (line == null) {
+                    Score s = obj.getScore(score((ChatColor.values()[i].toString())));
+                    s.setScore(i--);
+                    continue;
+                }
+                if (line.length() > 16) {
+                    line = line.substring(0, 16);
+                }
+                Score s = obj.getScore(score(line));
+                s.setScore(i--);
+            }
+        }
+
+    }
 }

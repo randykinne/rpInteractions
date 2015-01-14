@@ -6,10 +6,7 @@ import RandomPvP.Core.Chat.ChatHandler;
 import RandomPvP.Core.Commands.Admin.BroadcastAdminCmd;
 import RandomPvP.Core.Commands.Admin.OpCmd;
 import RandomPvP.Core.Commands.Admin.RankAdminCmd;
-import RandomPvP.Core.Commands.Game.CreditsCommand;
-import RandomPvP.Core.Commands.Game.RPICoreInfoCommand;
-import RandomPvP.Core.Commands.Game.TeamCommand;
-import RandomPvP.Core.Commands.Game.WhereAmICommand;
+import RandomPvP.Core.Commands.Game.*;
 import RandomPvP.Core.Commands.Mod.*;
 import RandomPvP.Core.Commands.Server.*;
 import RandomPvP.Core.Commands.VIP.GoToCmd;
@@ -17,9 +14,12 @@ import RandomPvP.Core.Data.MySQL;
 import RandomPvP.Core.Listener.DeathListener;
 import RandomPvP.Core.Listener.JoinListener;
 import RandomPvP.Core.Listener.QuitListener;
+import RandomPvP.Core.Player.RPlayer;
 import RandomPvP.Core.Player.RPlayerManager;
+import RandomPvP.Core.Player.Rank.Rank;
 import RandomPvP.Core.Player.UUIDCache;
 import RandomPvP.Core.Util.RPStaff;
+import RandomPvP.Core.Util.Tab.HidePlayerList;
 import com.sk89q.bukkit.util.CommandsManagerRegistration;
 import com.sk89q.minecraft.util.commands.*;
 import org.bukkit.Bukkit;
@@ -27,6 +27,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -54,6 +55,8 @@ public class RPICore extends JavaPlugin {
     private CommandsManager<CommandSender> commands;
 
     private int nextId = 0;
+
+    public static HidePlayerList list;
 
     public HashMap<UUID, AuraCheck> running = new HashMap<>();
     public HashMap<UUID, Long> lastHit = new HashMap<>();
@@ -83,6 +86,7 @@ public class RPICore extends JavaPlugin {
 
     void initialize() {
 
+        list = new HidePlayerList(this);
         PluginManager pm = Bukkit.getPluginManager();
         pm.registerEvents(new JoinListener(), this);
         pm.registerEvents(new ChatHandler(), this);
@@ -187,22 +191,23 @@ public class RPICore extends JavaPlugin {
         this.commands = new CommandsManager<CommandSender>() {
             @Override
             public boolean hasPermission(CommandSender sender, String perm) {
-                return sender instanceof ConsoleCommandSender || sender.hasPermission(perm);
+                return sender instanceof ConsoleCommandSender || RPlayerManager.getInstance().getPlayer((Player) sender).getRank().has(Rank.valueOf(perm.toUpperCase()));
             }
         };
 
         CommandsManagerRegistration cmdRegister = new CommandsManagerRegistration(this, this.commands);
         //Register your commands here
-        cmdRegister.register(AntiAura.class); //ANTICHEAT
+        cmdRegister.register(AntiAura.class); // ANTICHEAT
         cmdRegister.register(BroadcastAdminCmd.class); // ADMIN
-        cmdRegister.register(CreditsCommand.class); //GAME
+        cmdRegister.register(CreditsCommand.class); // GAME
         cmdRegister.register(GamemodeCmd.class); // MOD-BUILDER
-        cmdRegister.register(GoToCmd.class); //VIP
+        cmdRegister.register(GoToCmd.class); // VIP
         cmdRegister.register(HubCmd.class); // SERVER
         cmdRegister.register(MessageCmd.class); // SERVER
-        cmdRegister.register(ModPanelCmd.class); //MOD
-        cmdRegister.register(LookupCmd.class); //MOD
-        cmdRegister.register(OpCmd.class); //ADMIN
+        cmdRegister.register(ModPanelCmd.class); // MOD
+        cmdRegister.register(LookupCmd.class); // MOD
+        cmdRegister.register(OpCmd.class); // ADMIN
+        cmdRegister.register(PingCmd.class); // GAME
         cmdRegister.register(RankAdminCmd.class); // ADMIN
         cmdRegister.register(RDPVPCmd.class); // SERVER
         cmdRegister.register(ReportCmd.class); // SERVER
@@ -255,8 +260,11 @@ public class RPICore extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        for (int i = 0; i<RPlayerManager.getInstance().getOnlinePlayers().size(); i++) {
-            RPlayerManager.getInstance().getOnlinePlayers().remove(i);
+
+        list.cleanupAll();
+
+        for (RPlayer pl : RPlayerManager.getInstance().getOnlinePlayers()) {
+            RPlayerManager.getInstance().removePlayer(pl);
         }
 
         instance = null;
