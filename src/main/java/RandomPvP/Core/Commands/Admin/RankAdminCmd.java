@@ -1,11 +1,8 @@
 package RandomPvP.Core.Commands.Admin;
 
-import RandomPvP.Core.Player.OfflineRPlayer;
 import RandomPvP.Core.Player.RPlayer;
 import RandomPvP.Core.Player.RPlayerManager;
 import RandomPvP.Core.Player.Rank.Rank;
-import RandomPvP.Core.Player.UUIDCache;
-import RandomPvP.Core.RPICore;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandException;
@@ -13,7 +10,6 @@ import com.sk89q.minecraft.util.commands.CommandUsageException;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Arrays;
 
@@ -52,23 +48,10 @@ public class RankAdminCmd {
                         throw new CommandUsageException("Incorrect usage", "Arg 1 can only have 2 values [set] or [unset]");
                     }
                 } else {
-
-                    if (args.getString(1).equalsIgnoreCase("set")) {
-                        if (Rank.valueOf(args.getString(2).toUpperCase()) != null) {
-                            final Rank rank = Rank.valueOf(args.getString(2));
-                            pl.message("§6§l>> §eSet " + args.getString(0) + " §e to " + rank.getTag());
-                            new BukkitRunnable() {
-                                public void run() {
-                                    OfflineRPlayer target =  new OfflineRPlayer(args.getString(0), UUIDCache.getUUID(args.getString(0)));
-                                    target.setRank(rank);
-                                }
-                            }.runTaskAsynchronously(RPICore.getInstance());
-
-                        }
-                    }
+                    throw new CommandException("Player not found! Are they online?");
                 }
             } else {
-                throw new CommandException("§7You need to be §oAdmin §7to use this command.");
+                throw new CommandException("You need to be §oAdmin §7to use this command.");
             }
         }
     }

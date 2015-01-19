@@ -1,7 +1,5 @@
 package RandomPvP.Core.Util;
 
-import RandomPvP.Core.Player.RPlayer;
-import RandomPvP.Core.Player.RPlayerManager;
 import RandomPvP.Core.Player.Rank.Rank;
 
 /**
@@ -16,17 +14,10 @@ import RandomPvP.Core.Player.Rank.Rank;
  */
 public class ServerToggles {
 
-    static boolean checkForBan = true;
     static boolean chatEnabled = true;
     static Rank rankWhitelist = Rank.PLAYER;
     static boolean editMode = false;
 
-    public static void setCheckForBan(boolean check) {
-        checkForBan = check;
-    }
-    public static boolean checkForBan() {
-        return checkForBan;
-    }
     public static void setChatEnabled(boolean chat) {
         chatEnabled = chat;
     }
@@ -44,11 +35,8 @@ public class ServerToggles {
     }
 
     public static void setRankRequired(Rank rank) {
-        rankWhitelist = rank;
-        for (RPlayer pl : RPlayerManager.getInstance().getOnlinePlayers()) {
-            if (!pl.getRank().has(rank)) {
-                pl.getPlayer().kickPlayer("You must have " + rank.getName() + " §7to join this server!");
-            }
+        if (rankWhitelist != rank) {
+            rankWhitelist = rank;
         }
     }
     public static boolean hasRankWhitelist() {

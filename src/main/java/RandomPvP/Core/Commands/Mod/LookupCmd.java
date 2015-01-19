@@ -1,15 +1,12 @@
 package RandomPvP.Core.Commands.Mod;
 
-import RandomPvP.Core.Player.OfflineRPlayer;
 import RandomPvP.Core.Player.RPlayer;
 import RandomPvP.Core.Player.RPlayerManager;
 import RandomPvP.Core.Player.Rank.Rank;
-import RandomPvP.Core.Player.UUIDCache;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandException;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -66,6 +63,9 @@ public class LookupCmd {
                 online = true;
                 isnull = false;
             } else {
+                isnull = true;
+                throw new CommandException("Player not found! Are they online?");
+                /*
                 OfflineRPlayer playa = new OfflineRPlayer(args.getString(0), UUIDCache.getUUID(args.getString(0)));
                 isnull = playa.isNull();
                 displayname = playa.getRankedName(false);
@@ -75,6 +75,7 @@ public class LookupCmd {
                 rank = playa.getRank();
                 IP = playa.getIP();
                 rpid = playa.getRPID();
+                */
             }
 
             if (!isnull) {
@@ -85,7 +86,7 @@ public class LookupCmd {
                 sender.sendMessage("§f - §7Credits: §8" + credits);
                 sender.sendMessage("§f - §7IP: §8" + IP);
                 if (online) {
-                    sender.sendMessage("§f - §7Health: §8" + player.getPlayer().getHealthScale());
+                    sender.sendMessage("§f - §7Health: §8" + player.getPlayer().getHealth());
                     //sender.sendMessage("§f - §7Location: §8" + String.valueOf(NumberUtil.trimNumber(player.getPlayer().getLocation().getX())) + ", " + String.valueOf(NumberUtil.trimNumber(player.getPlayer().getLocation().getY())) + ", " + String.valueOf(NumberUtil.trimNumber(player.getPlayer().getLocation().getZ())));
                     sender.sendMessage("§f - §7Gamemode: §8" + player.getPlayer().getGameMode().toString());
                 }

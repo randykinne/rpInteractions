@@ -3,6 +3,7 @@ package RandomPvP.Core.Commands.Mod;
 import RandomPvP.Core.Player.RPlayer;
 import RandomPvP.Core.Player.RPlayerManager;
 import RandomPvP.Core.Player.Rank.Rank;
+import RandomPvP.Core.Util.ItemBuilder;
 import RandomPvP.Core.Util.ServerToggles;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
@@ -35,7 +36,7 @@ public class ModPanelCmd implements Listener {
     @EventHandler
     public void onClick(InventoryClickEvent e) {
         RPlayer pl = RPlayerManager.getInstance().getPlayer((Player) e.getWhoClicked());
-        if (e.getClickedInventory().getTitle().equalsIgnoreCase("§5Moderator Panel")) {
+        if (e.getInventory().getTitle().equalsIgnoreCase("§5Moderator Panel")) {
             if (e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§6§lRank Whitelist") || e.getCurrentItem().getType() == Material.NAME_TAG) {
                 openRankWhitelistInv(pl);
             } else if (e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§6§lToggle Chat")) {
@@ -48,7 +49,7 @@ public class ModPanelCmd implements Listener {
             }
 
             e.setCancelled(true);
-        } else if (e.getClickedInventory().getTitle().equalsIgnoreCase("§5Mod Panel §8> §6Rank")) {
+        } else if (e.getInventory().getTitle().equalsIgnoreCase("§5Mod Panel §8> §6Rank")) {
             if (e.getCurrentItem().getType() == Material.ARROW) {
                 openModPanel(pl);
             } else if (e.getCurrentItem().getType() == Material.WOOL) {
@@ -93,8 +94,8 @@ public class ModPanelCmd implements Listener {
         {
             ItemStack item = new ItemStack(Material.BLAZE_POWDER);
             ItemMeta meta = item.getItemMeta();
-            meta.setDisplayName("§6Toggle Chat");
-            meta.setLore(Arrays.asList("§7Toggles whether non-staff can chat"));
+            meta.setDisplayName("§6§lToggle Chat");
+            meta.setLore(Arrays.asList("§7§lToggles whether non-staff can chat"));
             item.setItemMeta(meta);
             inv.setItem(34, item);
         }
@@ -114,7 +115,7 @@ public class ModPanelCmd implements Listener {
     private static void openRankWhitelistInv(RPlayer pl) {
         Player player = pl.getPlayer();
 
-        Inventory inv = Bukkit.createInventory(null, 45, "§5Mod Panel §8> §6Rank");
+        Inventory inv = Bukkit.createInventory(null, 45, "§5Mod Panel §8> §6Rank Whitelist");
 
         for (int i = 0; i<inv.getSize(); i++) {
             {
@@ -128,9 +129,9 @@ public class ModPanelCmd implements Listener {
         {
             ItemStack item = new ItemStack(Material.ARROW);
             ItemMeta meta = item.getItemMeta();
-            meta.setDisplayName("§8< Go Back <");
+            meta.setDisplayName("§8§l< §eGo Back §8§l<");
             item.setItemMeta(meta);
-            inv.setItem(0, item);
+            inv.setItem(45, item);
         }
         {
             ItemStack item = new ItemStack(Material.ANVIL);
@@ -138,63 +139,64 @@ public class ModPanelCmd implements Listener {
             meta.setDisplayName("§6§lCurrent Rank Whitelist");
             meta.setLore(Arrays.asList("§l" + ServerToggles.getRankRequired().getName()));
             item.setItemMeta(meta);
-            inv.setItem(3, item);
+            inv.setItem(4, item);
+        }
+        {
+            inv.setItem(20, ItemBuilder.build(Material.ENCHANTED_BOOK, "§7§lRegular Ranks"));
         }
         {
             ItemStack item = new ItemStack(Material.WOOL, 1, (short) 8);
             ItemMeta meta = item.getItemMeta();
-            meta.setDisplayName("§7Set required to §l" + Rank.PLAYER.getName());
+            meta.setDisplayName(Rank.PLAYER.getName());
             meta.setLore(Arrays.asList("§0PLAYER"));
-            item.setItemMeta(meta);
-            inv.setItem(19, item);
-        }
-        {
-            ItemStack item = new ItemStack(Material.WOOL, 1, (short) 3);
-            ItemMeta meta = item.getItemMeta();
-            meta.setDisplayName("§7Set required to §l" + Rank.PREMIUM.getName());
-            meta.setLore(Arrays.asList("§0PREMIUM"));
-            item.setItemMeta(meta);
-            inv.setItem(20, item);
-        }
-        {
-            ItemStack item = new ItemStack(Material.WOOL, 1, (short) 4);
-            ItemMeta meta = item.getItemMeta();
-            meta.setDisplayName("§7Set required to §l" + Rank.VIP.getName());
-            meta.setLore(Arrays.asList("§0VIP"));
             item.setItemMeta(meta);
             inv.setItem(21, item);
         }
         {
+            inv.setItem(29, ItemBuilder.build(Material.ENCHANTED_BOOK, "§b§lPremium Ranks"));
+        }
+        {
+            ItemStack item = new ItemStack(Material.WOOL, 1, (short) 3);
+            ItemMeta meta = item.getItemMeta();
+            meta.setDisplayName(Rank.PREMIUM.getTag());
+            meta.setLore(Arrays.asList("§0PREMIUM"));
+            item.setItemMeta(meta);
+            inv.setItem(30, item);
+        }
+        {
+            ItemStack item = new ItemStack(Material.WOOL, 1, (short) 4);
+            ItemMeta meta = item.getItemMeta();
+            meta.setDisplayName(Rank.VIP.getTag());
+            meta.setLore(Arrays.asList("§0VIP"));
+            item.setItemMeta(meta);
+            inv.setItem(31, item);
+        }
+        {
+            inv.setItem(38, ItemBuilder.build(Material.ENCHANTED_BOOK, "§6§lStaff Ranks"));
+        }
+        {
             ItemStack item = new ItemStack(Material.WOOL, 1, (short) 13);
             ItemMeta meta = item.getItemMeta();
-            meta.setDisplayName("§7Set required to §l" + Rank.BUILDER.getName());
+            meta.setDisplayName(Rank.BUILDER.getTag());
             meta.setLore(Arrays.asList("§0BUILDER"));
             item.setItemMeta(meta);
-            inv.setItem(22, item);
+            inv.setItem(39, item);
         }
         {
             ItemStack item = new ItemStack(Material.WOOL, 1, (short) 10);
             ItemMeta meta = item.getItemMeta();
-            meta.setDisplayName("§7Set required to §l" + Rank.MOD.getName());
+            meta.setDisplayName(Rank.MOD.getTag());
             meta.setLore(Arrays.asList("§0MOD"));
             item.setItemMeta(meta);
-            inv.setItem(23, item);
-        }
-        {
-            ItemStack item = new ItemStack(Material.WOOL, 1, (short) 6);
-            ItemMeta meta = item.getItemMeta();
-            meta.setDisplayName("§7Set required to §l" + Rank.ADMIN.getName());
-            meta.setLore(Arrays.asList("§0ADMIN"));
-            item.setItemMeta(meta);
-            inv.setItem(24, item);
+            inv.setItem(40, item);
         }
         {
             ItemStack item = new ItemStack(Material.WOOL, 1, (short) 14);
             ItemMeta meta = item.getItemMeta();
-            meta.setDisplayName("§7Set required to §l" + Rank.OWNER.getName());
-            meta.setLore(Arrays.asList("§0OWNER"));
+            meta.setDisplayName(Rank.ADMIN.getTag());
+            meta.setLore(Arrays.asList("§0ADMIN"));
             item.setItemMeta(meta);
-            inv.setItem(25, item);
+            inv.setItem(41, item);
         }
 
         player.openInventory(inv);

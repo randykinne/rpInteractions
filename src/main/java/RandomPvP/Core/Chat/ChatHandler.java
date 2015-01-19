@@ -2,10 +2,8 @@ package RandomPvP.Core.Chat;
 
 import RandomPvP.Core.Player.RPlayer;
 import RandomPvP.Core.Player.RPlayerManager;
-import RandomPvP.Core.Player.UUIDCache;
 import RandomPvP.Core.Util.RPStaff;
 import RandomPvP.Core.Util.ServerToggles;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -28,7 +26,7 @@ public class ChatHandler implements Listener {
 
         RPlayer pl = RPlayerManager.getInstance().getPlayer(e.getPlayer());
         if (pl != null) {
-            String message = e.getMessage();
+            String message = e.getMessage().replace("%", "percent");
             String standardFormat = pl.getDisplayName(true) + "§8: §f" + message;
             String format;
             if (pl.getTeam() != null) {
@@ -57,10 +55,12 @@ public class ChatHandler implements Listener {
             }
 
             if (!e.isCancelled()) {
+                /*
                 String msg = e.getMessage();
                 Player sender = e.getPlayer();
                 String query = "INSERT INTO chatlog (uuid,message) VALUES ('" + UUIDCache.getUUID(sender.getName()) + "','" + msg + "')";
                 ChatLogger.logChat(query);
+                */
             }
         } else {
             e.setCancelled(true);

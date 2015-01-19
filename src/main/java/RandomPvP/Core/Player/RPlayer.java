@@ -30,6 +30,8 @@ import java.util.UUID;
  */
 public class RPlayer {
 
+    //TODO Swag points - Thanks thatdarkknight26!
+
     private int nextId = 1;
     boolean loaded = false;
     public void setLoaded(boolean loaded) {
@@ -45,11 +47,13 @@ public class RPlayer {
     String ip = "0.0.0.0";
     Rank rank = Rank.PLAYER;
     int credits = 0;
+    int killstreak = 0;
     Team team;
     boolean canInteract = false;
     RandomPvPScoreboard board;
     boolean hasSTFUEnabled = false;
     boolean hasWarningPending = false;
+    boolean ranked = false;
     int warnings = 0;
 
 
@@ -273,12 +277,21 @@ public class RPlayer {
         return credits;
     }
 
+    public void setKillstreak(int streak) { this.killstreak = streak; }
+    public int getKillStreak() { return killstreak; }
+    public void addKill() {
+        setKillstreak(getKillStreak() + 1);
+    }
+
     public Team getTeam() {
         return team;
     }
     public void setTeam(Team team) {
         this.team = team;
     }
+
+    public void setRanked(boolean bln) { ranked = bln; }
+    public boolean isRanked() { return ranked; }
 
     public boolean canInteract() {
         if (getTeam() != null) {
@@ -310,6 +323,9 @@ public class RPlayer {
         if (server.equalsIgnoreCase("Hub")) {
             server = "H1";
         }
+
+        server = server.toUpperCase();
+        message("§9§l>> §aConnecting you to §b" + server + "§a...");
 
         try {
             out.writeUTF("Connect");

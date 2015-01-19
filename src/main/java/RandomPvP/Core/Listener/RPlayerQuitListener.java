@@ -23,7 +23,7 @@ import org.bukkit.scheduler.BukkitRunnable;
  * Thanks.
  * ***************************************************************************************
  */
-public class QuitListener implements Listener {
+public class RPlayerQuitListener implements Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {

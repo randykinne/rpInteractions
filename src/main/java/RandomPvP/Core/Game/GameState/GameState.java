@@ -1,8 +1,5 @@
 package RandomPvP.Core.Game.GameState;
 
-import RandomPvP.Core.Game.Game;
-import RandomPvP.Core.Game.GameManager;
-
 /**
  * ***************************************************************************************
  * Copyright (c) Randomizer27 2014. All rights reserved.
@@ -13,35 +10,34 @@ import RandomPvP.Core.Game.GameManager;
  * Thanks.
  * ***************************************************************************************
  */
-public class GameState {
+public enum GameState {
 
-    String state;
-    int stateId;
-    Game gameFor;
-    boolean joinable;
+    NONE("None", false),
+    LOBBY("Lobby", true),
+    STARTING("Starting", false),
+    LOADING("Loading", false),
+    WARMUP("Warmup", false),
+    BATTLE("Battle", false),
+    GRACE("Grace", false),
+    BUILD("Build", false),
+    RUNNING("Running", true),
+    INGAME("InGame", true),
+    DEATHMATCH("DeathMatch", false),
+    ENDED("Ended", false);
 
-    public GameState(String state, int id, Game type) {
-        this.state = state;
-        this.stateId = id;
-        this.gameFor = type;
-    }
+    String name;
+    boolean join;
 
-    public boolean isJoinable() {
-        return joinable;
-    }
-    public void setJoinable(boolean joinable) {
-        this.joinable = joinable;
-    }
-
-    public int getID() {
-        return stateId;
+    GameState(String name, boolean isJoinable) {
+        this.name = name;
+        this.join = isJoinable;
     }
 
     public String getName() {
-        return state;
+        return name;
     }
 
-    public void registerGameState(GameState state) {
-            GameManager.gameStates.add(state);
+    public boolean isJoinable() {
+        return join;
     }
 }

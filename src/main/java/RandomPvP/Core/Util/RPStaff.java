@@ -99,10 +99,10 @@ public class RPStaff implements PluginMessageListener {
     }
 
     public static void sendAdminBroadcast(String message, boolean isGlobal) {
-        Bukkit.broadcastMessage("§7╔══════════════════════════════════");
-        Bukkit.broadcastMessage("§7║ §4§l[ §c§lADMIN BROADCAST §4§l]");
-        Bukkit.broadcastMessage("§7║ §7" + message);
-        Bukkit.broadcastMessage("§7╚══════════════════════════════════");
+        Bukkit.broadcastMessage("§4╔══════════════════════════════════");
+        Bukkit.broadcastMessage("§4║ §4§l*-*-* ADMIN BROADCAST *-*-*");
+        Bukkit.broadcastMessage("§4║ §7" + message);
+        Bukkit.broadcastMessage("§4╚══════════════════════════════════");
 
         if (isGlobal) {
             forwardString("ABroadcast", "ALL", message);

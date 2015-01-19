@@ -18,7 +18,7 @@ public class BlockedCmds implements Listener {
 
     @EventHandler
     public void onCommand(PlayerCommandPreprocessEvent e) {
-        if (e.getMessage().startsWith("/me") || e.getMessage().contains("minecraft")) {
+        if (e.getMessage().startsWith("/me") || e.getMessage().startsWith("/minecraft:") || e.getMessage().startsWith("/bukkit:")) {
             e.setCancelled(true);
             e.getPlayer().sendMessage("§4§l>> §7I don't think so!");
         }

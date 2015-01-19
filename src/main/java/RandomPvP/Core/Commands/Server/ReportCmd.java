@@ -35,9 +35,11 @@ public class ReportCmd {
                 pl.message("§2§l>> §6Your report has been sent to all online staff members. Thank you.");
                 pl.getPlayer().playSound(pl.getPlayer().getLocation(), Sound.ANVIL_BREAK, 1F, 1F);
                 RPStaff.sendStaffMessage("§2§l[§aR§2§l] §7[§6§l" + Bukkit.getServerName() + "§7] " + pl.getRankedName(false) + " §7> " + target.getRankedName(false) + "§8: §f" + args.getJoinedStrings(1) , true);
+                /*
                 try {
                     RPStaff.log("Reports.txt", pl.getName(), sender,  " Reports " + target.getName() +": "+  args.getJoinedStrings(1));
                 } catch (IOException ignored) {}
+                */
             } else {
                 throw new CommandException("Player must be online!");
             }

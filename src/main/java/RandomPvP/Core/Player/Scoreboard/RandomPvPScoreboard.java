@@ -71,6 +71,7 @@ public class RandomPvPScoreboard {
                 scoreboard.registerNewTeam(tag.name()).setPrefix((tag != Rank.PLAYER ? (tag.getTag() + ChatColor.RESET + "") : ""));
             }
         }
+
         // Setup scoreboard
         for (RPlayer pl : RPlayerManager.getInstance().getOnlinePlayers()) {
             Player p = pl.getPlayer();

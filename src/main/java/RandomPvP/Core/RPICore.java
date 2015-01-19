@@ -11,13 +11,12 @@ import RandomPvP.Core.Commands.Mod.*;
 import RandomPvP.Core.Commands.Server.*;
 import RandomPvP.Core.Commands.VIP.GoToCmd;
 import RandomPvP.Core.Data.MySQL;
-import RandomPvP.Core.Listener.DeathListener;
-import RandomPvP.Core.Listener.JoinListener;
-import RandomPvP.Core.Listener.QuitListener;
+import RandomPvP.Core.Listener.RPlayerDeathListener;
+import RandomPvP.Core.Listener.RPlayerJoinListener;
+import RandomPvP.Core.Listener.RPlayerQuitListener;
 import RandomPvP.Core.Player.RPlayer;
 import RandomPvP.Core.Player.RPlayerManager;
 import RandomPvP.Core.Player.Rank.Rank;
-import RandomPvP.Core.Player.UUIDCache;
 import RandomPvP.Core.Util.RPStaff;
 import RandomPvP.Core.Util.Tab.HidePlayerList;
 import com.sk89q.bukkit.util.CommandsManagerRegistration;
@@ -88,11 +87,11 @@ public class RPICore extends JavaPlugin {
 
         list = new HidePlayerList(this);
         PluginManager pm = Bukkit.getPluginManager();
-        pm.registerEvents(new JoinListener(), this);
+        pm.registerEvents(new RPlayerJoinListener(), this);
         pm.registerEvents(new ChatHandler(), this);
-        pm.registerEvents(new DeathListener(), this);
+        pm.registerEvents(new RPlayerDeathListener(), this);
         pm.registerEvents(new ModPanelCmd(), this);
-        pm.registerEvents(new QuitListener(), this);
+        pm.registerEvents(new RPlayerQuitListener(), this);
         pm.registerEvents(new AntiAura(), this);
         pm.registerEvents(new BlockedCmds(), this);
 
@@ -135,7 +134,6 @@ public class RPICore extends JavaPlugin {
             e.printStackTrace();
         }
 
-        UUIDCache.startFetch(instance);
         /*String createLog = "CREATE TABLE IF NOT EXISTS `chatlog` (`id` INT(10) NOT NULL AUTO_INCREMENT, `uuid` VARCHAR(40) NOT NULL, `message` TEXT NOT NULL, `time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, `caseid` INT(10) NOT NULL DEFAULT '0', PRIMARY KEY (`id`)) ENGINE = MyISAM;";
         try {
             PreparedStatement stmt2 = MySQL.getConnection().prepareStatement(createLog);

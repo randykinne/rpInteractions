@@ -2,6 +2,7 @@ package RandomPvP.Core.Listener;
 
 
 import RandomPvP.Core.Game.GameManager;
+import RandomPvP.Core.Game.Team.Team;
 import RandomPvP.Core.Player.*;
 import RandomPvP.Core.Player.Rank.Rank;
 import RandomPvP.Core.Util.*;
@@ -22,7 +23,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
  * Thanks.
  * ***************************************************************************************
  */
-public class JoinListener implements Listener {
+public class RPlayerJoinListener implements Listener {
 
     @EventHandler
     public void onLogin(final AsyncPlayerPreLoginEvent e) {
@@ -87,6 +88,7 @@ public class JoinListener implements Listener {
         //Prevents "player moved too quickly!" related spam in console, also better for the player
         ((CraftPlayer) e.getPlayer()).getHandle().playerConnection.checkMovement = false;
 
+        //Player made it through the checks in the method above, so they're connecting
         RPlayer pl = new RPlayer(e.getPlayer().getName(), e.getPlayer().getUniqueId());
 
         //Avoiding dem NPEs
@@ -97,6 +99,8 @@ public class JoinListener implements Listener {
             RPlayerManager.getInstance().addPlayer(pl);
         }
 
+        pl.message("\n");
+
         //Handle join messages
         if (pl.isVIP()) {
             e.setJoinMessage(null);
@@ -104,6 +108,19 @@ public class JoinListener implements Listener {
         } else {
             e.setJoinMessage("§2§l>> " + pl.getRankedName(false));
         }
+
+        //FIXME not working!!!
+        /*
+        //Checking if the game is team based
+        if (GameManager.getGame().isTeamBased()) {
+            //Iterating through online players and
+                for (RPlayer po : RPlayerManager.getInstance().getOnlinePlayers()) {
+                    if (po.getTeam().getType() == Team.Type.Observing) {
+                        pl.getPlayer().hidePlayer(po.getPlayer());
+                }
+            }
+        }
+        */
     }
 
 }

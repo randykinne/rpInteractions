@@ -1,5 +1,6 @@
 package RandomPvP.Core.Commands.Mod;
 
+import RandomPvP.Core.Event.Server.RankWhitelistChangeEvent;
 import RandomPvP.Core.Player.RPlayer;
 import RandomPvP.Core.Player.RPlayerManager;
 import RandomPvP.Core.Player.Rank.Rank;
@@ -38,7 +39,8 @@ public class SetWhitelistCmd {
                     Rank rank = Rank.valueOf(args.getString(0).toUpperCase());
 
                     ServerToggles.setRankRequired(rank);
-                    Bukkit.broadcastMessage("§5§l>> " + pl.getRankedName(false) + " §eset the minimum rank to " + rank.getTag().replace(" ", "") + "§e.");
+                    Bukkit.getPluginManager().callEvent(new RankWhitelistChangeEvent(pl, rank));
+
                 } else {
                     throw new CommandException("Rank not found! Available: " + String.valueOf(Arrays.asList(Rank.values())).replace("[", "").replace("]", ""));
                 }

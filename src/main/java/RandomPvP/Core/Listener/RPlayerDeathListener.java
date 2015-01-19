@@ -19,7 +19,7 @@ import org.bukkit.scheduler.BukkitRunnable;
  * Thanks.
  * ***************************************************************************************
  */
-public class DeathListener implements Listener {
+public class RPlayerDeathListener implements Listener {
 
     @EventHandler
     public void onDeath(final PlayerDeathEvent e) {
