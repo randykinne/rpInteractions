@@ -124,7 +124,7 @@ public class RPlayerJoinListener implements Listener {
         //Avoiding dem NPEs
         if (e.getPlayer() != null) {
             pl.setPlayer(e.getPlayer());
-            PlayerManager.getInstance().addPlayer(pl, e.getPlayer().getUniqueId());
+            PlayerManager.getInstance().addPlayer(pl);
         }
 
         pl.message("\n");
