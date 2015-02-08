@@ -1,11 +1,12 @@
 package RandomPvP.Core.Commands.Game;
 
+import RandomPvP.Core.Commands.Command.RCommand;
+import RandomPvP.Core.Player.RPlayer;
 import RandomPvP.Core.RPICore;
-import com.sk89q.minecraft.util.commands.Command;
-import com.sk89q.minecraft.util.commands.CommandContext;
-import com.sk89q.minecraft.util.commands.CommandException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.PluginDescriptionFile;
+
+import java.util.Arrays;
 
 /**
  * ***************************************************************************************
@@ -17,16 +18,23 @@ import org.bukkit.plugin.PluginDescriptionFile;
  * Thanks.
  * ***************************************************************************************
  */
-public class RPICoreInfoCommand {
-    @Command(aliases = { "game", "ver", "version", "rpi", "rpicore", "core", "?", "pl" },
-    desc = "Returns info about RPI", usage = "- ", max = 1, min = 0)
-    public static void command(final CommandContext args, CommandSender sender) throws CommandException {
-        PluginDescriptionFile pdf = new RPICoreInfoCommand().getDescription();
-        sender.sendMessage("§8§l>> §cRunning §4§l" + pdf.getName() + " §cbuild " + pdf.getVersion());
-        sender.sendMessage("§8§l>> §cDeveloped by §4Randomizer27§c.");
+public class RPICoreInfoCommand extends RCommand {
+
+    public RPICoreInfoCommand() {
+        super("game");
+        setDescription("Core RandomPvP Information");
+        setAliases(Arrays.asList("ver", "version", "rpi", "rpicore", "core", "?", "pl"));
     }
 
-    public PluginDescriptionFile getDescription() {
+    @Override
+    public void onCommand(RPlayer pl, String string, String[] args) {
+        CommandSender con = (CommandSender) pl.getPlayer();
+        PluginDescriptionFile pdf = new RPICoreInfoCommand().getDesc();
+        con.sendMessage("§8§l>> §cRunning §4§l" + pdf.getName() + " §cbuild " + pdf.getVersion());
+        con.sendMessage("§8§l>> §cDeveloped by §4Randomizer27§c.");
+    }
+
+    public PluginDescriptionFile getDesc() {
         return RPICore.getInstance().getDescription();
     }
 }

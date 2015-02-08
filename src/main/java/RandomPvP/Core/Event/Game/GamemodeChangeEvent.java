@@ -17,7 +17,7 @@ import org.bukkit.event.HandlerList;
 public class GamemodeChangeEvent extends Event {
 
     private Gamemode mode;
-    private HandlerList handlers = new HandlerList();
+    private static HandlerList handlers = new HandlerList();
 
     public GamemodeChangeEvent(Gamemode mode) {
         this.mode = mode;
@@ -29,4 +29,6 @@ public class GamemodeChangeEvent extends Event {
     public HandlerList getHandlers() {
         return handlers;
     }
+
+    public static HandlerList getHandlerList() { return handlers; }
 }

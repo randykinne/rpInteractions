@@ -1,5 +1,6 @@
 package RandomPvP.Core.Game;
 
+import RandomPvP.Core.Game.Mode.Gamemode;
 import RandomPvP.Core.Game.Team.Team;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
@@ -23,6 +24,8 @@ public interface Game {
 
     public String getName();
 
+    public int getID();
+
     public ArrayList<String> getDescription();
 
     public ChatColor getPrimaryColor();
@@ -33,6 +36,8 @@ public interface Game {
     public boolean isTeamBased();
 
     public void setLobby(World world);
+
+    public ArrayList<Gamemode> getModes();
 
     public int getMaxPlayers();
     public int getMinPlayers();

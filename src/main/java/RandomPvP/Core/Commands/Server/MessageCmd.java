@@ -1,13 +1,15 @@
 package RandomPvP.Core.Commands.Server;
 
+import RandomPvP.Core.Commands.Command.RCommand;
+import RandomPvP.Core.Player.MsgType;
+import RandomPvP.Core.Player.PlayerManager;
 import RandomPvP.Core.Player.RPlayer;
-import RandomPvP.Core.Player.RPlayerManager;
-import com.sk89q.minecraft.util.commands.Command;
-import com.sk89q.minecraft.util.commands.CommandContext;
-import com.sk89q.minecraft.util.commands.CommandException;
+import RandomPvP.Core.Util.Module.IModule;
+import net.minecraft.util.org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.Arrays;
 
 /**
  * ***************************************************************************************
@@ -19,22 +21,37 @@ import org.bukkit.entity.Player;
  * Thanks.
  * ***************************************************************************************
  */
-public class MessageCmd {
+public class MessageCmd extends RCommand {
 
-    @Command(aliases = { "msg", "m", "message", "w", "whisper", "tell" }, usage = "[player] [message]", desc = "Sends a player a message", min = 2)
-    public static void message(final CommandContext args, CommandSender sender) throws CommandException {
-        if (sender instanceof Player) {
-            RPlayer pl = RPlayerManager.getInstance().getPlayer((Player) sender);
-            Player player= Bukkit.getPlayer(args.getString(0));
-            if (player != null) {
-                RPlayer target = RPlayerManager.getInstance().getPlayer(player);
-                pl.message("§dYou --> " + target.getDisplayName(false) + "§8: §2" + args.getJoinedStrings(1));
-                target.message(pl.getDisplayName(false) +  " §a--> You" + "§8: §2" + args.getJoinedStrings(1));
+    public MessageCmd() {
+        super("message");
+        setPlayerOnly(true);
+        setAliases(Arrays.asList("msg", "m", "w", "whisper", "tell"));
+        setDescription("Sends a message to a player");
+        setArgsUsage("<Player> <Message>");
+    }
+
+    @Override
+    public void onCommand(RPlayer pl, String string, String[] args) {
+        Player player= Bukkit.getPlayer(args[0]);
+        if (player != null) {
+            RPlayer target = PlayerManager.getInstance().getPlayer(player);
+            pl.message("§9§l>> §7[" + pl.getRank().getColor() + "You§7] §9--> §7[" + target.getDisplayName(false) + "§7]§8: §2" + StringUtils.join(args, " ", 1));
+            target.message("§9§l>> §7[" + pl.getDisplayName(false) +  "§7] §9--> §7[" + target.getRank().getColor() + "You§7]§8: §2" + StringUtils.join(args, " ", 1));
+
+            if (pl.getModule("LastMessage") != null) {
+                pl.getModule("LastMessage").setData(target);
             } else {
-               throw new CommandException("§4Player not found!");
+                pl.addModule(new IModule("LastMessage", target));
+            }
+
+            if (target.getModule("LastMessage") != null) {
+                target.getModule("LastMessage").setData(pl);
+            } else {
+                target.addModule(new IModule("LastMessage", pl));
             }
         } else {
-            sender.sendMessage("Must be player!");
+            pl.message(MsgType.ERROR, "§4Player not found!");
         }
     }
 }

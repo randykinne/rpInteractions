@@ -12,7 +12,7 @@
     <description>RandomPvP Engine</description>
     <url>http://www.randompvp.com</url>
 
-    <distributionManagement>
+    <!--distributionManagement>
         <repository>
             <id>overcast-deployment</id>
             <url>https://repo.oc.tc/content/repositories/releases-private</url>
@@ -21,13 +21,9 @@
             <id>overcast-deployment</id>
             <url>https://repo.oc.tc/content/repositories/snapshots-private</url>
         </snapshotRepository>
-    </distributionManagement>
+    </distributionManagement-->
 
     <repositories>
-        <repository>
-            <id>overcast</id>
-            <url>https://repo.oc.tc/content/groups/public</url>
-        </repository>
         <repository>
             <id>shadowvolt-repo</id>
             <url>http://ci.shadowvolt.com/plugin/repository/everything/</url>
@@ -43,10 +39,6 @@
         <repository>
             <id>greatman-repo</id>
             <url>http://repo.greatmancode.com/content/groups/public/</url>
-        </repository>
-        <repository>
-            <id>confuser-repo</id>
-            <url>http://ci.frostcast.net/plugin/repository/everything</url>
         </repository>
         <repository>
             <id>cybermaxkes-repo</id>
@@ -77,11 +69,6 @@
             <artifactId>citizensapi</artifactId>
             <version>LATEST</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.sk89q</groupId>
-            <artifactId>command-framework-bukkit</artifactId>
-            <version>0.5-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>me.confuser</groupId>

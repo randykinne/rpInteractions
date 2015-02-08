@@ -1,20 +1,11 @@
 package RandomPvP.Core.Commands.Game;
 
+import RandomPvP.Core.Commands.Command.RCommand;
 import RandomPvP.Core.Game.GameManager;
-import RandomPvP.Core.Game.Team.Team;
-import RandomPvP.Core.Game.Team.TeamManager;
+import RandomPvP.Core.Player.MsgType;
 import RandomPvP.Core.Player.RPlayer;
-import RandomPvP.Core.Player.RPlayerManager;
-import com.sk89q.minecraft.util.commands.Command;
-import com.sk89q.minecraft.util.commands.CommandContext;
-import com.sk89q.minecraft.util.commands.CommandException;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * ***************************************************************************************
@@ -26,32 +17,23 @@ import java.util.List;
  * Thanks.
  * ***************************************************************************************
  */
-public class TeamCommand implements Listener {
+public class TeamCommand extends RCommand {
 
-    @Command(aliases = "team", desc = "Sets your team.", usage = "<team> ", max = 1, min = 0)
-    public static void team(final CommandContext args, CommandSender sender) throws CommandException {
-        if (sender instanceof Player) {
-            RPlayer pl = RPlayerManager.getInstance().getPlayer((Player) sender);
-            if (GameManager.getGame().isTeamBased()) {
-                if (args.argsLength() == 0) {
-                    List<String> names = new ArrayList<>();
-                    for (Team team : TeamManager.getTeams().values()) {
-                        names.add(team.getColor() + team.getName());
-                    }
+    public TeamCommand() {
+        super("team");
+        setPlayerOnly(true);
+        setAliases(Arrays.asList("t", "myteam"));
+        setDescription("Shows your current team");
+    }
 
-                    throw new CommandException("You must select a team to join. Available: " + String.valueOf(Arrays.asList(names)).replace("[", "").replace("]", ""));
-                } else if (TeamManager.getTeam(args.getString(0)) != null) {
-                    try {
-                        TeamManager.joinTeam(pl, TeamManager.getTeam(args.getString(0)));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            } else {
-                throw new CommandException("Teams are not enabled for " + GameManager.getGame().getPrimaryColor() + GameManager.getGame().getName());
+    @Override
+    public void onCommand(RPlayer player, String string, String[] args) {
+        if (GameManager.getGame().isTeamBased()) {
+            if (player.getTeam() != null) {
+                player.message(MsgType.GAME, "Your current team: " + player.getTeam().getColor() + player.getTeam().getName());
             }
         } else {
-            sender.sendMessage("Only players can use this command!");
+            player.message("Teams are not enabled for " + GameManager.getGame().getPrimaryColor() + GameManager.getGame().getName());
         }
     }
 }

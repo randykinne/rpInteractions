@@ -1,13 +1,10 @@
 package RandomPvP.Core.Commands.Mod;
 
+import RandomPvP.Core.Commands.Command.RCommand;
 import RandomPvP.Core.Player.RPlayer;
-import RandomPvP.Core.Player.RPlayerManager;
-import com.sk89q.minecraft.util.commands.Command;
-import com.sk89q.minecraft.util.commands.CommandContext;
-import com.sk89q.minecraft.util.commands.CommandException;
+import RandomPvP.Core.Player.Rank.Rank;
+import net.minecraft.util.org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 /**
  * ***************************************************************************************
@@ -19,21 +16,18 @@ import org.bukkit.entity.Player;
  * Thanks.
  * ***************************************************************************************
  */
-public class SayCmd {
+public class SayCmd extends RCommand {
 
-    @Command(aliases = "say", usage = "[message]", desc = "Broadcasts something to the whole server", min = 1)
-    public static void say(final CommandContext args, CommandSender sender) throws CommandException {
-        String username = "";
-        if (sender instanceof Player) {
-            RPlayer pl = RPlayerManager.getInstance().getPlayer((Player) sender);
-            if (pl.isStaff()) {
-                username = pl.getRankedName(false);
-                Bukkit.broadcastMessage("§8[§4§l§oSAY§8] " + username + "§8: §b" + args.getJoinedStrings(0));
-            } else {
-                throw new CommandException("§7You need to be §oMod §7to use this command.");
-            }
-        } else {
-            username = "§d§lConsole";
-        }
+    public SayCmd() {
+        super("say");
+        setRank(Rank.MOD);
+        setDescription("Broadcast a message to the whole server");
+        setArgsUsage("<Message>");
+        setMinimumArgs(1);
+    }
+
+    @Override
+    public void onCommand(RPlayer pl, String string, String[] args) {
+        Bukkit.broadcastMessage("§5§l<§8Say§5§l> " + pl.getRankedName(false) + " §d" + StringUtils.join(args, " ", 1));
     }
 }

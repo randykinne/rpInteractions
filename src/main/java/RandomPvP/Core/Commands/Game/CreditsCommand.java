@@ -1,12 +1,12 @@
 package RandomPvP.Core.Commands.Game;
 
+import RandomPvP.Core.Commands.Command.RCommand;
+import RandomPvP.Core.Player.MsgType;
+import RandomPvP.Core.Player.PlayerManager;
 import RandomPvP.Core.Player.RPlayer;
-import RandomPvP.Core.Player.RPlayerManager;
-import com.sk89q.minecraft.util.commands.Command;
-import com.sk89q.minecraft.util.commands.CommandContext;
-import com.sk89q.minecraft.util.commands.CommandException;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+import org.bukkit.Bukkit;
+
+import java.util.Arrays;
 
 /**
  * ***************************************************************************************
@@ -18,15 +18,27 @@ import org.bukkit.entity.Player;
  * Thanks.
  * ***************************************************************************************
  */
-public class CreditsCommand {
+public class CreditsCommand extends RCommand {
 
-    @Command(aliases = { "credits", "cre", "cr", "c" }, desc = "Shows your current credits", usage = "-")
-    public static void credit(final CommandContext args, CommandSender sender) throws CommandException {
-        if (sender instanceof Player) {
-            RPlayer pl = RPlayerManager.getInstance().getPlayer((Player) sender);
-            pl.message("§9§l>> §bCredits: " + pl.getCredits());
+    public CreditsCommand() {
+        super("credits");
+        setPlayerOnly(true);
+        setAliases(Arrays.asList("c", "cr"));
+        setDescription("Your credits");
+        setArgsUsage("-");
+    }
+
+    @Override
+    public void onCommand(RPlayer player, String string, String[] args) {
+        if (args.length > 0) {
+            if (Bukkit.getPlayer(args[0]) != null) {
+                RPlayer target = PlayerManager.getInstance().getPlayer(Bukkit.getPlayer(args[0]));
+                player.message(MsgType.NETWORK, target.getRankedName(false) + "§b's Credits: " + target.getCredits());
+            } else {
+                player.message(MsgType.ERROR, "Player not found!");
+            }
         } else {
-            throw new CommandException("You must be a player to have credits");
+            player.message(MsgType.NETWORK, "Credits: " + player.getCredits());
         }
     }
 }

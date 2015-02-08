@@ -1,13 +1,12 @@
 package RandomPvP.Core.Commands.Mod;
 
+import RandomPvP.Core.Commands.Command.RCommand;
+import RandomPvP.Core.Player.PlayerManager;
 import RandomPvP.Core.Player.RPlayer;
-import RandomPvP.Core.Player.RPlayerManager;
-import com.sk89q.minecraft.util.commands.Command;
-import com.sk89q.minecraft.util.commands.CommandContext;
-import com.sk89q.minecraft.util.commands.CommandException;
+import RandomPvP.Core.Player.Rank.Rank;
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+
+import java.util.Arrays;
 
 /**
  * ***************************************************************************************
@@ -19,23 +18,25 @@ import org.bukkit.entity.Player;
  * Thanks.
  * ***************************************************************************************
  */
-public class TeleportCmd {
+public class TeleportCmd extends RCommand {
 
-    @Command(aliases = { "tp", "teleport" }, usage = "[player] -", desc = "Teleports players", min = 1, max = 1)
-    public static void teleport(final CommandContext args, CommandSender sender) throws CommandException {
-        if (sender instanceof Player) {
-            RPlayer pl = RPlayerManager.getInstance().getPlayer((Player) sender);
-            if (pl.isStaff() || pl.getTeam().getName().equalsIgnoreCase("Spectators")) {
-                if (Bukkit.getPlayer(args.getString(0)) != null) {
-                    RPlayer target = RPlayerManager.getInstance().getPlayer(Bukkit.getPlayer(args.getString(0)));
-                    pl.getPlayer().teleport(target.getPlayer().getLocation());
-                    pl.message("§6§l>> §eYou have teleported to " + target.getRankedName(false) + "§e.");
-                }
-            } else {
-                throw new CommandException("§7You need to be §oMod §7to use this command.");
-            }
-        } else {
-            sender.sendMessage("You must be in game to use this command!");
+    public TeleportCmd() {
+        super("teleport");
+        setRank(Rank.MOD);
+        setMinimumArgs(1);
+        setMaximumArgs(1);
+        setPlayerOnly(true);
+        setAliases(Arrays.asList("tp"));
+        setDescription("Teleport to player");
+        setArgsUsage("<Player>");
+    }
+
+    @Override
+    public void onCommand(RPlayer pl, String string, String[] args) {
+        if (Bukkit.getPlayer(args[0]) != null) {
+            RPlayer target = PlayerManager.getInstance().getPlayer(Bukkit.getPlayer(args[0]));
+            pl.getPlayer().teleport(target.getPlayer().getLocation());
+            pl.message("§6§l>> §eYou have teleported to " + target.getRankedName(false) + "§e.");
         }
     }
 }

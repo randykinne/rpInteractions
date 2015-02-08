@@ -1,15 +1,12 @@
 package RandomPvP.Core.Commands.Admin;
 
-
+import RandomPvP.Core.Commands.Command.RCommand;
 import RandomPvP.Core.Player.RPlayer;
-import RandomPvP.Core.Player.RPlayerManager;
 import RandomPvP.Core.Player.Rank.Rank;
-import RandomPvP.Core.Util.RPStaff;
-import com.sk89q.minecraft.util.commands.Command;
-import com.sk89q.minecraft.util.commands.CommandContext;
-import com.sk89q.minecraft.util.commands.CommandException;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+import net.minecraft.util.org.apache.commons.lang3.StringUtils;
+import org.bukkit.Bukkit;
+
+import java.util.Arrays;
 
 /**
  * ***************************************************************************************
@@ -21,26 +18,27 @@ import org.bukkit.entity.Player;
  * Thanks.
  * ***************************************************************************************
  */
-public class BroadcastAdminCmd {
+public class BroadcastAdminCmd extends RCommand {
 
-    @Command(aliases = { "broadcast" }, desc = "Broadcasts a message to all online players", usage = "[message] - broadcasts to all players", min = 1)
-    public static void broadcast(final CommandContext args, CommandSender sender) throws CommandException {
+    public BroadcastAdminCmd() {
+        super("broadcast");
+        setRank(Rank.ADMIN);
+        setPlayerOnly(true);
+        setAliases(Arrays.asList("bc"));
+        setDescription("Broadcasts message to all players");
+        setArgsUsage("<Message>");
+        setMinimumArgs(1);
+    }
 
-        String username;
-        if (sender instanceof Player) {
-            RPlayer pl = RPlayerManager.getInstance().getPlayer((Player) sender);
-            if (pl.getRank().has(Rank.ADMIN)) {
-                username = pl.getRankedName(false);
-            } else {
-                throw new CommandException("§7You need §oAdmin §7to use this command.");
-            }
+    @Override
+    public void onCommand(RPlayer pl, String string, String[] args) {
+        String name = pl.getRankedName(false);
 
-        } else {
-            username = "Console";
-        }
-
-        if (username != null) {
-            RPStaff.sendAdminBroadcast(username + "§8: §7" + args.getJoinedStrings(0), true);
+        if (name != null) {
+            Bukkit.broadcastMessage("\n");
+            Bukkit.broadcastMessage("  " + name + " §esays... ");
+            Bukkit.broadcastMessage("  §7" + StringUtils.join(args, " "));
+            Bukkit.broadcastMessage("\n");
         }
     }
 }

@@ -1,15 +1,9 @@
 package RandomPvP.Core.Util;
 
-import RandomPvP.Core.Player.RPlayerManager;
-import RandomPvP.Core.RPICore;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.text.DecimalFormat;
-import java.util.Random;
 
 /**
  * ***************************************************************************************
@@ -73,6 +67,28 @@ public class NumberUtil {
 
     public static String translateDuration(long duration) {
         long diff = duration;
-        return "" + (int)(diff / 86400000L) + "d" + (int)(diff / 3600000L % 24L) + "h" +  (int)(diff / 60000L % 60L) + "m" + (int)(diff / 1000L % 60L) + "s" + ".";
+        if (duration != -1L) {
+            StringBuilder builder = new StringBuilder("");
+            if ((int) (diff / 86400000L) > 0) {
+                builder.append((int) (diff / 86400000L) + "d");
+            }
+
+            if ((int) (diff / 3600000L % 24L) > 0) {
+                builder.append((int) (diff / 3600000L % 24L) + "h");
+            }
+
+            if ((int) (diff / 60000L % 60L) > 0) {
+                builder.append((int) (diff / 60000L % 60L) + "m");
+            }
+
+            if ((int) (diff / 1000L % 60L) > 0) {
+                builder.append((int) (diff / 1000L % 60L) + "s");
+            }
+
+            return builder.toString();
+        } else {
+            return "(Permanent)";
+        }
     }
+
 }

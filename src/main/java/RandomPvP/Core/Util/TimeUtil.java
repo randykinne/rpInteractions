@@ -1,5 +1,6 @@
 package RandomPvP.Core.Util;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 /**
@@ -24,4 +25,6 @@ public class TimeUtil {
         // Day_OF_WEEK starts from 1 while array index starts from 0
         return strDays[now.get(Calendar.DAY_OF_WEEK) -1];
     }
+
+    public static SimpleDateFormat dateFormat = new SimpleDateFormat("h:mm a - MMM d, yyyy");
 }

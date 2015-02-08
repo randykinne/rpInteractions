@@ -2,8 +2,8 @@ package RandomPvP.Core.Game.Team;
 
 import RandomPvP.Core.Game.GameManager;
 import RandomPvP.Core.Game.Team.Exception.TeamException;
+import RandomPvP.Core.Player.PlayerManager;
 import RandomPvP.Core.Player.RPlayer;
-import RandomPvP.Core.Player.RPlayerManager;
 import RandomPvP.Core.RPICore;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.SetMultimap;
@@ -79,7 +79,7 @@ public class TeamManager {
 
     public static void leaveTeam(RPlayer player, Team team) {
         if (GameManager.getGame().isTeamBased()) {
-            if (player.getTeam() == team) {
+            if (player.getTeam().getName().equalsIgnoreCase(team.getName())) {
                 team.removePlayer(player);
                 playersByTeam.remove(team, player);
                 playersByType.remove(team.getType(), player);
@@ -92,6 +92,7 @@ public class TeamManager {
             if (player.getTeam() != null) {
                 leaveTeam(player, player.getTeam());
             }
+
             if (team.getMaxSize() == -1 || team.getPlayers().size() < team.getMaxSize()) {
                 team.addPlayer(player);
                 player.message("§3§l>> §7You have joined " + team.getColor() + team.getName() + "§7.");
@@ -101,7 +102,7 @@ public class TeamManager {
                     RPICore.getInstance().list.showPlayer(player.getPlayer());
                 }
 
-                for (RPlayer pl : RPlayerManager.getInstance().getOnlinePlayers()) {
+                for (RPlayer pl : PlayerManager.getInstance().getOnlinePlayers()) {
                     if (team.getType() == Team.Type.Observing) {
                         pl.getPlayer().hidePlayer(player.getPlayer());
                     } else {

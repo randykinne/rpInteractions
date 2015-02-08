@@ -1,13 +1,12 @@
 package RandomPvP.Core.Commands.Game;
 
-import RandomPvP.Core.Player.RPlayerManager;
+import RandomPvP.Core.Commands.Command.RCommand;
+import RandomPvP.Core.Player.MsgType;
+import RandomPvP.Core.Player.PlayerManager;
+import RandomPvP.Core.Player.RPlayer;
 import RandomPvP.Core.RPICore;
-import com.sk89q.minecraft.util.commands.Command;
-import com.sk89q.minecraft.util.commands.CommandContext;
-import com.sk89q.minecraft.util.commands.CommandException;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
@@ -20,48 +19,51 @@ import org.bukkit.entity.Player;
  * Thanks.
  * ***************************************************************************************
  */
-public class PingCmd {
+public class PingCmd extends RCommand {
 
-    private static ChatColor getColor(int ping) {
+    public PingCmd() {
+        super("ping");
+        setPlayerOnly(true);
+        setDescription("What's your ping?");
+        setArgsUsage("[player]");
+    }
+
+    @Override
+    public void onCommand(RPlayer player, String string, String[] args) {
+        if (args.length > 0) {
+            if (Bukkit.getPlayer(args[0]) != null) {
+
+                try {
+                    int ping = RPICore.getInstance().list.getPlayerPing(Bukkit.getPlayer(args[0]));
+                    player.message("§9§l>> " +
+                            PlayerManager.getInstance().getPlayer(Bukkit.getPlayer(args[0])).getRankedName(false) +
+                            "§b's current ping is " +
+                            getColor(ping) +
+                            ping +
+                            "ms");
+                } catch (IllegalAccessException e) {
+                    player.message(MsgType.ERROR, "Unable to retrieve player's ping. Ping OP! :(");
+                }
+            } else {
+                player.message(MsgType.ERROR, args[0] + " is not online! Did you spell it correctly?");
+            }
+        } else {
+            try {
+                int ping = RPICore.getInstance().list.getPlayerPing(player.getPlayer());
+                player.message("§9§l>> §bYour current ping is " + getColor(ping) + ping + "ms");
+            } catch (IllegalAccessException e) {
+                player.message(MsgType.ERROR, "Unable to retrieve your ping. Ping OP! :(");
+            }
+        }
+    }
+
+    private ChatColor getColor(int ping) {
         if (ping <= 125) {
             return ChatColor.GREEN;
         } else if (ping > 125 && ping <= 250) {
             return ChatColor.YELLOW;
         } else {
             return ChatColor.RED;
-        }
-    }
-
-    @Command(aliases = { "ping", "pong" }, desc = "Shows your ping to the server", usage = "-")
-    public static void ping(final CommandContext args, CommandSender sender) throws CommandException {
-        if (sender instanceof Player) {
-            if (args.argsLength() > 0) {
-                if (Bukkit.getPlayer(args.getString(0)) != null) {
-
-                    try {
-                        int ping = RPICore.getInstance().list.getPlayerPing(Bukkit.getPlayer(args.getString(0)));
-                        sender.sendMessage("§9§l>> " +
-                                RPlayerManager.getInstance().getPlayer(Bukkit.getPlayer(args.getString(0))).getRankedName(false) +
-                                "§b's current ping is " +
-                                getColor(ping) +
-                                ping +
-                        "ms");
-                    } catch (IllegalAccessException e) {
-                        throw new CommandException("Unable to retrieve player's ping. Ping OP! :(");
-                    }
-                } else {
-                    throw new CommandException(args.getString(0) + " is not online! Did you spell it correctly?");
-                }
-            } else {
-                try {
-                    int ping = RPICore.getInstance().list.getPlayerPing((Player) sender);
-                    sender.sendMessage("§9§l>> §bYour current ping is " + getColor(ping) + ping + "ms");
-                } catch (IllegalAccessException e) {
-                    throw new CommandException("Unable to retrieve your ping. Ping OP! :(");
-                }
-            }
-        } else {
-            throw new CommandException("You must be a player to use this command!");
         }
     }
 }

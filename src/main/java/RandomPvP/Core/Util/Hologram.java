@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import RandomPvP.Core.Player.PlayerManager;
 import RandomPvP.Core.Player.RPlayer;
-import RandomPvP.Core.Player.RPlayerManager;
 import RandomPvP.Core.RPICore;
 import net.minecraft.server.v1_7_R4.EntityHorse;
 import net.minecraft.server.v1_7_R4.EntityPlayer;
@@ -63,7 +63,7 @@ public class Hologram {
 
         Bukkit.getScheduler().runTaskAsynchronously(RPICore.getInstance(), new Runnable(){
             public void run(){
-                for (RPlayer pl : RPlayerManager.getInstance().getOnlinePlayers()) {
+                for (RPlayer pl : PlayerManager.getInstance().getOnlinePlayers()) {
                     Player player = pl.getPlayer();
                     ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
                 }

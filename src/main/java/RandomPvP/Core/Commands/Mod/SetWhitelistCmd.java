@@ -1,18 +1,16 @@
 package RandomPvP.Core.Commands.Mod;
 
+import RandomPvP.Core.Commands.Command.RCommand;
 import RandomPvP.Core.Event.Server.RankWhitelistChangeEvent;
+import RandomPvP.Core.Player.MsgType;
 import RandomPvP.Core.Player.RPlayer;
-import RandomPvP.Core.Player.RPlayerManager;
 import RandomPvP.Core.Player.Rank.Rank;
 import RandomPvP.Core.Util.ServerToggles;
-import com.sk89q.minecraft.util.commands.Command;
-import com.sk89q.minecraft.util.commands.CommandContext;
-import com.sk89q.minecraft.util.commands.CommandException;
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * ***************************************************************************************
@@ -24,30 +22,31 @@ import java.util.Arrays;
  * Thanks.
  * ***************************************************************************************
  */
-public class SetWhitelistCmd {
+public class SetWhitelistCmd extends RCommand {
 
-    @Command(aliases = "setwhitelist", desc = "Sets the rank whitelist level", usage = "<rank> -", min = 1)
-    public static void setwhitelist(final CommandContext args, CommandSender sender) throws CommandException {
-        RPlayer pl = null;
-        if (sender instanceof Player) {
-            pl = RPlayerManager.getInstance().getPlayer((Player) sender);
+    public SetWhitelistCmd() {
+        super("setwhitelist");
+        setRank(Rank.MOD);
+        setDescription("Sets the minimum rank required to join");
+        setArgsUsage("<Rank>");
+        setMinimumArgs(1);
+    }
 
-            if (!pl.isStaff()) {
-                throw new CommandException("You need Mod to use this command.");
-            } else {
-                if (Rank.valueOf(args.getString(0).toUpperCase()) != null) {
-                    Rank rank = Rank.valueOf(args.getString(0).toUpperCase());
+    @Override
+    public void onCommand(RPlayer pl, String string, String[] args) {
+        if (Rank.valueOf(args[0].toUpperCase()) != null) {
+            Rank rank = Rank.valueOf(args[0].toUpperCase());
 
-                    ServerToggles.setRankRequired(rank);
-                    Bukkit.getPluginManager().callEvent(new RankWhitelistChangeEvent(pl, rank));
-
-                } else {
-                    throw new CommandException("Rank not found! Available: " + String.valueOf(Arrays.asList(Rank.values())).replace("[", "").replace("]", ""));
-                }
-            }
+            ServerToggles.setRankRequired(rank);
+            Bukkit.getPluginManager().callEvent(new RankWhitelistChangeEvent(pl, rank));
 
         } else {
-            sender.sendMessage("You need to be a player!");
+            List<String> names = new ArrayList<>();
+            for (Rank rank : Rank.values()) {
+                names.add(rank.getFormattedName() + ", ");
+            }
+
+            pl.message(MsgType.ERROR.getPrefix() + "Rank not found! Available: " + String.valueOf(Arrays.asList(names)).replace("[", "").replace("]", ""));
         }
     }
 }

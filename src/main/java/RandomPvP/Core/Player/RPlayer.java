@@ -2,11 +2,21 @@ package RandomPvP.Core.Player;
 
 import RandomPvP.Core.Data.MySQL;
 import RandomPvP.Core.Game.Team.Team;
+import RandomPvP.Core.Player.Counter.Counter;
+import RandomPvP.Core.Player.Credit.Booster;
 import RandomPvP.Core.Player.Rank.Rank;
 import RandomPvP.Core.Player.Scoreboard.RandomPvPScoreboard;
+import RandomPvP.Core.Punish.Punishment;
+import RandomPvP.Core.Punish.PunishmentManager;
+import RandomPvP.Core.Punish.PunishmentType;
+import RandomPvP.Core.Punish.Warning;
 import RandomPvP.Core.RPICore;
-import org.bukkit.ChatColor;
-import org.bukkit.Sound;
+import RandomPvP.Core.Util.Module.IModule;
+import RandomPvP.Core.Util.NumberUtil;
+import RandomPvP.Core.Util.TimeUtil;
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -16,6 +26,9 @@ import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -30,72 +43,94 @@ import java.util.UUID;
  */
 public class RPlayer {
 
-    //TODO Swag points - Thanks thatdarkknight26!
-
     private int nextId = 1;
-    boolean loaded = false;
-    public void setLoaded(boolean loaded) {
-        this.loaded = loaded;
-    }
-    public boolean isLoaded() {
-        return loaded;
-    }
+
     Player player;
     String name;
     UUID uuid;
     int rpid = nextId;
     String ip = "0.0.0.0";
     Rank rank = Rank.PLAYER;
+    long rank_updated;
     int credits = 0;
     int killstreak = 0;
     Team team;
+    HashMap<String, Counter> counters = new HashMap<>();
+    HashMap<String, IModule> modules = new HashMap<>();
     boolean canInteract = false;
     RandomPvPScoreboard board;
-    boolean hasSTFUEnabled = false;
+    Booster booster = null;
+    RStaff staff = null;
     boolean hasWarningPending = false;
     boolean ranked = false;
     int warnings = 0;
+    boolean frozen;
 
-
-    public RPlayer(String name, UUID id) {
+    public RPlayer(String name, UUID id, boolean rankOnly) {
         setUUID(id);
         this.name = name;
 
-        try {
-            PreparedStatement stmt = MySQL.getConnection().prepareStatement("SELECT * FROM `accounts` WHERE `accounts`.`uuid` = ?;");
-            stmt.setString(1, getUUID().toString());
-            ResultSet set = stmt.executeQuery();
+        if (RPICore.debugEnabled) {
+            System.out.println(name + " has the UUID " + id.toString());
+        }
 
-            if (set.next()) {
-                setRank(Rank.valueOf(set.getString("rank").toUpperCase()), false);
-                setCredits(set.getInt("credits"));
-                setRPID(set.getInt("rpid"));
-                /*if (!getIP().equalsIgnoreCase(set.getString("ip"))) {
-                    if (isStaff()) {
-                        RPStaff.questionIP(RPlayerManager.getInstance().getPlayer(getPlayer()));
-                    } else {
-                        saveData();
-                    }
-                }*/
+        try {
+            if (rankOnly) {
+                PreparedStatement stmt = MySQL.getConnection().prepareStatement("SELECT `rank` FROM `accounts` WHERE `accounts`.`uuid` = ?;");
+                stmt.setString(1, getUUID().toString());
+                ResultSet set = stmt.executeQuery();
+
+                if (set.next()) {
+                    setRank(Rank.valueOf(set.getString("rank").toUpperCase()), false);
+                }
             } else {
-                String sqlGetNextId = "SELECT MAX(rpid) AS max FROM accounts";
-                PreparedStatement statement;
-                statement = MySQL.getConnection().prepareStatement(sqlGetNextId);
-                ResultSet rs = statement.executeQuery();
-                while (rs.next()) {
-                    nextId = rs.getInt("max") + 1;
+                PreparedStatement stmt = MySQL.getConnection().prepareStatement("SELECT * FROM `accounts` WHERE `accounts`.`uuid` = ?;");
+                stmt.setString(1, getUUID().toString());
+                ResultSet set = stmt.executeQuery();
+
+                if (set.next()) {
+                    setRank(Rank.valueOf(set.getString("rank").toUpperCase()), false);
+                    rank_updated = System.currentTimeMillis();
+                    setCredits(set.getInt("credits"));
+                    setRPID(set.getInt("rpid"));
+                } else {
+                    String sqlGetNextId = "SELECT MAX(rpid) AS max FROM accounts";
+                    PreparedStatement statement;
+                    statement = MySQL.getConnection().prepareStatement(sqlGetNextId);
+                    ResultSet rs = statement.executeQuery();
+                    while (rs.next()) {
+                        nextId = rs.getInt("max") + 1;
+                    }
+
+                    PreparedStatement stmt2 = MySQL.getConnection().prepareStatement("INSERT INTO `accounts` VALUES (?, ?, ?, ?, ?, ?, ?, ?);");
+                    stmt2.setString(1, getUUID().toString());
+                    stmt2.setString(2, getName());
+                    stmt2.setInt(3, 0);
+                    stmt2.setString(4, getRank().getRank());
+                    stmt2.setLong(5, rank_updated);
+                    stmt2.setInt(6, getCredits());
+                    stmt2.setString(7, getIP().replace(".", "-"));
+                    stmt2.setString(8, null);
+
+                    stmt2.executeUpdate();
                 }
 
-                PreparedStatement stmt2 = MySQL.getConnection().prepareStatement("INSERT INTO `accounts` VALUES (?, ?, ?, ?, ?, ?, ?);");
-                stmt2.setString(1, getUUID().toString());
-                stmt2.setString(2, getName());
-                stmt2.setInt(3, 0);
-                stmt2.setString(4, getRank().getRank());
-                stmt2.setInt(5, getCredits());
-                stmt2.setString(6, getIP().replace(".", "-"));
-                stmt2.setString(7, null);
+                {
+                    PreparedStatement statement = MySQL.getConnection().prepareStatement("INSERT INTO `online_players` VALUES (?, ?, ?);");
+                    statement.setInt(1, getRPID());
+                    statement.setString(2, getName());
+                    statement.setString(3, Bukkit.getServerName());
+                    statement.executeUpdate();
 
-                stmt2.executeUpdate();
+                        /*
+                        statement = MySQL.getConnection().prepareStatement("SELECT * FROM `credit_booster` WHERE `rpid` = ?");
+                        statement.setInt(1, getRPID());
+                        ResultSet rs = stmt.executeQuery();
+                        if (rs.next()) {
+                            Booster boost = new Booster(PlayerManager.getInstance().getPlayer(getPlayer()), rs.getLong("duration"), rs.getInt("multiplier"));
+                            setBooster(boost);
+                        }*/
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -107,12 +142,13 @@ public class RPlayer {
             @Override
             public void run() {
                 try {
-                    PreparedStatement stmt = MySQL.getConnection().prepareStatement("UPDATE `accounts` SET `username`=?, `rank`=?, `credits`=?, `ip` =? WHERE `uuid`=?;");
+                    PreparedStatement stmt = MySQL.getConnection().prepareStatement("UPDATE `accounts` SET `username`=?, `rank`=?, `rank_updated`=?, `credits`=?, `ip` =? WHERE `uuid`=?;");
                     stmt.setString(1, getName());
                     stmt.setString(2, getRank().getRank());
-                    stmt.setInt(3, getCredits());
-                    stmt.setString(4, getIP().replace(".", "-"));
-                    stmt.setString(5, getUUID().toString());
+                    stmt.setLong(3, rank_updated);
+                    stmt.setInt(4, getCredits());
+                    stmt.setString(5, getIP().replace(".", "-"));
+                    stmt.setString(6, getUUID().toString());
                     stmt.executeUpdate();
                 } catch (SQLException e) {
                     e.printStackTrace();
@@ -125,10 +161,28 @@ public class RPlayer {
         if (player != null && player.isOnline()) {
             this.player = player;
             this.name = player.getName();
-            setIP(player.getAddress().toString().replace("/", ""));
+
+            String ipAddress = player.getAddress().toString();
+
+            try {
+                if ((ipAddress.charAt(0) == '/') || (ipAddress.charAt(0) == '\\'))
+                    ipAddress = ipAddress.substring(1);
+            } catch (Exception e) {
+                System.out.println("Error with given IP: " + ipAddress);
+            }
+
+            try {
+                if ((ipAddress.contains(":")) && (ipAddress.indexOf(':') != -1))
+                    ipAddress = ipAddress.substring(0, ipAddress.indexOf(':'));
+            } catch (Exception e) {
+                System.out.println("Error with given IP: " + ipAddress);
+            }
+
+            setIP(ipAddress);
         }
 
     }
+
     public Player getPlayer() {
         return player;
     }
@@ -170,6 +224,7 @@ public class RPlayer {
     public void setUUID(UUID id) {
         this.uuid = id;
     }
+
     public UUID getUUID() {
         return uuid;
     }
@@ -177,6 +232,7 @@ public class RPlayer {
     public void setRPID(int id) {
         this.rpid = id;
     }
+
     public int getRPID() {
         return rpid;
     }
@@ -184,33 +240,48 @@ public class RPlayer {
     public void setIP(String ip) {
         this.ip = ip;
     }
+
     public String getIP() {
         return ip;
     }
 
     public void setRank(Rank rank, boolean saveData) {
-        this.rank = rank;
-        if (saveData) {
-            saveData();
-        }
+        if (rank != getRank()) {
 
-        new BukkitRunnable() {
-            public void run() {
-                RandomPvPScoreboard.updateScoreboard(true);
+            this.rank = rank;
+            rank_updated = System.currentTimeMillis();
+            if (saveData) {
+                saveData();
             }
-        }.runTaskLater(RPICore.getInstance(), 5L);
+
+            if (has(Rank.MOD)) {
+                staff = new RStaff(this);
+            }
+
+            new BukkitRunnable() {
+                public void run() {
+                    RandomPvPScoreboard.updateScoreboard(true);
+                }
+            }.runTaskLater(RPICore.getInstance(), 5L);
+
+
+        }
     }
+
     public Rank getRank() {
         return rank;
     }
-    public boolean isStaff() {
-        return (getRank().has(Rank.MOD));
+
+    public RStaff getStaff() {
+        if (has(Rank.MOD)) {
+            return staff;
+        }
+
+        return null;
     }
-    public boolean isVIP() {
-        return (getRank().has(Rank.VIP));
-    }
-    public boolean isDonator() {
-        return (getRank().has(Rank.PREMIUM));
+
+    public boolean has(Rank rank) {
+        return getRank().has(rank);
     }
 
     public int getWarnings() {
@@ -222,63 +293,196 @@ public class RPlayer {
         setHasWarningPending(true);
     }
 
-    public boolean hasWarningPending() { return hasWarningPending; }
-    public void setHasWarningPending(boolean warningPending) { this.hasWarningPending = warningPending; }
+    public boolean isBanned() {
+        return PunishmentManager.getInstance().hasBanActive(getUUID());
+    }
 
-    public void warn(String message) {
-        message("§4╔══════════════════════════════════");
-        message("§4║   §c§lWarning");
-        message("§4║   §7§o" + message );
-        message("§4║   §cPlease type§8 §8§l[ §7/rdpvp §8§l] §cto acknowledge this warning." );
-        message("§4╚══════════════════════════════════");
+    public boolean isMuted() {
+        return PunishmentManager.getInstance().hasMuteActive(getUUID());
+    }
+
+    public Punishment getMute() {
+        return PunishmentManager.getInstance().getActiveMute(getUUID());
+    }
+
+    public boolean hasWarningPending() {
+        return hasWarningPending;
+    }
+
+    public void setHasWarningPending(boolean warningPending) {
+        this.hasWarningPending = warningPending;
+    }
+
+    public void warn(String type, String message) {
+        message("\n");
+        message("  §4§lWarning §8|| §c" + type);
+        message("  §7" + message);
+        message("  §cPlease type §8[ §7/rdpvp §8] §cto acknowledge this warning.");
+        message("\n");
+
         if (hasWarningPending || getWarnings() >= 1) {
             getPlayer().kickPlayer((message));
         } else {
+            if (RPICore.pEnabled) {
+                Punishment punish = new Punishment(
+                        getUUID(),
+                        null,
+                        PunishmentType.WARN,
+                        type,
+                        TimeUtil.dateFormat.format(new Date()),
+                        0L);
+
+                punish.save();
+            }
             addWarning();
+            setFrozen(true);
         }
     }
 
-    public void toggleSTFU() {
-        if (hasSTFUEnabled) {
-            message("§6§l>> §eTurned §c§lOFF §estfu mode!");
-            message("§6§l>> §6You can now see all staff messages.");
-            getPlayer().playSound(getPlayer().getLocation(), Sound.NOTE_PLING, 2L, 1L);
-            hasSTFUEnabled = false;
-        } else {
-            message("§6§l>> §eTurned §a§lON §estfu mode!");
-            message("§6§l>> §6It'll automatically disable when you log off.");
-            getPlayer().playSound(getPlayer().getLocation(), Sound.NOTE_PLING, 2L, 1L);
-            hasSTFUEnabled = true;
-        }
-    }
-    public boolean hasSTFUEnabled() {
-        return hasSTFUEnabled;
+    public void warn(Warning type) {
+        warn(type.getName(), type.getDescription());
     }
 
-    public void addCredits(int credits, String reason) {
+    public boolean isFrozen() {
+        return frozen;
+    }
+
+    public void setFrozen(boolean freeze) {
+        frozen = freeze;
+    }
+
+    public void addCredits(int credits) {
+        String reason = "";
         int credAdded = credits;
-        if (isDonator()) {
-            credAdded = credits * 2;
-            reason = reason + " §b§lx2 Premium Bonus!";
+        switch (getRank()) {
+            case PLAYER:
+                break;
+            case PREMIUM:
+                credAdded = credits * 2;
+                reason = " §b§lx2 Premium Bonus";
+                break;
+            case VIP:
+                credAdded = credits * 3;
+                reason = " §e§lx3 VIP Bonus";
+                break;
+            case BUILDER:
+                credAdded = credits * 3;
+                reason = " §2§lx3 Builder Bonus";
+                break;
+            case MOD:
+                credAdded = credits * 5;
+                reason = " §5§lx5 Staff Bonus";
+                break;
+            case SUPPORT:
+                credAdded = credits * 5;
+                reason = " §5§lx5 Staff Bonus";
+                break;
+            case ADMIN:
+                credAdded = credits * 5;
+                reason = " §5§lx5 Staff Bonus";
+                break;
+            case OWNER:
+                credAdded = credits * 10;
+                reason = " §4§lx10 Owner Bonus";
+                break;
+        }
+
+        if (getBooster() != null) {
+            if (getBooster().isActive())
+                credAdded = credAdded * getBooster().getMultiplier();
+            reason = reason + " §1§lx" + getBooster().getMultiplier() + " Credit Booster";
         }
 
         this.credits = getCredits() + credAdded;
 
-        message("§2§l>> §a+" + credAdded + " Credits! §8| §7" + reason);
+        if (!reason.equalsIgnoreCase("")) {
+            message(MsgType.CREDIT, "§a+" + credAdded + " Credits!" + reason);
+        } else {
+            message(MsgType.CREDIT, "§a+" + credAdded + " Credits!");
+        }
     }
-    public void removeCredits(int credits, String reason) {
+
+    public void removeCredits(int credits) {
         this.credits = getCredits() - credits;
-        message("§2§l>> §a§lCredits§8: §c" + credits + " §8- §7" + reason);
+        message(MsgType.GAME, "§c-" + credits + " Credits!");
     }
+
     public void setCredits(int credits) {
         this.credits = credits;
     }
+
     public int getCredits() {
         return credits;
     }
 
-    public void setKillstreak(int streak) { this.killstreak = streak; }
-    public int getKillStreak() { return killstreak; }
+    public void setBooster(Booster boost) {
+        this.booster = boost;
+    }
+
+    public Booster getBooster() {
+        return booster;
+    }
+
+    public boolean hasActiveBooster() {
+        return getBooster() != null;
+    }
+
+    public void addCounter(Counter counter) {
+        counters.put(counter.getName(), counter);
+    }
+
+    public Counter getCounter(String name) {
+        for (String counter : counters.keySet()) {
+            if (name.equalsIgnoreCase(counter)) {
+                return counters.get(counter);
+            }
+        }
+
+        return null;
+    }
+
+    public Map<String, Counter> getCounters() {
+        return counters;
+    }
+
+    public void removeCounter(Counter counter) {
+        if (counters.containsKey(counter.getName())) {
+            counters.remove(counter.getName());
+        }
+    }
+
+    public void addModule(IModule module) {
+        modules.put(module.getName(), module);
+    }
+
+    public IModule getModule(String name) {
+        for (String module : modules.keySet()) {
+            if (name.equalsIgnoreCase(module)) {
+                return modules.get(module);
+            }
+        }
+
+        return null;
+    }
+
+    public Map<String, IModule> getModules() {
+        return modules;
+    }
+
+    public void removeCounter(IModule module) {
+        if (modules.containsKey(module.getName())) {
+            modules.remove(module.getName());
+        }
+    }
+
+    public void setKillstreak(int streak) {
+        this.killstreak = streak;
+    }
+
+    public int getKillStreak() {
+        return killstreak;
+    }
+
     public void addKill() {
         setKillstreak(getKillStreak() + 1);
     }
@@ -286,12 +490,18 @@ public class RPlayer {
     public Team getTeam() {
         return team;
     }
+
     public void setTeam(Team team) {
         this.team = team;
     }
 
-    public void setRanked(boolean bln) { ranked = bln; }
-    public boolean isRanked() { return ranked; }
+    public void setRanked(boolean bln) {
+        ranked = bln;
+    }
+
+    public boolean isRanked() {
+        return ranked;
+    }
 
     public boolean canInteract() {
         if (getTeam() != null) {
@@ -305,13 +515,70 @@ public class RPlayer {
         this.canInteract = interact;
     }
 
+    public String getHealth() {
+        return "" + NumberUtil.trimNumber((double) getPlayer().getHealth());
+    }
+
+    public Location getLocation() {
+        return getPlayer().getLocation();
+    }
+
+    public void setAllowFlight(boolean flight) {
+        getPlayer().setAllowFlight(flight);
+    }
+
+    public boolean isFlightAllowed() {
+        return getPlayer().getAllowFlight();
+    }
+
+    public void teleport(Location loc) {
+        getPlayer().teleport(loc);
+    }
+
+    public boolean isOnline() {
+        return getPlayer().isOnline();
+    }
+
+    public void setCompassTarget(Location loc) {
+        getPlayer().setCompassTarget(loc);
+    }
+
+    public void setCompassTarget(RPlayer player) {
+        while (player != null && player.getPlayer() != null) {
+            setCompassTarget(player.getLocation());
+        }
+    }
+
+    public Location getCompassTarget() {
+        return getPlayer().getCompassTarget();
+    }
+
+    public GameMode getGameMode() {
+        return getPlayer().getGameMode();
+    }
+
+    RPlayer last_damage = null;
+
+    public void setPlayerLastHitBy(RPlayer player) {
+        last_damage = player;
+    }
+
+    public RPlayer getPlayerLastHitBy() {
+        return last_damage;
+    }
+
     public void message(String message) {
         player.sendMessage(message);
+    }
+
+    public void message(MsgType type, String message) {
+        player.sendMessage(type.getPrefix() + message);
     }
 
     public RandomPvPScoreboard getScoreboard() {
         return board;
     }
+
     public void setScoreboard(RandomPvPScoreboard scoreboard) {
         board = scoreboard;
     }
@@ -325,7 +592,7 @@ public class RPlayer {
         }
 
         server = server.toUpperCase();
-        message("§9§l>> §aConnecting you to §b" + server + "§a...");
+        message(MsgType.NETWORK, "§aConnecting you to §b" + server + "§a...");
 
         try {
             out.writeUTF("Connect");
@@ -334,19 +601,6 @@ public class RPlayer {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public void sendToHub(String message) {
-        message("§4╔══════════════════════════════════");
-        message("§4║   §4§lYou were disconnected from that server!");
-        message("§4║   §d[§5§l!§d] §f§o" + message);
-        message("§4╚══════════════════════════════════");
-        new BukkitRunnable() {
-            @Override
-        public void run() {
-                send("Hub");
-            }
-        }.runTaskLaterAsynchronously(RPICore.getInstance(), 20L);
     }
 
 }

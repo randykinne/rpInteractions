@@ -1,7 +1,7 @@
 package RandomPvP.Core.Util.Tab;
 
+import RandomPvP.Core.Player.PlayerManager;
 import RandomPvP.Core.Player.RPlayer;
-import RandomPvP.Core.Player.RPlayerManager;
 import RandomPvP.Core.RPICore;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
@@ -74,7 +74,7 @@ public class HidePlayerList  {
         this.manager = ProtocolLibrary.getProtocolManager();
 
         // Add every current player
-        for (RPlayer player : RPlayerManager.getInstance().getOnlinePlayers()) {
+        for (RPlayer player : PlayerManager.getInstance().getOnlinePlayers()) {
             if (!player.getTeam().isHidden()) {
                 visiblePlayers.add(player.getPlayer().getPlayerListName());
             } else {
@@ -175,7 +175,7 @@ public class HidePlayerList  {
             PacketContainer packet = playerListConstructor.createPacket(name, visible, getPlayerPing(player));
 
             // Just broadcast it
-            for (RPlayer reciever : RPlayerManager.getInstance().getOnlinePlayers()) {
+            for (RPlayer reciever : PlayerManager.getInstance().getOnlinePlayers()) {
                 manager.sendServerPacket(reciever.getPlayer(), packet);
             }
 

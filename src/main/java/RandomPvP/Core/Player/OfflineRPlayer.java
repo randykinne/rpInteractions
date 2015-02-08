@@ -3,6 +3,7 @@ package RandomPvP.Core.Player;
 import RandomPvP.Core.Data.MySQL;
 import RandomPvP.Core.Player.Rank.Rank;
 import RandomPvP.Core.RPICore;
+import RandomPvP.Core.Util.Player.UUID.UUIDUtil;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.sql.PreparedStatement;
@@ -31,8 +32,20 @@ public class OfflineRPlayer {
     int rpid;
 
 
-    public OfflineRPlayer(final String name, UUID id) {
-        setUUID(id);
+    public OfflineRPlayer(final String name) {
+        new BukkitRunnable() {
+            public void run() {
+                setUUID(UUIDUtil.getUUID(name));
+            }
+        }.runTaskAsynchronously(RPICore.getInstance());
+
+        if (uuid == null) {
+            Thread th = new Thread();
+            th.start();
+            setUUID(UUIDUtil.getUUID(name));
+            th.stop();
+        }
+
         this.name = name;
 
         if (uuid == null) {
@@ -85,8 +98,12 @@ public class OfflineRPlayer {
     public void setName(String name) { this.name = name; }
 
     public String getRankedName(boolean hasTag) {
-        if (hasTag) {
-            return getRank().getTag() + getRank().getColor() + name;
+        if (!isNull()) {
+            if (hasTag) {
+                return getRank().getTag() + getRank().getColor() + name;
+            } else {
+                return getRank().getColor() + name;
+            }
         } else {
             return getRank().getColor() + name;
         }
@@ -113,6 +130,7 @@ public class OfflineRPlayer {
         this.rank = rank;
         saveData();
     }
+
     public Rank getRank() {
         return rank;
     }

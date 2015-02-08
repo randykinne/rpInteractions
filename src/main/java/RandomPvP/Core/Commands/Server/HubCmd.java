@@ -1,16 +1,11 @@
 package RandomPvP.Core.Commands.Server;
 
+import RandomPvP.Core.Commands.Command.RCommand;
 import RandomPvP.Core.Player.RPlayer;
-import RandomPvP.Core.Player.RPlayerManager;
 import RandomPvP.Core.RPICore;
-import com.sk89q.minecraft.util.commands.Command;
-import com.sk89q.minecraft.util.commands.CommandContext;
-import com.sk89q.minecraft.util.commands.CommandException;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.Random;
+import java.util.Arrays;
 
 /**
  * ***************************************************************************************
@@ -22,22 +17,23 @@ import java.util.Random;
  * Thanks.
  * ***************************************************************************************
  */
-public class HubCmd {
+public class HubCmd extends RCommand {
 
-    @Command(aliases = { "hub" , "lobby" },desc = "Sends to hub", usage = "-")
-     public static void hub(final CommandContext args, CommandSender sender) throws CommandException {
-        if (sender instanceof Player) {
-            final RPlayer pl = RPlayerManager.getInstance().getPlayer((Player) sender);
-            pl.message("§9§l>> §bTo hub! Here we go!");
-            new BukkitRunnable() {
-                @Override
+    public HubCmd() {
+        super("hub");
+        setPlayerOnly(true);
+        setAliases(Arrays.asList("lobby"));
+        setDescription("To the lobby!");
+    }
+
+    @Override
+    public void onCommand(final RPlayer pl, String string, String[] args) {
+        pl.message("§9§l>> §bTo hub! Here we go!");
+        new BukkitRunnable() {
+            @Override
             public void run() {
-                    pl.send("H1");
-                }
-            }.runTaskLaterAsynchronously(RPICore.getInstance(), 40L);
-
-        } else {
-            sender.sendMessage("You are not a player");
-        }
+                pl.send("Hub");
+            }
+        }.runTaskLaterAsynchronously(RPICore.getInstance(), 40L);
     }
 }

@@ -1,5 +1,6 @@
 package RandomPvP.Core.Player.Rank;
 
+import org.apache.commons.lang.WordUtils;
 import org.bukkit.ChatColor;
 
 /**
@@ -15,11 +16,13 @@ import org.bukkit.ChatColor;
 public enum Rank {
 
     PLAYER(0, "PLAYER", "", ChatColor.BLUE),
-    PREMIUM(1, "PREMIUM", "Premium ", ChatColor.AQUA),
+    PREMIUM(1, "PREMIUM", "PREMIUM ", ChatColor.AQUA),
     VIP(2, "VIP", "VIP ", ChatColor.YELLOW),
-    BUILDER(3, "BUILDER", "Builder ", ChatColor.DARK_GREEN),
+    BUILDER(3, "BUILDER", "BUILDER ", ChatColor.DARK_GREEN),
     MOD(4, "MOD", "MOD ", ChatColor.DARK_PURPLE),
-    ADMIN(5, "ADMIN", "ADMIN ", ChatColor.DARK_RED);
+    SUPPORT(5, "SUPPORT", "SUPPORT ", ChatColor.DARK_AQUA),
+    ADMIN(6, "ADMIN", "ADMIN ", ChatColor.RED),
+    OWNER(7, "OWNER", "OWNER ", ChatColor.DARK_RED);
 
     String rank;
     String name;
@@ -35,6 +38,8 @@ public enum Rank {
     public int getWeight() {
         return weight;
     }
+
+    public String getFormattedName() { return WordUtils.capitalizeFully(getName()); }
 
     public String getRank() { return rank; }
 
@@ -52,5 +57,9 @@ public enum Rank {
 
     public boolean has(Rank rank) {
         return (compareTo(rank) >= 0);
+    }
+
+    public Rank fromString(String name) {
+        return valueOf(name) != null ? valueOf(name) : PLAYER;
     }
 }

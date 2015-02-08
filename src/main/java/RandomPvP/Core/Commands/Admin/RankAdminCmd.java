@@ -1,16 +1,16 @@
 package RandomPvP.Core.Commands.Admin;
 
+import RandomPvP.Core.Commands.Command.RCommand;
+import RandomPvP.Core.Player.MsgType;
+import RandomPvP.Core.Player.OfflineRPlayer;
+import RandomPvP.Core.Player.PlayerManager;
 import RandomPvP.Core.Player.RPlayer;
-import RandomPvP.Core.Player.RPlayerManager;
 import RandomPvP.Core.Player.Rank.Rank;
-import com.sk89q.minecraft.util.commands.Command;
-import com.sk89q.minecraft.util.commands.CommandContext;
-import com.sk89q.minecraft.util.commands.CommandException;
-import com.sk89q.minecraft.util.commands.CommandUsageException;
+import net.minecraft.util.org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -23,35 +23,115 @@ import java.util.Arrays;
  * Thanks.
  * ***************************************************************************************
  */
-public class RankAdminCmd {
+public class RankAdminCmd extends RCommand {
 
-    @Command(aliases = { "perm", "rank" }, usage = "[set/unset] [player] [rank] - Sets a player's rank", desc = "Sets a player's rank", min = 1, max = 3)
-    public static void rank(final CommandContext args, CommandSender sender) throws CommandException {
-        if (sender instanceof Player) {
-            RPlayer pl = RPlayerManager.getInstance().getPlayer((Player) sender);
-            if (pl.getRank().has(Rank.ADMIN)) {
-                if (Bukkit.getPlayer(args.getString(1)) != null) {
-                    RPlayer target = RPlayerManager.getInstance().getPlayer(Bukkit.getPlayer(args.getString(1)));
-                    if (args.getString(0).equalsIgnoreCase("set")) {
-                        if (Rank.valueOf(args.getString(2).toUpperCase()) != null) {
-                            target.setRank(Rank.valueOf(args.getString(2).toUpperCase()), true);
-                            target.message("§6§l>> §eYour rank has been set to " + target.getRank().getName() + "§e.");
-                            pl.message("§6§l>> §eSet " + target.getRankedName(false) + "§e to " + target.getRank().getName());
-                        } else {
-                            throw new CommandException("Available ranks: " + String.valueOf(Arrays.asList(Rank.values())).replace("[", "").replace("]", ""));
-                        }
-                    } else if (args.getString(0).equalsIgnoreCase("unset")) {
-                        target.setRank(Rank.PLAYER, true);
-                        target.message("§6§l>> §eYour rank has been set to " + target.getRank().getName() + "§e.");
-                        pl.message("§6§l>> §eUnset " + target.getRankedName(false) + " §e's rank.");
+    public RankAdminCmd() {
+        super("perm");
+        setRank(Rank.ADMIN);
+        setAliases(Arrays.asList("rank"));
+        setDescription("Set a player's rank");
+        setArgsUsage("<Set/Unset> <Player> <Rank>");
+        setMinimumArgs(2);
+        setMaximumArgs(3);
+        setPlayerOnly(true);
+    }
+
+    @Override
+    public void onCommand(RPlayer pl, String string, String[] args) {
+        CommandSender console = null;
+        RPlayer player = pl;
+
+        if (Bukkit.getPlayer(args[1]) != null) {
+            RPlayer target = PlayerManager.getInstance().getPlayer(Bukkit.getPlayer(args[1]));
+            if (args[0].equalsIgnoreCase("set")) {
+                if (Rank.valueOf(args[2].toUpperCase()) != null) {
+                    target.setRank(Rank.valueOf(args[2].toUpperCase()), true);
+                    target.message("§6§l>> §eYour rank has been set to " + target.getRank().getName() + "§e.");
+                    if (player != null) {
+                        player.message("§6§l>> §eSet " + target.getRankedName(false) + "§e to " + target.getRank().getName());
                     } else {
-                        throw new CommandUsageException("Incorrect usage", "Arg 1 can only have 2 values [set] or [unset]");
+                        console.sendMessage("Set " + target.getName() + " to " + target.getRank().getName());
                     }
                 } else {
-                    throw new CommandException("Player not found! Are they online?");
+                    if (player != null) {
+                        Rank[] ranks = Rank.values();
+                        ArrayList<String> names = new ArrayList<>();
+
+                        for (Rank rank : ranks) {
+                            names.add(rank.getFormattedName());
+                        }
+
+                        player.message(MsgType.ERROR, "Available ranks: " + String.valueOf(StringUtils.join(names, "§7, ")));
+                    } else {
+                        Rank[] ranks = Rank.values();
+                        ArrayList<String> names = new ArrayList<>();
+
+                        for (Rank rank : ranks) {
+                            names.add(rank.getRank());
+                        }
+
+                        console.sendMessage("Available ranks: " + String.valueOf(StringUtils.join(names, "§7, ")));
+                    }
+                }
+            } else if (args[0].equalsIgnoreCase("unset")) {
+                target.setRank(Rank.PLAYER, true);
+                target.message("§6§l>> §eYour rank has been set to " + target.getRank().getName() + "§e.");
+                if (player != null) {
+                    player.message("§6§l>> §eUnset " + target.getRankedName(false) + " §e's rank.");
+                } else {
+                    console.sendMessage("Unset " + target.getName() + "'s rank");
                 }
             } else {
-                throw new CommandException("You need to be §oAdmin §7to use this command.");
+                console.sendMessage("Arg 1 can only have 2 values [set] or [unset]");
+            }
+        } else {
+            OfflineRPlayer target = new OfflineRPlayer(args[1]);
+            if (!target.isNull()) {
+                if (args[0].equalsIgnoreCase("set")) {
+                    if (Rank.valueOf(args[2].toUpperCase()) != null) {
+                        target.setRank(Rank.valueOf(args[2].toUpperCase()));
+                        if (player != null) {
+                            player.message("§6§l>> §eSet " + target.getRankedName(false) + "§e to " + target.getRank().getName());
+                        } else {
+                            console.sendMessage("Set " + target.getName() + " to " + target.getRank().getName());
+                        }
+                    } else {
+                        if (player != null) {
+                            Rank[] ranks = Rank.values();
+                            ArrayList<String> names = new ArrayList<>();
+
+                            for (Rank rank : ranks) {
+                                names.add(rank.getFormattedName());
+                            }
+
+                            player.message(MsgType.ERROR, "Available ranks: " + String.valueOf(StringUtils.join(names, "§7, ")));
+                        } else {
+                            Rank[] ranks = Rank.values();
+                            ArrayList<String> names = new ArrayList<>();
+
+                            for (Rank rank : ranks) {
+                                names.add(rank.getRank());
+                            }
+
+                            console.sendMessage("Available ranks: " + String.valueOf(StringUtils.join(names, "§7, ")));
+                        }
+                    }
+                } else if (args[0].equalsIgnoreCase("unset")) {
+                    target.setRank(Rank.PLAYER);
+                    if (player != null) {
+                        player.message("§6§l>> §eUnset " + target.getRankedName(false) + " §e's rank in the database.");
+                    } else {
+                        console.sendMessage("Unset " + target.getName() + "'s rank in the database");
+                    }
+                } else {
+                    console.sendMessage("Incorrect usageArg 1 can only have 2 values [set] or [unset]");
+                }
+            } else {
+                if (player != null) {
+                    player.message("Player not online and not found in the database, check your spelling!");
+                } else {
+                    console.sendMessage("Player not in database");
+                }
             }
         }
     }

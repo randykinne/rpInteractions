@@ -1,14 +1,10 @@
 package RandomPvP.Core.Commands.Game;
 
+import RandomPvP.Core.Commands.Command.RCommand;
 import RandomPvP.Core.Game.GameManager;
+import RandomPvP.Core.Player.MsgType;
 import RandomPvP.Core.Player.RPlayer;
-import RandomPvP.Core.Player.RPlayerManager;
-import com.sk89q.minecraft.util.commands.Command;
-import com.sk89q.minecraft.util.commands.CommandContext;
-import com.sk89q.minecraft.util.commands.CommandException;
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 /**
  * ***************************************************************************************
@@ -20,15 +16,21 @@ import org.bukkit.entity.Player;
  * Thanks.
  * ***************************************************************************************
  */
-public class WhereAmICommand {
+public class WhereAmICommand extends RCommand {
 
-    @Command(aliases = { "whereami", "where", "server" }, desc = "Shows your current game/location on the network.", usage = "- Shows your current game/location on the network", max = 0, min = 0)
-    public static void whereami(final CommandContext args, CommandSender sender) throws CommandException {
-        if (sender instanceof Player) {
-            RPlayer pl = RPlayerManager.getInstance().getPlayer((Player) sender);
-            pl.message("§8§l>> §7You are playing " + GameManager.getGame().getPrimaryColor() + GameManager.getGame().getName() + "§7 on " + GameManager.getGame().getPrimaryColor() + Bukkit.getServerName() + "§7.");
-        } else {
-            throw new CommandException("You must be a player to be on the server!");
-        }
+    public WhereAmICommand() {
+        super("whereami");
+        setPlayerOnly(true);
+        setDescription("Shows your current location on the network");
+    }
+
+    @Override
+    public void onCommand(RPlayer player, String string, String[] args) {
+        player.message(MsgType.GAME, "You are playing " +
+                GameManager.getGame().getPrimaryColor() +
+                GameManager.getGame().getName() +
+                "§7 on " +
+                GameManager.getGame().getPrimaryColor() +
+                Bukkit.getServerName() + "§7.");
     }
 }

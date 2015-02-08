@@ -36,4 +36,24 @@ public class MySQL {
         connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/19359?autoReconnect=true", "19359", "46728c06e0");
         return connection;
     }
+
+    public static String getAddress() {
+        return "jdbc:mysql://localhost:3306/19359?autoReconnect=true";
+    }
+
+    public static int getPort() {
+        return 3306;
+    }
+
+    public static String getDatabase() {
+        return "19359";
+    }
+
+    public static String getUsername() {
+        return "19359";
+    }
+
+    public static String getPassword() {
+        return "46728c06e0";
+    }
 }

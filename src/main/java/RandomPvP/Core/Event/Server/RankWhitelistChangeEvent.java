@@ -1,7 +1,7 @@
 package RandomPvP.Core.Event.Server;
 
+import RandomPvP.Core.Player.PlayerManager;
 import RandomPvP.Core.Player.RPlayer;
-import RandomPvP.Core.Player.RPlayerManager;
 import RandomPvP.Core.Player.Rank.Rank;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Cancellable;
@@ -25,14 +25,21 @@ public class RankWhitelistChangeEvent extends Event implements Cancellable {
     private boolean cancelled = false;
     private static HandlerList handlers = new HandlerList();
 
-    public RankWhitelistChangeEvent(RPlayer pl, Rank to) {
+    public RankWhitelistChangeEvent(Object pl, Rank to) {
         rank = to;
-        player = pl;
-        Bukkit.broadcastMessage("§6§l>> " + pl.getRankedName(false) + " §eset the minimum rank to " + rank.getTag().replace(" ", "") + "§e.");
+        if (pl instanceof RPlayer) {
+            player = (RPlayer) pl;
+        }
 
-        for (RPlayer po : RPlayerManager.getInstance().getOnlinePlayers()) {
-            if (!po.getRank().has(to)) {
-                po.getPlayer().kickPlayer("You must have " + to.getTag() + "§fto join this server!");
+        Bukkit.broadcastMessage("§6§l>> " + (pl instanceof RPlayer ? ((RPlayer) pl).getRankedName(false) : "§4Console")  + " §eset the minimum rank to " + rank.getName() + "§e.");
+
+        if (PlayerManager.getInstance().getOnlinePlayers() != null) {
+            if (PlayerManager.getInstance().getOnlinePlayers().size() > 0) {
+                for (RPlayer po : PlayerManager.getInstance().getOnlinePlayers()) {
+                    if (!po.getRank().has(to)) {
+                        po.getPlayer().kickPlayer("You must have " + to.getTag() + "§fto join this server!");
+                    }
+                }
             }
         }
     }

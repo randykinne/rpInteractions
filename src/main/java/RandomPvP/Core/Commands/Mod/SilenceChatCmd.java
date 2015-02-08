@@ -1,14 +1,16 @@
 package RandomPvP.Core.Commands.Mod;
 
+import RandomPvP.Core.Commands.Command.RCommand;
+import RandomPvP.Core.Player.PlayerManager;
 import RandomPvP.Core.Player.RPlayer;
-import RandomPvP.Core.Player.RPlayerManager;
+import RandomPvP.Core.Player.Rank.Rank;
+import RandomPvP.Core.RPICore;
 import RandomPvP.Core.Util.ServerToggles;
-import com.sk89q.minecraft.util.commands.Command;
-import com.sk89q.minecraft.util.commands.CommandContext;
-import com.sk89q.minecraft.util.commands.CommandException;
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+import org.bukkit.Sound;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.Arrays;
 
 /**
  * ***************************************************************************************
@@ -20,47 +22,40 @@ import org.bukkit.entity.Player;
  * Thanks.
  * ***************************************************************************************
  */
-public class SilenceChatCmd {
+public class SilenceChatCmd extends RCommand {
 
-    @Command(aliases = "silencechat", desc = "Disables chat for non staff members", usage = "Toggles chat for non staff members")
-    public static void chat(final CommandContext args, CommandSender sender) throws CommandException {
-        if (sender instanceof Player) {
-            RPlayer pl = RPlayerManager.getInstance().getPlayer((Player) sender);
-            if (pl.isStaff()) {
-                if (ServerToggles.isChatEnabled()) {
-                    ServerToggles.setChatEnabled(false);
-                    /*Bukkit.broadcastMessage("§c╔══════════════════════════════════");
-                    Bukkit.broadcastMessage("§c║ §4§lCHAT SILENCED! §7Requested by " + pl.getRankedName(false));
-                    Bukkit.broadcastMessage("§c║ §7All non-staff members have been silenced.");
-                    Bukkit.broadcastMessage("§c╚══════════════════════════════════");
-                    */
-                    Bukkit.broadcastMessage("§4§m----------------------------------------------------");
-                    Bukkit.broadcastMessage("\n");
-                    Bukkit.broadcastMessage("§c§lCHAT SILENCED! §7Requested by " + pl.getRankedName(false));
-                    Bukkit.broadcastMessage("\n");
-                    Bukkit.broadcastMessage("§7All non-staff members have been silenced.");
-                    Bukkit.broadcastMessage("\n");
-                    Bukkit.broadcastMessage("§4§m----------------------------------------------------");
-                } else {
-                    ServerToggles.setChatEnabled(true);
-                    /*
-                    Bukkit.broadcastMessage("§a╔══════════════════════════════════");
-                    Bukkit.broadcastMessage("§a║ §2§lYOU MAY SPEAK AGAIN!! §7Requested by " + pl.getRankedName(false));
-                    Bukkit.broadcastMessage("§a║ §7Chat has been returned to normal state, all players may now speak.");
-                    Bukkit.broadcastMessage("§a╚══════════════════════════════════");
-                    */
+    public SilenceChatCmd() {
+        super("silencechat");
+        setRank(Rank.MOD);
+        setAliases(Arrays.asList("globalmute", "muteall", "silence"));
+        setDescription("Prevents all non-VIP+ players from speaking");
+    }
 
-                    Bukkit.broadcastMessage("§2§m----------------------------------------------------");
-                    Bukkit.broadcastMessage("\n");
-                    Bukkit.broadcastMessage("§a§lYOU MAY SPEAK AGAIN! §7Requested by " + pl.getRankedName(false));
-                    Bukkit.broadcastMessage("\n");
-                    Bukkit.broadcastMessage("§7Chat has been returned to normal state.");
-                    Bukkit.broadcastMessage("\n");
-                    Bukkit.broadcastMessage("§2§m----------------------------------------------------");
-                }
-            } else {
-                throw new CommandException("§7You need to be §oMod §7to use this command.");
-            }
+    @Override
+    public void onCommand(RPlayer pl, String string, String[] args) {
+        for (RPlayer p : PlayerManager.getInstance().getOnlinePlayers()) {
+            p.getPlayer().playSound(p.getPlayer().getLocation(), Sound.ENDERDRAGON_GROWL, 1L, 1L);
         }
+
+        if (ServerToggles.isChatEnabled()) {
+            ServerToggles.setChatEnabled(false);
+            Bukkit.broadcastMessage("§4§l>> §c§lSILENCE!");
+            new BukkitRunnable() {
+                public void run() {
+                    Bukkit.broadcastMessage("§4§l>> §8(§7§oGlobal Mute §c§oEnabled§8)");
+                    Bukkit.broadcastMessage("§4§l>> §8(§7§oAll non-staff members have been silenced§8)");
+                }
+            }.runTaskLater(RPICore.getInstance(), 15L);
+        } else {
+            ServerToggles.setChatEnabled(true);
+            Bukkit.broadcastMessage("§2§l>> §a§lYOU MAY SPEAK AGAIN!");
+            new BukkitRunnable() {
+                public void run() {
+                    Bukkit.broadcastMessage("§2§l>> §8(§7§oGlobal Mute §a§oDisabled§8)");
+                    Bukkit.broadcastMessage("§2§l>> §8(§7§oChat has been returned to normal state§8)");
+                }
+            }.runTaskLater(RPICore.getInstance(), 15L);
+        }
+
     }
 }

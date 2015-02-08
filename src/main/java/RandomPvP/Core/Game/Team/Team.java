@@ -1,5 +1,6 @@
 package RandomPvP.Core.Game.Team;
 
+import RandomPvP.Core.Player.PlayerManager;
 import RandomPvP.Core.Player.RPlayer;
 import org.bukkit.ChatColor;
 
@@ -29,11 +30,11 @@ public class Team {
     boolean teamDisplayNameColor = true;
     boolean usesCustomChatChannel = false;
 
-    private Map<String, RPlayer> members = new HashMap<>();
+    private Map<String, Integer> members = new HashMap<>();
 
     public void addPlayer(RPlayer player) {
         if (!members.containsValue(player)) {
-            members.put(player.getName(), player);
+            members.put(player.getName(), player.getRPID());
             player.setTeam(this);
         }
     }
@@ -45,8 +46,15 @@ public class Team {
         }
     }
 
-    public Collection<RPlayer> getPlayers() { return members.values(); }
+    public Collection<RPlayer> getPlayers() {
+        Map<Integer, RPlayer> players = new HashMap<>();
 
+        for (Integer i : members.values()) {
+            players.put(i, PlayerManager.getInstance().getPlayer(i));
+        }
+
+        return players.values();
+    }
 
 
     public Team(String name, String teamName, ChatColor color) {
@@ -92,7 +100,7 @@ public class Team {
     public int getMaxSize() {
         return maxSize;
     }
-    public void setMaxsize(int size) {
+    public void setMaxSize(int size) {
         this.maxSize = size;
     }
 

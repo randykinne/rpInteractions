@@ -2,8 +2,8 @@ package RandomPvP.Core.Player.Scoreboard;
 
 import RandomPvP.Core.Game.GameManager;
 import RandomPvP.Core.Game.Team.*;
+import RandomPvP.Core.Player.PlayerManager;
 import RandomPvP.Core.Player.RPlayer;
-import RandomPvP.Core.Player.RPlayerManager;
 import RandomPvP.Core.Player.Rank.Rank;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -16,7 +16,7 @@ public class RandomPvPScoreboard {
 
     public static void updateScoreboard(boolean force) {
         // Its in lobby so everyone needs their own scoreboards
-        for (RPlayer p : RPlayerManager.getInstance().getOnlinePlayers()) {
+        for (RPlayer p : PlayerManager.getInstance().getOnlinePlayers()) {
             updateScorebard(p.getPlayer(), force);
         }
     }
@@ -25,7 +25,7 @@ public class RandomPvPScoreboard {
         if (!p.isOnline() || p.isDead()) {
             return;
         }
-        if (RPlayerManager.getInstance().getPlayer(p) == null || RPlayerManager.getInstance().getPlayer(p).getPlayer() == null)
+        if (PlayerManager.getInstance().getPlayer(p) == null || PlayerManager.getInstance().getPlayer(p).getPlayer() == null)
             return;
 
         Scoreboard sb = Bukkit.getScoreboardManager().getNewScoreboard();
@@ -73,16 +73,16 @@ public class RandomPvPScoreboard {
         }
 
         // Setup scoreboard
-        for (RPlayer pl : RPlayerManager.getInstance().getOnlinePlayers()) {
+        for (RPlayer pl : PlayerManager.getInstance().getOnlinePlayers()) {
             Player p = pl.getPlayer();
-            if (p == null || !p.isOnline() || RPlayerManager.getInstance().getPlayer(p) == null || RPlayerManager.getInstance().getPlayer(p).getPlayer() == null)
+            if (p == null || !p.isOnline() || PlayerManager.getInstance().getPlayer(p) == null || PlayerManager.getInstance().getPlayer(p).getPlayer() == null)
                 continue;
             Team team = null;
             // Its starting so make it just the reg rank with no color.
             if (pl.getTeam() != null || !GameManager.getState().getName().equalsIgnoreCase("Lobby")) {
-                team = scoreboard.getTeam(RPlayerManager.getInstance().getPlayer(p).getRank().name());
+                team = scoreboard.getTeam(PlayerManager.getInstance().getPlayer(p).getRank().name());
             } else {
-                team = scoreboard.getTeam(RPlayerManager.getInstance().getPlayer(p).getRank().name() + RPlayerManager.getInstance().getPlayer(p).getTeam().getColor().name());
+                team = scoreboard.getTeam(PlayerManager.getInstance().getPlayer(p).getRank().name() + PlayerManager.getInstance().getPlayer(p).getTeam().getColor().name());
             }
             if (team == null) {
                 team = scoreboard.getTeam(Rank.PLAYER.getName());

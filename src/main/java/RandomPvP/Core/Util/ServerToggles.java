@@ -14,9 +14,16 @@ import RandomPvP.Core.Player.Rank.Rank;
  */
 public class ServerToggles {
 
+    static boolean checkForBan = true;
     static boolean chatEnabled = true;
     static Rank rankWhitelist = Rank.PLAYER;
     static boolean editMode = false;
+
+    public static void setCheckForBan(boolean boo) {
+        boo = checkForBan;
+    }
+
+    public static boolean checkForBan() { return checkForBan; }
 
     public static void setChatEnabled(boolean chat) {
         chatEnabled = chat;

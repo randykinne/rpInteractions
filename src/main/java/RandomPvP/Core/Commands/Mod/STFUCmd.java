@@ -1,12 +1,10 @@
 package RandomPvP.Core.Commands.Mod;
 
+import RandomPvP.Core.Commands.Command.RCommand;
 import RandomPvP.Core.Player.RPlayer;
-import RandomPvP.Core.Player.RPlayerManager;
-import com.sk89q.minecraft.util.commands.Command;
-import com.sk89q.minecraft.util.commands.CommandContext;
-import com.sk89q.minecraft.util.commands.CommandException;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+import RandomPvP.Core.Player.Rank.Rank;
+
+import java.util.Arrays;
 
 /**
  * ***************************************************************************************
@@ -18,19 +16,18 @@ import org.bukkit.entity.Player;
  * Thanks.
  * ***************************************************************************************
  */
-public class STFUCmd {
+public class STFUCmd extends RCommand {
 
-    @Command(aliases = { "stfu", "togglestaffmessages", "togglestfu" },  desc = "Toggles staff messages", usage = "- ", max = 0)
-    public static void stfu(final CommandContext args, CommandSender sender) throws CommandException {
-        if (sender instanceof Player) {
-            RPlayer pl = RPlayerManager.getInstance().getPlayer((Player) sender);
-            if (pl.isStaff()) {
-                pl.toggleSTFU();
-            } else {
-                throw new CommandException("§7You need to be §oMod §7to use this command.");
-            }
-        } else {
-            sender.sendMessage("You must be a staff/player");
-        }
+    public STFUCmd() {
+        super("stfu");
+        setRank(Rank.MOD);
+        setPlayerOnly(true);
+        setDescription("Toggles staff chat notifications");
+        setAliases(Arrays.asList("togglestaffmessages", "togglestfu"));
+    }
+
+    @Override
+    public void onCommand(RPlayer pl, String string, String[] args) {
+        pl.getStaff().toggleSTFU();
     }
 }

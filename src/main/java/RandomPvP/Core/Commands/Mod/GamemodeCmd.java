@@ -1,14 +1,12 @@
 package RandomPvP.Core.Commands.Mod;
 
+import RandomPvP.Core.Commands.Command.RCommand;
+import RandomPvP.Core.Player.MsgType;
 import RandomPvP.Core.Player.RPlayer;
-import RandomPvP.Core.Player.RPlayerManager;
 import RandomPvP.Core.Player.Rank.Rank;
-import com.sk89q.minecraft.util.commands.Command;
-import com.sk89q.minecraft.util.commands.CommandContext;
-import com.sk89q.minecraft.util.commands.CommandException;
 import org.bukkit.GameMode;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+
+import java.util.Arrays;
 
 /**
  * ***************************************************************************************
@@ -20,29 +18,31 @@ import org.bukkit.entity.Player;
  * Thanks.
  * ***************************************************************************************
  */
-public class GamemodeCmd {
+public class GameModeCmd extends RCommand {
 
-    @Command(aliases = { "gm", "gamemode" }, desc = "Changes gamemode", usage = "[#/gamemode]", min = 1)
-    public static void gamemode(final CommandContext args, CommandSender sender) throws CommandException {
-        if (sender instanceof Player) {
-            RPlayer pl = RPlayerManager.getInstance().getPlayer((Player) sender);
-            if (pl.getRank().has(Rank.BUILDER)) {
-                if (args.getString(0).equalsIgnoreCase("0") || args.getString(0).equalsIgnoreCase("survival") || args.getString(0).equalsIgnoreCase("s")) {
-                    pl.getPlayer().setGameMode(GameMode.SURVIVAL);
-                } else if (args.getString(0).equalsIgnoreCase("1") || args.getString(0).equalsIgnoreCase("creative") || args.getString(0).equalsIgnoreCase("c")) {
-                    pl.getPlayer().setGameMode(GameMode.CREATIVE);
-                } else if (args.getString(0).equalsIgnoreCase("2") || args.getString(0).equalsIgnoreCase("adventure") || args.getString(0).equalsIgnoreCase("a")) {
-                    pl.getPlayer().setGameMode(GameMode.ADVENTURE);
-                } else {
-                    throw new CommandException("Gamemode not found!");
-                }
+    public GameModeCmd() {
+        super("gamemode");
+        setRank(Rank.BUILDER);
+        setPlayerOnly(true);
+        setDescription("Changes your gamemode");
+        setArgsUsage("<0|1|2>");
+        setAliases(Arrays.asList("gm"));
+        setMaximumArgs(1);
+    }
 
-                pl.message("§6§l>> §7Gamemode switched to §e" + pl.getPlayer().getGameMode().name() + "§7.");
-            } else {
-                throw new CommandException("§7You need to be §oBuilder §7to use this command.");
-            }
+    @Override
+    public void onCommand(RPlayer pl, String string, String[] args) {
+
+        if (args[0].equalsIgnoreCase("0") || args[0].equalsIgnoreCase("survival") || args[0].equalsIgnoreCase("s")) {
+            pl.getPlayer().setGameMode(GameMode.SURVIVAL);
+        } else if (args[0].equalsIgnoreCase("1") || args[0].equalsIgnoreCase("creative") || args[0].equalsIgnoreCase("c")) {
+            pl.getPlayer().setGameMode(GameMode.CREATIVE);
+        } else if (args[0].equalsIgnoreCase("2") || args[0].equalsIgnoreCase("adventure") || args[0].equalsIgnoreCase("a")) {
+            pl.getPlayer().setGameMode(GameMode.ADVENTURE);
         } else {
-            sender.sendMessage("You must be a player to use this command");
+            pl.message(MsgType.ERROR, "Gamemode not found!");
         }
+
+        pl.message("§6§l>> §eGameMode set to §a" + pl.getPlayer().getGameMode().name() + "§7.");
     }
 }

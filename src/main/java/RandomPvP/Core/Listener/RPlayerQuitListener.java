@@ -1,12 +1,11 @@
 package RandomPvP.Core.Listener;
 
-import RandomPvP.Core.Game.GameManager;
 import RandomPvP.Core.Game.Team.TeamManager;
+import RandomPvP.Core.Player.PlayerManager;
 import RandomPvP.Core.Player.RPlayer;
-import RandomPvP.Core.Player.RPlayerManager;
+import RandomPvP.Core.Player.Rank.Rank;
 import RandomPvP.Core.RPICore;
-import RandomPvP.Core.Util.RPStaff;
-import org.bukkit.Bukkit;
+import RandomPvP.Core.Util.Broadcasts;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerKickEvent;
@@ -28,7 +27,7 @@ public class RPlayerQuitListener implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
 
-            final RPlayer pl = RPlayerManager.getInstance().getPlayer(e.getPlayer());
+            final RPlayer pl = PlayerManager.getInstance().getPlayer(e.getPlayer());
 
             if (pl.getTeam() != null) {
                 TeamManager.leaveTeam(pl, pl.getTeam());
@@ -41,33 +40,20 @@ public class RPlayerQuitListener implements Listener {
             }.runTaskAsynchronously(RPICore.getInstance());
 
 
-            if (pl.isVIP()) {
+            if (pl.has(Rank.VIP)) {
                 e.setQuitMessage(null);
-                RPStaff.sendVIPMessage(pl.getRankedName(false) + " §7left§7.", false);
+                Broadcasts.sendRankedBroadcast(Rank.MOD, false, false, pl.getRankedName(false) + " §9left§7.");
             } else {
-                e.setQuitMessage("§4§l<< " + pl.getRankedName(false));
+                e.setQuitMessage("§c§l<< " + pl.getRankedName(false) + " §9left.");
             }
 
 
-            RPlayerManager.getInstance().removePlayer(e.getPlayer());
+            PlayerManager.getInstance().removePlayer(e.getPlayer());
     }
 
-    /*@EventHandler
+    @EventHandler
     public void onKick(PlayerKickEvent e) {
-        RPlayer pl = RPlayerManager.getInstance().getPlayer(e.getPlayer());
-
-        pl.saveData();
-
-        if (pl.isStaff() || pl.isVIP()) {
-            e.setLeaveMessage(null);
-            RPStaff.sendVIPMessage(pl.getRankedName(false) + " §7was kicked from " + GameManager.getGame().getPrimaryColor() + Bukkit.getServerName() + "§7.", true);
-        } else {
-            e.setLeaveMessage("§4§l<< " + pl.getRankedName(false) + " §7was kicked.");
-        }
-
-
-        RPlayerManager.getInstance().removePlayer(e.getPlayer());
-
-
-    }*/
+        RPlayer pl = PlayerManager.getInstance().getPlayer(e.getPlayer());
+        e.setLeaveMessage("§4§l<< " + pl.getRankedName(false) + " §cwas kicked.");
+    }
 }
