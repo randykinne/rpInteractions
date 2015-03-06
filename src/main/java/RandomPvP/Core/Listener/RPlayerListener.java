@@ -70,6 +70,7 @@ public class RPlayerListener implements Listener {
     }
     */
 
+    @SuppressWarnings("deprecation")
     @EventHandler
     public void onDeath(final PlayerDeathEvent e) {
         new BukkitRunnable() {
