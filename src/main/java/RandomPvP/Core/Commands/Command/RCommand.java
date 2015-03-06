@@ -33,10 +33,8 @@ public abstract class RCommand extends Command {
         super(name);
     }
 
-
     @Override
     public boolean execute(CommandSender sender, String s, String[] strings) {
-
         try {
             checkCommand(sender, s, strings);
             args = strings;
@@ -71,12 +69,14 @@ public abstract class RCommand extends Command {
             throw new CommandException(getUsage());
         }
 
-        onCommand(PlayerManager.getInstance().getPlayer((Player) sender), s, args);
-
+        if(playerOnly) {
+            onCommand(PlayerManager.getInstance().getPlayer((Player) sender), s, args);
+        } else {
+            onCommand(PlayerManager.getInstance().getConsole(), s, args);
+        }
     }
 
     public abstract void onCommand(RPlayer pl, String string, String[] args);
-
 
     public String getString(int where) {
         return args[where];
@@ -117,6 +117,6 @@ public abstract class RCommand extends Command {
     }
 
     public void setArgsUsage(String msg) {
-        setUsage("" + "/" + getName() + msg + " - " + (getDescription() != null ? getDescription() : "No description."));
+        setUsage("" + "/" + getName() + " " + msg + " - " + (getDescription() != null ? getDescription() : "No description."));
     }
 }

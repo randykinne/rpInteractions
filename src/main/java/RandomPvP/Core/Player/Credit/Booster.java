@@ -43,8 +43,8 @@ public class Booster {
                     PreparedStatement stmt = MySQL.getConnection().prepareStatement("INSERT INTO `credit_booster` VALUES (?, ?, ?, ?, ?);");
                     stmt.setInt(1, 0);
                     stmt.setInt(2, getPlayer().getRPID());
-                    stmt.setInt(3, getMultiplier());
-                    stmt.setLong(4, getDuration());
+                    stmt.setLong(3, getDuration());
+                    stmt.setInt(4, getMultiplier());
                     stmt.setBoolean(5, isActive());
 
                     stmt.executeUpdate();

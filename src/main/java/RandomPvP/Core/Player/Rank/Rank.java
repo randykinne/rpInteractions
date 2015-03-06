@@ -16,11 +16,11 @@ import org.bukkit.ChatColor;
 public enum Rank {
 
     PLAYER(0, "PLAYER", "", ChatColor.BLUE),
-    PREMIUM(1, "PREMIUM", "PREMIUM ", ChatColor.AQUA),
-    VIP(2, "VIP", "VIP ", ChatColor.YELLOW),
-    BUILDER(3, "BUILDER", "BUILDER ", ChatColor.DARK_GREEN),
-    MOD(4, "MOD", "MOD ", ChatColor.DARK_PURPLE),
-    SUPPORT(5, "SUPPORT", "SUPPORT ", ChatColor.DARK_AQUA),
+    PRIME(1, "PRIME", "PRIME ", ChatColor.GOLD),
+    PREMIUM(2, "PREMIUM", "PREMIUM ", ChatColor.AQUA),
+    VIP(3, "VIP", "VIP ", ChatColor.YELLOW),
+    BUILDER(4, "BUILDER", "BUILDER ", ChatColor.DARK_GREEN),
+    MOD(5, "MOD", "MOD ", ChatColor.DARK_PURPLE),
     ADMIN(6, "ADMIN", "ADMIN ", ChatColor.RED),
     OWNER(7, "OWNER", "OWNER ", ChatColor.DARK_RED);
 
@@ -39,7 +39,7 @@ public enum Rank {
         return weight;
     }
 
-    public String getFormattedName() { return WordUtils.capitalizeFully(getName()); }
+    public String getFormattedName() { return getName().toUpperCase(); }
 
     public String getRank() { return rank; }
 

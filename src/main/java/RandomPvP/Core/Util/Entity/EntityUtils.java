@@ -20,4 +20,5 @@ public class EntityUtils {
     public static boolean isCreature(Entity entity) {
         return entity instanceof Creature || entity instanceof Slime || entity instanceof Ghast;
     }
+
 }

@@ -60,38 +60,45 @@ public class RandomPvPScoreboard {
     }
 
     public static Scoreboard assignPlayerTeams(Scoreboard scoreboard) {
-        if (scoreboard.getTeams().isEmpty()) {
-            for (Rank tag : Rank.values()) {
-                // In game so register these extra teams
-                for (RandomPvP.Core.Game.Team.Team t : TeamManager.getTeams().values()) {
-                    scoreboard.registerNewTeam(tag.name() + t.getColor().name()).setPrefix(
-                            (tag != Rank.PLAYER ? (tag.getName()) : "") + t.getColor());
+        try {
+            if (scoreboard.getTeams().isEmpty()) {
+                for (Rank tag : Rank.values()) {
+                    // In game so register these extra teams
+                    for (RandomPvP.Core.Game.Team.Team t : TeamManager.getTeams().values()) {
+                        scoreboard.registerNewTeam(tag.name() + t.getColor().name()).setPrefix(
+                                (tag != Rank.PLAYER ? (tag.getName()) : "") + t.getColor());
+                    }
+
+                    scoreboard.registerNewTeam(tag.name()).setPrefix((tag != Rank.PLAYER ? (tag.getTag() + ChatColor.RESET + "") : ""));
+                }
+            }
+
+            // Setup scoreboard
+            for (RPlayer pl : PlayerManager.getInstance().getOnlinePlayers()) {
+                Player p = pl.getPlayer();
+                if (p == null || !p.isOnline() || PlayerManager.getInstance().getPlayer(p) == null || PlayerManager.getInstance().getPlayer(p).getPlayer() == null)
+                    continue;
+                Team team = null;
+                // Its starting so make it just the reg rank with no color.
+                if (pl.getTeam() != null || !GameManager.getState().getName().equalsIgnoreCase("Lobby")) {
+                    team = scoreboard.getTeam(PlayerManager.getInstance().getPlayer(p).getRank().name());
+                } else {
+                    team = scoreboard.getTeam(PlayerManager.getInstance().getPlayer(p).getRank().name() + PlayerManager.getInstance().getPlayer(p).getTeam().getColor().name());
+                }
+                if (team == null) {
+                    team = scoreboard.getTeam(Rank.PLAYER.getName());
                 }
 
-                scoreboard.registerNewTeam(tag.name()).setPrefix((tag != Rank.PLAYER ? (tag.getTag() + ChatColor.RESET + "") : ""));
+                team.setCanSeeFriendlyInvisibles(false);
+                if (!team.hasEntry(p.getName())) {
+                    team.addPlayer(p);
+                }
             }
-        }
-
-        // Setup scoreboard
-        for (RPlayer pl : PlayerManager.getInstance().getOnlinePlayers()) {
-            Player p = pl.getPlayer();
-            if (p == null || !p.isOnline() || PlayerManager.getInstance().getPlayer(p) == null || PlayerManager.getInstance().getPlayer(p).getPlayer() == null)
-                continue;
-            Team team = null;
-            // Its starting so make it just the reg rank with no color.
-            if (pl.getTeam() != null || !GameManager.getState().getName().equalsIgnoreCase("Lobby")) {
-                team = scoreboard.getTeam(PlayerManager.getInstance().getPlayer(p).getRank().name());
-            } else {
-                team = scoreboard.getTeam(PlayerManager.getInstance().getPlayer(p).getRank().name() + PlayerManager.getInstance().getPlayer(p).getTeam().getColor().name());
-            }
-            if (team == null) {
-                team = scoreboard.getTeam(Rank.PLAYER.getName());
-            }
-
-            team.setCanSeeFriendlyInvisibles(false);
-            if (!team.hasEntry(p.getName())) {
-                team.addPlayer(p);
-            }
+        } catch (Exception ex) {
+            System.out.println("*---------------------*");
+            System.out.println("|     SCOREBOARD      |");
+            System.out.println("|     EXCEPTION       |");
+            System.out.println("*---------------------*");
         }
         return scoreboard;
     }

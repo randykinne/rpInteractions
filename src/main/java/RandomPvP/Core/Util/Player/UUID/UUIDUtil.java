@@ -34,7 +34,15 @@ public class UUIDUtil {
                 PLAYER_UUIDS.put(player, id);
                 return id;
             } catch (Exception e) {
-                e.printStackTrace();
+                if(e.getMessage().equals("The client has sent too many requests within a certain amount of time")) {
+                    System.out.println("*-------------------------*");
+                    System.out.println("|   SENT TOO MANY UUID    |");
+                    System.out.println("|   REQUESTS TO MOJANG!   |");
+                    System.out.println("*-------------------------*");
+
+                } else {
+                    e.printStackTrace();
+                }
             }
         }
 

@@ -32,7 +32,7 @@ public class HubCmd extends RCommand {
         new BukkitRunnable() {
             @Override
             public void run() {
-                pl.send("Hub");
+                pl.send("H1");
             }
         }.runTaskLaterAsynchronously(RPICore.getInstance(), 40L);
     }

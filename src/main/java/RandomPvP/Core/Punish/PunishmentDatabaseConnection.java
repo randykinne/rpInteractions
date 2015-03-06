@@ -1,5 +1,7 @@
 package RandomPvP.Core.Punish;
 
+import RandomPvP.Core.Data.MySQL;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -56,7 +58,7 @@ public class PunishmentDatabaseConnection {
      * @throws ClassNotFoundException
      */
     public PreparedStatement getPreparedStatement(String sql) throws SQLException, ClassNotFoundException {
-        return getConnection().prepareStatement(sql);
+        return MySQL.getConnection().prepareStatement(sql);
     }
 
     /**

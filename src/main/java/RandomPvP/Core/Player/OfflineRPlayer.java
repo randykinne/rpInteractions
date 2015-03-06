@@ -2,8 +2,11 @@ package RandomPvP.Core.Player;
 
 import RandomPvP.Core.Data.MySQL;
 import RandomPvP.Core.Player.Rank.Rank;
+import RandomPvP.Core.Punish.Punishment;
+import RandomPvP.Core.Punish.PunishmentManager;
 import RandomPvP.Core.RPICore;
 import RandomPvP.Core.Util.Player.UUID.UUIDUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.sql.PreparedStatement;
@@ -33,18 +36,7 @@ public class OfflineRPlayer {
 
 
     public OfflineRPlayer(final String name) {
-        new BukkitRunnable() {
-            public void run() {
-                setUUID(UUIDUtil.getUUID(name));
-            }
-        }.runTaskAsynchronously(RPICore.getInstance());
-
-        if (uuid == null) {
-            Thread th = new Thread();
-            th.start();
-            setUUID(UUIDUtil.getUUID(name));
-            th.stop();
-        }
+        uuid = Bukkit.getOfflinePlayer(name).getUniqueId();
 
         this.name = name;
 
@@ -70,6 +62,31 @@ public class OfflineRPlayer {
             }
         }
     }
+
+    public OfflineRPlayer(final int rpid) {
+        try {
+            PreparedStatement stmt = MySQL.getConnection().prepareStatement("SELECT * FROM `accounts` WHERE `rpid`=?");
+            stmt.setInt(1, rpid);
+            ResultSet set = stmt.executeQuery();
+
+            if (set.next()) {
+                setRank(Rank.valueOf(set.getString("rank").toUpperCase()));
+                setCredits(set.getInt("credits"));
+                ip = set.getString("ip").replace("-", ".");
+                setName(set.getString("username"));
+                isnull = false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        uuid = Bukkit.getOfflinePlayer(name).getUniqueId();
+
+        if (uuid == null) {
+            isnull = true;
+        }
+    }
+
 
     public synchronized void saveData() {
         new BukkitRunnable() {
@@ -97,13 +114,21 @@ public class OfflineRPlayer {
     }
     public void setName(String name) { this.name = name; }
 
+    public boolean isBanned() {
+        return PunishmentManager.getInstance().hasBanActive(getUUID());
+    }
+
+    public boolean isMuted() {
+        return PunishmentManager.getInstance().hasMuteActive(getUUID());
+    }
+
+    public Punishment getMute() {
+        return PunishmentManager.getInstance().getActiveMute(getUUID());
+    }
+
     public String getRankedName(boolean hasTag) {
-        if (!isNull()) {
-            if (hasTag) {
-                return getRank().getTag() + getRank().getColor() + name;
-            } else {
-                return getRank().getColor() + name;
-            }
+        if (hasTag) {
+            return getRank().getTag() + getRank().getColor() + name;
         } else {
             return getRank().getColor() + name;
         }

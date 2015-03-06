@@ -30,28 +30,7 @@ public class GoToCmd extends RCommand {
 
     @Override
     public void onCommand(RPlayer player, String string, String[] args) {
-        String server = "H1";
-
-        switch (args[0]) {
-            case "PvPAcademy": server = "PA1"; break;
-            case "pvpacademy": server = "PA1"; break;
-            case "pvpac": server = "PA1"; break;
-            case "PA": server = "PA1"; break;
-            case "PA1": server = "PA1"; break;
-
-            case "UltraHardCore": server = "UHC1"; break;
-            case "UHC": server = "UHC1"; break;
-
-            case "GhostCraft": server = "GC1"; break;
-            case "GC": server = "GC1"; break;
-            case "Ghost": server = "GC1"; break;
-            case "gh": server = "GC1"; break;
-            case "gho": server = "GC1"; break;
-
-            default:
-        }
-
-        player .send(server);
+        player.send(args[0]);
 
     }
 

@@ -1,6 +1,7 @@
 package RandomPvP.Core.Util;
 
 import RandomPvP.Core.Game.Team.Team;
+import RandomPvP.Core.Player.OfflineRPlayer;
 import RandomPvP.Core.Player.PlayerManager;
 import RandomPvP.Core.Player.RPlayer;
 import RandomPvP.Core.Player.Rank.Rank;
@@ -29,6 +30,7 @@ public class Broadcasts implements PluginMessageListener {
     public static void sendRankedBroadcast(Rank rank, boolean specific, boolean global, String message) {
 
         //message = "§8[" + rank.getColor() + rank.getName() + "§8] " + message;
+        String rawMsg = message;
 
         if (rank == Rank.MOD && !specific) {
             message = "§8(§6Staff§8) " + message;
@@ -55,7 +57,7 @@ public class Broadcasts implements PluginMessageListener {
         }
 
         if (global) {
-            forwardString(rank.getName(), "ONLINE", message);
+            forwardString(rank.getName(), "ONLINE", rawMsg);
         }
     }
 
@@ -135,4 +137,37 @@ public class Broadcasts implements PluginMessageListener {
 
         return p;
     }
+
+    public static void sendPlayerMessage(OfflineRPlayer p, String msg) {
+        if(NetworkUtil.getOnlinePlayers().contains(p.getName())) {
+            try {
+                ByteArrayOutputStream b = new ByteArrayOutputStream();
+                DataOutputStream out = new DataOutputStream(b);
+
+                out.writeUTF("Message");
+                out.writeUTF(p.getName());
+                out.writeUTF(msg);
+
+                getRandomPlayer().sendPluginMessage(RPICore.getInstance(), "BungeeCord", b.toByteArray());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    public static void kickPlayerFromNetwork(RPlayer p, String reason) {
+        try {
+            ByteArrayOutputStream b = new ByteArrayOutputStream();
+            DataOutputStream out = new DataOutputStream(b);
+
+            out.writeUTF("KickPlayer");
+            out.writeUTF(p.getName());
+            out.writeUTF(reason);
+
+            p.getPlayer().sendPluginMessage(RPICore.getInstance(), "BungeeCord", b.toByteArray());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
 }

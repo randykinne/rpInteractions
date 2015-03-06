@@ -21,13 +21,14 @@ public class SayCmd extends RCommand {
     public SayCmd() {
         super("say");
         setRank(Rank.MOD);
+        setPlayerOnly(true);
         setDescription("Broadcast a message to the whole server");
-        setArgsUsage("<Message>");
+        setArgsUsage(" <Message>");
         setMinimumArgs(1);
     }
 
     @Override
     public void onCommand(RPlayer pl, String string, String[] args) {
-        Bukkit.broadcastMessage("§5§l<§8Say§5§l> " + pl.getRankedName(false) + " §d" + StringUtils.join(args, " ", 1));
+        Bukkit.broadcastMessage("§5§l<§8Say§5§l> " + pl.getRankedName(false) + " §d" + StringUtils.join(args, " ", 0, args.length));
     }
 }

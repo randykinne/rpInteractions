@@ -102,7 +102,7 @@ public class RPlayerListener implements Listener {
                                 pl.getRankedName(false) + " §7to death!");
                         break;
                     case 2:
-                        e.setDeathMessage("§8§l>> " + PlayerManager.getInstance().getPlayer(killer).getRankedName(false) + " §7ended " +
+                        e.setDeathMessage("§8§l>> " + PlayerManager.getInstance().getPlayer(killer).getRankedName(false) + " §7slaughtered " +
                                 pl.getRankedName(false) + "§7!");
                         break;
                     case 3:
@@ -110,7 +110,7 @@ public class RPlayerListener implements Listener {
                                 pl.getRankedName(false) + "§7!");
                         break;
                     case 4:
-                        e.setDeathMessage("§8§l>> " + PlayerManager.getInstance().getPlayer(killer).getRankedName(false) + " §7killed " +
+                        e.setDeathMessage("§8§l>> " + PlayerManager.getInstance().getPlayer(killer).getRankedName(false) + " §7obliterated " +
                                 pl.getRankedName(false) + "§7!");
                         break;
                     case 5:

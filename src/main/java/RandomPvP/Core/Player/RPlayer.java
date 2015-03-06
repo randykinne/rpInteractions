@@ -45,95 +45,106 @@ public class RPlayer {
 
     private int nextId = 1;
 
-    Player player;
-    String name;
-    UUID uuid;
+    Player player = null;
+    String name = null;
+    UUID uuid = null;
     int rpid = nextId;
     String ip = "0.0.0.0";
     Rank rank = Rank.PLAYER;
     long rank_updated;
     int credits = 0;
     int killstreak = 0;
-    Team team;
+    Team team = null;
     HashMap<String, Counter> counters = new HashMap<>();
     HashMap<String, IModule> modules = new HashMap<>();
     boolean canInteract = false;
-    RandomPvPScoreboard board;
+    RandomPvPScoreboard board = null;
     Booster booster = null;
     RStaff staff = null;
     boolean hasWarningPending = false;
     boolean ranked = false;
     int warnings = 0;
-    boolean frozen;
+    boolean frozen = false;
 
     public RPlayer(String name, UUID id, boolean rankOnly) {
         setUUID(id);
         this.name = name;
 
-        if (RPICore.debugEnabled) {
-            System.out.println(name + " has the UUID " + id.toString());
-        }
+        if(id != null) {
+            if (RPICore.debugEnabled) {
+                System.out.println(name + " has the UUID " + id.toString());
+            }
 
-        try {
-            if (rankOnly) {
-                PreparedStatement stmt = MySQL.getConnection().prepareStatement("SELECT `rank` FROM `accounts` WHERE `accounts`.`uuid` = ?;");
-                stmt.setString(1, getUUID().toString());
-                ResultSet set = stmt.executeQuery();
+            try {
+                if (rankOnly) {
+                    PreparedStatement stmt = MySQL.getConnection().prepareStatement("SELECT `rank` FROM `accounts` WHERE `accounts`.`uuid` = ?;");
+                    stmt.setString(1, getUUID().toString());
+                    ResultSet set = stmt.executeQuery();
 
-                if (set.next()) {
-                    setRank(Rank.valueOf(set.getString("rank").toUpperCase()), false);
-                }
-            } else {
-                PreparedStatement stmt = MySQL.getConnection().prepareStatement("SELECT * FROM `accounts` WHERE `accounts`.`uuid` = ?;");
-                stmt.setString(1, getUUID().toString());
-                ResultSet set = stmt.executeQuery();
-
-                if (set.next()) {
-                    setRank(Rank.valueOf(set.getString("rank").toUpperCase()), false);
-                    rank_updated = System.currentTimeMillis();
-                    setCredits(set.getInt("credits"));
-                    setRPID(set.getInt("rpid"));
+                    if (set.next()) {
+                        setRank(Rank.valueOf(set.getString("rank").toUpperCase()), false);
+                    }
                 } else {
-                    String sqlGetNextId = "SELECT MAX(rpid) AS max FROM accounts";
-                    PreparedStatement statement;
-                    statement = MySQL.getConnection().prepareStatement(sqlGetNextId);
-                    ResultSet rs = statement.executeQuery();
-                    while (rs.next()) {
-                        nextId = rs.getInt("max") + 1;
+                    PreparedStatement stmt = MySQL.getConnection().prepareStatement("SELECT * FROM `accounts` WHERE `accounts`.`uuid` = ?;");
+                    stmt.setString(1, getUUID().toString());
+                    ResultSet set = stmt.executeQuery();
+
+                    if (set.next()) {
+                        setRank(Rank.valueOf(set.getString("rank").toUpperCase()), false);
+                        rank_updated = System.currentTimeMillis();
+                        setCredits(set.getInt("credits"));
+                        setRPID(set.getInt("rpid"));
+                    } else {
+                        String sqlGetNextId = "SELECT MAX(rpid) AS max FROM accounts";
+                        PreparedStatement statement;
+                        statement = MySQL.getConnection().prepareStatement(sqlGetNextId);
+                        ResultSet rs = statement.executeQuery();
+                        while (rs.next()) {
+                            nextId = rs.getInt("max") + 1;
+                        }
+
+                        PreparedStatement stmt2 = MySQL.getConnection().prepareStatement("INSERT INTO `accounts` VALUES (?, ?, ?, ?, ?, ?, ?, ?);");
+                        stmt2.setString(1, getUUID().toString());
+                        stmt2.setString(2, getName());
+                        stmt2.setInt(3, 0);
+                        stmt2.setString(4, getRank().getRank());
+                        stmt2.setLong(5, rank_updated);
+                        stmt2.setInt(6, getCredits());
+                        stmt2.setString(7, getIP().replace(".", "-"));
+                        stmt2.setString(8, null);
+
+                        stmt2.executeUpdate();
                     }
 
-                    PreparedStatement stmt2 = MySQL.getConnection().prepareStatement("INSERT INTO `accounts` VALUES (?, ?, ?, ?, ?, ?, ?, ?);");
-                    stmt2.setString(1, getUUID().toString());
-                    stmt2.setString(2, getName());
-                    stmt2.setInt(3, 0);
-                    stmt2.setString(4, getRank().getRank());
-                    stmt2.setLong(5, rank_updated);
-                    stmt2.setInt(6, getCredits());
-                    stmt2.setString(7, getIP().replace(".", "-"));
-                    stmt2.setString(8, null);
+                    {
+                        //to slow down the time so the removal in between switching servers doesn't overlap
+                        new BukkitRunnable() {
+                            public void run() {
+                                try {
+                                    PreparedStatement statement = MySQL.getConnection().prepareStatement("INSERT INTO `online_players` VALUES (?, ?, ?);");
+                                    statement.setInt(1, getRPID());
+                                    statement.setString(2, getName());
+                                    statement.setString(3, Bukkit.getServerName());
+                                    statement.executeUpdate();
+                                } catch (SQLException ex) {
+                                    ex.printStackTrace();
+                                }
+                            }
+                        }.runTaskLaterAsynchronously(RPICore.getInstance(), 25L);
 
-                    stmt2.executeUpdate();
-                }
 
-                {
-                    PreparedStatement statement = MySQL.getConnection().prepareStatement("INSERT INTO `online_players` VALUES (?, ?, ?);");
-                    statement.setInt(1, getRPID());
-                    statement.setString(2, getName());
-                    statement.setString(3, Bukkit.getServerName());
-                    statement.executeUpdate();
-
-                        /*
-                        statement = MySQL.getConnection().prepareStatement("SELECT * FROM `credit_booster` WHERE `rpid` = ?");
+                        PreparedStatement statement = MySQL.getConnection().prepareStatement("SELECT * FROM `credit_booster` WHERE `rpid` = ?");
                         statement.setInt(1, getRPID());
-                        ResultSet rs = stmt.executeQuery();
+                        ResultSet rs = statement.executeQuery();
                         if (rs.next()) {
-                            Booster boost = new Booster(PlayerManager.getInstance().getPlayer(getPlayer()), rs.getLong("duration"), rs.getInt("multiplier"));
+                            Booster boost = new Booster(this, rs.getLong("duration"), rs.getInt("multiplier"));
                             setBooster(boost);
-                        }*/
+                        }
+                    }
                 }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
@@ -245,7 +256,7 @@ public class RPlayer {
         return ip;
     }
 
-    public void setRank(Rank rank, boolean saveData) {
+    public void setRank(final Rank rank, boolean saveData) {
         if (rank != getRank()) {
 
             this.rank = rank;
@@ -357,9 +368,13 @@ public class RPlayer {
         switch (getRank()) {
             case PLAYER:
                 break;
-            case PREMIUM:
+            case PRIME:
                 credAdded = credits * 2;
-                reason = " §b§lx2 Premium Bonus";
+                reason = " §6§lx2 Prime Bonus";
+                break;
+            case PREMIUM:
+                credAdded = credits * 3;
+                reason = " §b§lx3 Premium Bonus";
                 break;
             case VIP:
                 credAdded = credits * 3;
@@ -370,10 +385,6 @@ public class RPlayer {
                 reason = " §2§lx3 Builder Bonus";
                 break;
             case MOD:
-                credAdded = credits * 5;
-                reason = " §5§lx5 Staff Bonus";
-                break;
-            case SUPPORT:
                 credAdded = credits * 5;
                 reason = " §5§lx5 Staff Bonus";
                 break;
@@ -388,9 +399,13 @@ public class RPlayer {
         }
 
         if (getBooster() != null) {
-            if (getBooster().isActive())
+            if (getBooster().isActive()) {
                 credAdded = credAdded * getBooster().getMultiplier();
-            reason = reason + " §1§lx" + getBooster().getMultiplier() + " Credit Booster";
+                reason = reason + " §1§lx" + getBooster().getMultiplier() + " Credit Booster";
+            } else {
+                getBooster().deactivate();
+                message(MsgType.INFO, "Your 1 day credit booster has now ended.");
+            }
         }
 
         this.credits = getCredits() + credAdded;
@@ -587,16 +602,11 @@ public class RPlayer {
     private static DataOutputStream out = new DataOutputStream(b);
 
     public void send(String server) {
-        if (server.equalsIgnoreCase("Hub")) {
-            server = "H1";
-        }
-
-        server = server.toUpperCase();
-        message(MsgType.NETWORK, "§aConnecting you to §b" + server + "§a...");
+        message(MsgType.NETWORK, "§aConnecting you to §b" + server.toUpperCase() + "§a...");
 
         try {
             out.writeUTF("Connect");
-            out.writeUTF(server);
+            out.writeUTF(server.toUpperCase());
             getPlayer().sendPluginMessage(RPICore.getInstance(), "BungeeCord", b.toByteArray());
         } catch (IOException e) {
             e.printStackTrace();

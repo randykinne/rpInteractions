@@ -23,27 +23,27 @@ public class ServerUpdateListener implements Listener {
     @EventHandler
     public void onChange(GameStateChangeEvent e) {
         if (!e.isCancelled()) {
-            GameManager.updateGame();
+            GameManager.updateMotd();
             System.out.println("GameState changed to " + e.getState().getName());
         }
     }
 
     @EventHandler
     public void onChange(GamemodeChangeEvent e) {
-        GameManager.updateGame();
+        GameManager.updateMotd();
         System.out.println("Game Mode changed to " + e.getMode().getName());
     }
 
     @EventHandler
     public void onChange(MapChangeEvent e) {
-        GameManager.updateGame();
+        GameManager.updateMotd();
         System.out.println("Game Map changed to " + e.getMap().getName());
     }
 
     @EventHandler
     public void onChange(RankWhitelistChangeEvent e) {
         if (!e.isCancelled()) {
-            GameManager.updateGame();
+            GameManager.updateMotd();
             System.out.println("Game Rank Whitelist changed to " + e.getRank().getName());
         }
     }

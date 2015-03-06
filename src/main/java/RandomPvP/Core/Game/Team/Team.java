@@ -56,7 +56,6 @@ public class Team {
         return players.values();
     }
 
-
     public Team(String name, String teamName, ChatColor color) {
         this.name = name;
         this.teamName = teamName;

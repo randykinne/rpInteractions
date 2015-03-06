@@ -96,11 +96,13 @@ public class TeamManager {
             if (team.getMaxSize() == -1 || team.getPlayers().size() < team.getMaxSize()) {
                 team.addPlayer(player);
                 player.message("§3§l>> §7You have joined " + team.getColor() + team.getName() + "§7.");
-                if (team.isHidden() && !RPICore.getInstance().list.isVisible(player.getPlayer())) {
-                    RPICore.getInstance().list.hidePlayer(player.getPlayer());
+                /*
+                if (team.isHidden() && !RPICore.list.isVisible(player.getPlayer())) {
+                    RPICore.list.hidePlayer(player.getPlayer());
                 } else {
-                    RPICore.getInstance().list.showPlayer(player.getPlayer());
+                    RPICore.list.showPlayer(player.getPlayer());
                 }
+                */
 
                 for (RPlayer pl : PlayerManager.getInstance().getOnlinePlayers()) {
                     if (team.getType() == Team.Type.Observing) {

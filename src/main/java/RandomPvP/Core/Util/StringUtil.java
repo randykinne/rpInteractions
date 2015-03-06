@@ -1,5 +1,7 @@
 package RandomPvP.Core.Util;
 
+import RandomPvP.Core.Player.MsgType;
+
 /**
  * ***************************************************************************************
  * Copyright (c) Randomizer27 2014. All rights reserved.
@@ -19,9 +21,25 @@ public class StringUtil {
     public static String join(String[] string, String separator) {
         StringBuilder str = new StringBuilder();
         for (String s : string) {
-            str.append(s + separator);
+            str.append(separator);
+            str.append(s);
         }
 
         return str.toString();
     }
+
+    public String formatLongMessage(MsgType type, String msg) {
+        return null;
+    }
+
+    public static int[] stringToIntArray(String[] array) {
+        int[] a = new int[array.length];
+        for(int i=0; i < array.length; i++) {
+            try {
+                a[i] = Integer.valueOf(array[i]);
+            } catch (Exception ignored) {}
+        }
+        return a;
+    }
+
 }

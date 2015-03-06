@@ -4,6 +4,9 @@ import RandomPvP.Core.Data.MySQL;
 import RandomPvP.Core.Player.OfflineRPlayer;
 import RandomPvP.Core.Util.NumberUtil;
 import RandomPvP.Core.Util.Player.UUID.UUIDUtil;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.event.Listener;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -55,12 +58,18 @@ public class PunishmentManager extends PunishmentDatabaseConnection {
        String message = "";
 
         if (pm.getType() == PunishmentType.PERMANENT_BAN || pm.getType() == PunishmentType.TEMPORARY_BAN) {
-            message = "    §4§lBANNED! §e" + NumberUtil.translateDuration(pm.getEnd()) + "\n" +
+            message = "\n    §4§lBANNED! §e" + NumberUtil.translateDuration(pm.getEnd()) + "\n" +
                     "  §fReason? §e§n" + pm.getReason() + "\n" +
-                    "    §fStaff? " + new OfflineRPlayer(UUIDUtil.getName(pm.getIssuer())).getRankedName(false) + "\n" +
+                    "§f    Staff? " + new OfflineRPlayer(Bukkit.getOfflinePlayer(pm.getIssuer()).getName()).getRankedName(false) + "\n" +
                     " §cAppeal at http://randompvp.com/forum";
         } else if (pm.getType() == PunishmentType.WARN) {
-            message = "§4§l>> §6§lWARNING§8: §7You have recieved one warning for §3§n" + pm.getReason() + "§7. \n §4§l>> §6If you continue, you may be kicked or banned.";
+            message = "§4§l>> §6§lWARNING§8: §7You have recieved one warning for §3§n" + pm.getReason() + "§7. \n§4§l>> §6If you continue, you may be kicked or banned.";
+        } else if(pm.getType() == PunishmentType.KICK) {
+            message = "\n    §c§lKICKED!\n" +
+                    "  §fReason? §e§n" + pm.getReason() + "\n" +
+                    "§f    Staff? " + new OfflineRPlayer(Bukkit.getOfflinePlayer(pm.getIssuer()).getName()).getRankedName(false) + "\n";
+        } else if(pm.getType() == PunishmentType.PERMANENT_MUTE || pm.getType() == PunishmentType.TEMPORARY_MUTE) {
+            message = "§4§l>> §7You have been §6§lMUTED§7 (§6" + NumberUtil.translateDuration(pm.getEnd()) + ChatColor.GRAY + ")! Reason? §3§n" + pm.getReason() + "§7. \n§4§l>> §cAppeal at http://randompvp.com/forums";
         }
 
         return message;

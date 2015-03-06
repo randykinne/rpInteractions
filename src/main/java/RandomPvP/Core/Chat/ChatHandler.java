@@ -1,6 +1,7 @@
 package RandomPvP.Core.Chat;
 
 import RandomPvP.Core.Event.Player.RPlayerChatEvent;
+import RandomPvP.Core.Player.MsgType;
 import RandomPvP.Core.Player.PlayerManager;
 import RandomPvP.Core.Player.RPlayer;
 import RandomPvP.Core.Player.Rank.Rank;
@@ -11,6 +12,7 @@ import RandomPvP.Core.Util.Broadcasts;
 import RandomPvP.Core.Util.NumberUtil;
 import RandomPvP.Core.Util.ServerToggles;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -75,7 +77,11 @@ public class ChatHandler implements Listener {
                             if (e.getMessage().startsWith("!")) {
                                 StringBuilder string = new StringBuilder(message);
                                 string.deleteCharAt(0);
-                                Broadcasts.sendRankedBroadcast(Rank.MOD, false, true, pl.getRankedName(true) + "§8: §3" + string.toString());
+                                if(!(string.toString().equals(""))) {
+                                    Broadcasts.sendRankedBroadcast(Rank.MOD, false, true, pl.getRankedName(true) + "§8: §3" + string.toString());
+                                } else {
+                                    pl.message(MsgType.ERROR, "You must supply a message!");
+                                }
                             } else {
                                 Broadcasts.sendRankedBroadcast(Rank.MOD, false, true, pl.getRankedName(true) + "§8: §3" + e.getMessage());
                             }
@@ -99,6 +105,7 @@ public class ChatHandler implements Listener {
                 */
                 }
         } else {
+            e.getPlayer().sendMessage(ChatColor.RED + "Your data was equal to null... what?");
             e.setCancelled(true);
         }
     }

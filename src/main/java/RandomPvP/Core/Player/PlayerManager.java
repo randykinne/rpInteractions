@@ -5,6 +5,7 @@ import RandomPvP.Core.RPICore;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import sun.io.ByteToCharMacUkraine;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -24,7 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class PlayerManager {
 
     private static PlayerManager instance;
-    ConcurrentHashMap<UUID, RPlayer> players = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<UUID, RPlayer> players = new ConcurrentHashMap<>();
 
     public static PlayerManager getInstance() {
         if (instance == null) {
@@ -43,6 +44,10 @@ public class PlayerManager {
         }
     }
 
+    public RPlayer getConsole() {
+        return new RPlayer("CONSOLE", null, false);
+    }
+
     public void addPlayer(RPlayer pl, UUID id) {
         if (pl != null) {
             players.putIfAbsent(id, pl);
@@ -53,7 +58,7 @@ public class PlayerManager {
         if (RPICore.debugEnabled) {
             getInMap();
         }
-        for (UUID id: players.keySet()) {
+        for (UUID id : players.keySet()) {
             if (id == p.getUniqueId()) {
                 return players.get(id);
             }
@@ -69,6 +74,7 @@ public class PlayerManager {
         if (Bukkit.getPlayer(name) != null) {
             return getPlayer(Bukkit.getPlayer(name));
         }
+
         return null;
     }
 
@@ -76,15 +82,13 @@ public class PlayerManager {
         if (RPICore.debugEnabled) {
             getInMap();
         }
-        RPlayer player = null;
-
         for (UUID od: players.keySet()) {
             if (od == id) {
-                player = players.get(id);
+                return players.get(id);
             }
         }
 
-        return player;
+        return null;
     }
 
     public RPlayer getPlayer(int rpid) {
@@ -116,6 +120,7 @@ public class PlayerManager {
                 try {
                     PreparedStatement stmt = MySQL.getConnection().prepareStatement("DELETE FROM `online_players` WHERE `id` = ?;");
                     stmt.setInt(1, pl.getRPID());
+                    stmt.executeUpdate();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -128,9 +133,9 @@ public class PlayerManager {
         if (players.values().size() != 0) {
             for (RPlayer pl : players.values()) {
                 if (pl != null) {
-                    if (pl.getPlayer() != null && pl.getPlayer().isOnline()) {
+                    if (pl.getPlayer() != null) {
                         online.add(pl);
-                    } else {
+                    }  else {
                         removePlayer(pl.getPlayer());
                     }
                 }

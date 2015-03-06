@@ -1,12 +1,20 @@
 package RandomPvP.Core.Util;
 
 import RandomPvP.Core.Data.MySQL;
+import RandomPvP.Core.Player.OfflineRPlayer;
+import RandomPvP.Core.Player.Rank.Rank;
 import RandomPvP.Core.RPICore;
+import RandomPvP.Core.Util.MotdData.MotdFetcher;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * ***************************************************************************************
@@ -21,23 +29,93 @@ import java.sql.SQLException;
 public class NetworkUtil {
 
     public static String[] getOnlineStaff() {
-        return new OnlineStaff().online;
+        final StringBuilder sb = new StringBuilder();
+        new BukkitRunnable() {
+            public void run() {
+                try {
+                    PreparedStatement stmt = MySQL.getConnection().prepareStatement("SELECT * FROM `online_players`;");
+                    ResultSet res = stmt.executeQuery();
+                    while (res.next()) {
+                        if (new OfflineRPlayer(res.getString("username")).getRank().has(Rank.MOD)) {
+                            sb.append(res.getString("username") + "|");
+                        }
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.runTaskAsynchronously(RPICore.getInstance());
+        return sb.toString().split("\\|");
     }
 
-    private static class OnlineStaff {
-        String[] online;
-        public OnlineStaff() {
-            new BukkitRunnable() {
-                public void run() {
-                    try {
-                        PreparedStatement stmt = MySQL.getConnection().prepareStatement("SELECT * FROM `online_players`;");
-                        ResultSet set = stmt.executeQuery();
-
-                    } catch (SQLException e) {
-                        e.printStackTrace();
+    public static String getCurrentServer(final OfflineRPlayer p) {
+        try {
+            ExecutorService s = Executors.newCachedThreadPool();
+            Future<String> task = s.submit(new Callable<String>() {
+                @Override
+                public String call() throws Exception {
+                    PreparedStatement stmt = MySQL.getConnection().prepareStatement("SELECT `server` FROM `online_players` WHERE `id`=?;");
+                    {
+                        stmt.setInt(1, p.getRPID());
                     }
+                    ResultSet res = stmt.executeQuery();
+                    while (res.next()) {
+                        return res.getString("server");
+                    }
+                    return null;
                 }
-            }.runTaskAsynchronously(RPICore.getInstance());
+            });
+            return task.get();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
         }
     }
+
+    public static ArrayList<String> getOnlinePlayers() {
+        try {
+            ArrayList<String> data = new ArrayList<>();
+            ExecutorService s = Executors.newCachedThreadPool();
+            Future<ArrayList<String>> task = s.submit(new Callable<ArrayList<String>>() {
+                @Override
+                public ArrayList<String> call() throws Exception {
+                    PreparedStatement stmt = MySQL.getConnection().prepareStatement("SELECT `username` FROM `online_players`;");
+                    ResultSet res = stmt.executeQuery();
+                    ArrayList<String> data = new ArrayList<>();
+                    {
+                        while (res.next()) {
+                            data.add(res.getString("username"));
+                        }
+                    }
+                    return data;
+                }
+            });
+            return task.get();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    public static String[] convertServerData(MotdFetcher fetcher) {
+        return fetcher.getMotd().split("\\|");
+    }
+
+    public static ResultSet getServerAddress(final String gamemode, final int num) {
+        try {
+            Future<ResultSet> task = Executors.newCachedThreadPool().submit(new Callable<ResultSet>() {
+                @Override
+                public ResultSet call() throws Exception {
+                    PreparedStatement stmt = MySQL.getConnection().prepareStatement("SELECT * FROM `servers_" + gamemode + "` WHERE `server_id`=?");
+                    stmt.setString(1, num + "");
+                    return stmt.executeQuery();
+                }
+            });
+            return task.get();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return  null;
+        }
+    }
+
 }

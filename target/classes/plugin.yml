@@ -3,9 +3,3 @@ version: 1.0
 name: RPI
 author: Randomizer27
 depend: [ProtocolLib]
-
-commands:
-  auracheck:
-        description: Check if player has aura hack
-        usage: /<command> <nickname> (running/standing) (invisible/visible) - checks for aura hack
-        aliases: [ac]

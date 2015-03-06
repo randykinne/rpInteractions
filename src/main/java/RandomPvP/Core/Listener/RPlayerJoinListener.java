@@ -9,12 +9,18 @@ import RandomPvP.Core.Punish.PunishmentManager;
 import RandomPvP.Core.Punish.PunishmentType;
 import RandomPvP.Core.RPICore;
 import RandomPvP.Core.Util.*;
+import RandomPvP.Core.Util.Poll.PollManager;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * ***************************************************************************************
@@ -114,7 +120,7 @@ public class RPlayerJoinListener implements Listener {
     }
 
     @EventHandler
-    public void onJoin(PlayerJoinEvent e) {
+    public void onJoin(final PlayerJoinEvent e) {
         //Prevents "player moved too quickly!" related spam in console, also better for the player
         ((CraftPlayer) e.getPlayer()).getHandle().playerConnection.checkMovement = false;
 
@@ -136,6 +142,23 @@ public class RPlayerJoinListener implements Listener {
         } else {
             e.setJoinMessage("§a§l>> " + pl.getRankedName(false) + " §9joined.");
         }
+
+        //Polls
+        new BukkitRunnable() {
+            public void run() {
+                if (ServerToggles.pollVotingEnabled()) {
+                    PollManager manager = new PollManager();
+                    RPlayer pl = PlayerManager.getInstance().getPlayer(e.getPlayer());
+                    List<String> polls = manager.getOpenPolls();
+                    for (int i=0; i < polls.size(); i++) {
+                        if (!manager.hasVoted(polls.get(i), pl)) {
+                            manager.sendPollMessage(pl, polls.get(i));
+                            break;
+                        }
+                    }
+                }
+            }
+        }.runTaskLater(RPICore.getInstance(), 70L);
     }
 
 }

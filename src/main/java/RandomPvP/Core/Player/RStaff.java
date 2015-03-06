@@ -34,7 +34,7 @@ public class RStaff {
             pl.message("§6§l>> §eTurned §c§lOFF §etoggle staff chat!");
             hasStaffChatToggled = false;
         } else {
-            pl.message("§6§l>> §eTurned §f§lON §etoggle staff chat!");
+            pl.message("§6§l>> §eTurned §a§lON §etoggle staff chat!");
             hasStaffChatToggled = true;
         }
     }

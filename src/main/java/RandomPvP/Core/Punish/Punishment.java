@@ -1,8 +1,11 @@
 package RandomPvP.Core.Punish;
 
+import RandomPvP.Core.Data.MySQL;
 import RandomPvP.Core.Player.OfflineRPlayer;
 import RandomPvP.Core.Util.Player.UUID.UUIDUtil;
+import org.bukkit.Bukkit;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
@@ -134,16 +137,39 @@ public class Punishment {
      */
     public void save() {
         try {
-            ResultSet count = PunishmentManager.getInstance().getPreparedStatement("SELECT COUNT(*) FROM punishments WHERE id='" + getId() + "';").executeQuery();
-            count.next();
-
-            if (count.getInt(1) == 0) {
-                PunishmentManager.getInstance().getPreparedStatement("INSERT INTO punishments (id, punished, issuer, type, reason, time, end, active) VALUES (" + getId() + ", '" + getPunished().toString() + "', '" + getIssuer().toString() + "', '" + getType().getName() + "', '" + getReason() + "', '" + getTime() + "', " + getEnd() + ", " + isActive() + ")").execute();
-            } else {
-                PunishmentManager.getInstance().getPreparedStatement("UPDATE punishments SET punished='" + getPunished().toString() + "', issuer='" + getIssuer().toString() + "', type='" + getType().toString() + "', reason='" + getReason() + "', type='" + getType().getName() + "', time='" + getTime() + "', end=" + getEnd() + ", active=" + isActive() + " WHERE id=" + getId()).execute();
+            PreparedStatement statement = MySQL.getConnection().prepareStatement("SELECT COUNT(*) FROM punishments WHERE id=?;");
+            statement.setInt(1, getId());
+            ResultSet res = statement.executeQuery();
+            {
+                res.next();
             }
-        } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
+            if (res.getInt(1) == 0) {
+                PreparedStatement stmt = MySQL.getConnection().prepareStatement("INSERT INTO `punishments` (id, punished, issuer, type, reason, time, end, active) VALUES (?,?,?,?,?,?,?,?)");
+                stmt.setInt(1, getId());
+                stmt.setString(2, getPunished().toString());
+                stmt.setString(3, getIssuer().toString());
+                stmt.setString(4, getType().getName());
+                stmt.setString(5, getReason());
+                stmt.setString(6, getTime());
+                stmt.setLong(7, getEnd());
+                stmt.setBoolean(8, isActive());
+
+                stmt.executeUpdate();
+            } else {
+                PreparedStatement stmt = MySQL.getConnection().prepareStatement("UPDATE `punishments` SET punished=?, issuer=?, type=?, reason=?, time=?, end=?, active=? WHERE id=?");
+                stmt.setString(1, getPunished().toString());
+                stmt.setString(2, getIssuer().toString());
+                stmt.setString(3, getType().getName());
+                stmt.setString(4, getReason());
+                stmt.setString(5, getTime());
+                stmt.setLong(6, getEnd());
+                stmt.setBoolean(7, isActive());
+                stmt.setInt(8, getId());
+
+                stmt.executeUpdate();
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
         }
     }
 }

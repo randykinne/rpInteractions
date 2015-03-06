@@ -26,9 +26,36 @@ public class RPlayerQuitListener implements Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
-
             final RPlayer pl = PlayerManager.getInstance().getPlayer(e.getPlayer());
+            if(pl != null) {
+                if (pl.getTeam() != null) {
+                    TeamManager.leaveTeam(pl, pl.getTeam());
+                }
 
+                new BukkitRunnable() {
+                    public void run() {
+                        pl.saveData();
+                    }
+                }.runTaskAsynchronously(RPICore.getInstance());
+
+
+                if (pl.has(Rank.VIP)) {
+                    e.setQuitMessage(null);
+                    Broadcasts.sendRankedBroadcast(Rank.MOD, false, true, pl.getRankedName(false) + " §9left§7.");
+                } else {
+                    e.setQuitMessage("§c§l<< " + pl.getRankedName(false) + " §9left.");
+                }
+
+                PlayerManager.getInstance().removePlayer(e.getPlayer());
+            } else {
+                e.setQuitMessage("§c§l<< " + e.getPlayer().getName() + " §9left.");
+            }
+    }
+
+    @EventHandler
+    public void onKick(PlayerKickEvent e) {
+        final RPlayer pl = PlayerManager.getInstance().getPlayer(e.getPlayer());
+        if(pl != null) {
             if (pl.getTeam() != null) {
                 TeamManager.leaveTeam(pl, pl.getTeam());
             }
@@ -39,21 +66,11 @@ public class RPlayerQuitListener implements Listener {
                 }
             }.runTaskAsynchronously(RPICore.getInstance());
 
-
-            if (pl.has(Rank.VIP)) {
-                e.setQuitMessage(null);
-                Broadcasts.sendRankedBroadcast(Rank.MOD, false, false, pl.getRankedName(false) + " §9left§7.");
-            } else {
-                e.setQuitMessage("§c§l<< " + pl.getRankedName(false) + " §9left.");
-            }
-
+            e.setLeaveMessage("§4§l<< " + pl.getRankedName(false) + " §cwas kicked.");
 
             PlayerManager.getInstance().removePlayer(e.getPlayer());
-    }
-
-    @EventHandler
-    public void onKick(PlayerKickEvent e) {
-        RPlayer pl = PlayerManager.getInstance().getPlayer(e.getPlayer());
-        e.setLeaveMessage("§4§l<< " + pl.getRankedName(false) + " §cwas kicked.");
+        } else {
+            e.setLeaveMessage("§4§l<< " + e.getPlayer().getName() + " §cwas kicked.");
+        }
     }
 }

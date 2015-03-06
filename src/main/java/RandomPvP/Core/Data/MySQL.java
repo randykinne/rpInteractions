@@ -28,17 +28,17 @@ public class MySQL {
         }
 
         try {
-        Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
 
-        connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/19359?autoReconnect=true", "19359", "46728c06e0");
+        connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/bhs112-67?autoReconnect=true", "bhs112-67", "29e771cddc");
         return connection;
     }
 
     public static String getAddress() {
-        return "jdbc:mysql://localhost:3306/19359?autoReconnect=true";
+        return "jdbc:mysql://localhost:3306/bhs112-67?autoReconnect=true";
     }
 
     public static int getPort() {
@@ -46,14 +46,14 @@ public class MySQL {
     }
 
     public static String getDatabase() {
-        return "19359";
+        return "bhs112-67";
     }
 
     public static String getUsername() {
-        return "19359";
+        return "bhs112-67";
     }
 
     public static String getPassword() {
-        return "46728c06e0";
+        return "29e771cddc";
     }
 }

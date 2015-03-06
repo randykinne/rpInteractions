@@ -24,17 +24,13 @@ public class StaffChatCmd extends RCommand {
         super("sc");
         setAliases(Arrays.asList("mc", "staffchat", "modchat"));
         setDescription("Staff chat");
-        setArgsUsage("<Message>");
+        setPlayerOnly(true);
+        setMaximumArgs(0);
         setRank(Rank.MOD);
     }
 
     @Override
-    public void onCommand(RPlayer sender, String string, String[] args) {
-        if (args.length > 0) {
-            String name = sender.getRankedName(true);
-            Broadcasts.sendRankedBroadcast(Rank.MOD, false, true, name + "§8: §3" + StringUtils.join(args, " "));
-        } else {
-                sender.getStaff().toggleStaffChat();
-        }
+    public void onCommand(RPlayer pl, String string, String[] args) {
+        pl.getStaff().toggleStaffChat();
     }
 }

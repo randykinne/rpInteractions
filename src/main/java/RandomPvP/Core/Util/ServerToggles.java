@@ -1,5 +1,6 @@
 package RandomPvP.Core.Util;
 
+import RandomPvP.Core.Game.GameManager;
 import RandomPvP.Core.Player.Rank.Rank;
 
 /**
@@ -18,6 +19,7 @@ public class ServerToggles {
     static boolean chatEnabled = true;
     static Rank rankWhitelist = Rank.PLAYER;
     static boolean editMode = false;
+    static boolean pollVoting = false;
 
     public static void setCheckForBan(boolean boo) {
         boo = checkForBan;
@@ -44,6 +46,7 @@ public class ServerToggles {
     public static void setRankRequired(Rank rank) {
         if (rankWhitelist != rank) {
             rankWhitelist = rank;
+            GameManager.updateMotd();
         }
     }
     public static boolean hasRankWhitelist() {
@@ -55,5 +58,13 @@ public class ServerToggles {
     }
     public static Rank getRankRequired() {
         return rankWhitelist;
+    }
+
+    public static boolean pollVotingEnabled() {
+        return pollVoting;
+    }
+
+    public static void setPollVoting(boolean pollVoting) {
+        ServerToggles.pollVoting = pollVoting;
     }
 }

@@ -29,15 +29,20 @@ public class MessageCmd extends RCommand {
         setAliases(Arrays.asList("msg", "m", "w", "whisper", "tell"));
         setDescription("Sends a message to a player");
         setArgsUsage("<Player> <Message>");
+        setMinimumArgs(2);
     }
 
     @Override
     public void onCommand(RPlayer pl, String string, String[] args) {
+        if(pl.isMuted()) {
+            pl.message(MsgType.ERROR, "You cannot use message while muted.");
+            return;
+        }
         Player player= Bukkit.getPlayer(args[0]);
         if (player != null) {
             RPlayer target = PlayerManager.getInstance().getPlayer(player);
-            pl.message("§9§l>> §7[" + pl.getRank().getColor() + "You§7] §9--> §7[" + target.getDisplayName(false) + "§7]§8: §2" + StringUtils.join(args, " ", 1));
-            target.message("§9§l>> §7[" + pl.getDisplayName(false) +  "§7] §9--> §7[" + target.getRank().getColor() + "You§7]§8: §2" + StringUtils.join(args, " ", 1));
+            pl.message("§9§l>> §7[" + pl.getRank().getColor() + "You§7] §9--> §7[" + target.getDisplayName(false) + "§7]§8: §2" + StringUtils.join(args, " ", 1, args.length));
+            target.message("§9§l>> §7[" + pl.getDisplayName(false) +  "§7] §9--> §7[" + target.getRank().getColor() + "You§7]§8: §2" + StringUtils.join(args, " ", 1, args.length));
 
             if (pl.getModule("LastMessage") != null) {
                 pl.getModule("LastMessage").setData(target);

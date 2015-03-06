@@ -1,11 +1,5 @@
 main: RandomPvP.Core.RPICore
 version: 1.0
 name: RPI
-author: Randomizer27
+author: WesJD
 depend: [ProtocolLib]
-
-commands:
-  auracheck:
-        description: Check if player has aura hack
-        usage: /<command> <nickname> (running/standing) (invisible/visible) - checks for aura hack
-        aliases: [ac]

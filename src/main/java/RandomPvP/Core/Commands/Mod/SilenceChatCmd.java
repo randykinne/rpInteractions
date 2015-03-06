@@ -27,6 +27,7 @@ public class SilenceChatCmd extends RCommand {
     public SilenceChatCmd() {
         super("silencechat");
         setRank(Rank.MOD);
+        setPlayerOnly(true);
         setAliases(Arrays.asList("globalmute", "muteall", "silence"));
         setDescription("Prevents all non-VIP+ players from speaking");
     }

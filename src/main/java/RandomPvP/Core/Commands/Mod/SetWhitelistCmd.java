@@ -27,6 +27,7 @@ public class SetWhitelistCmd extends RCommand {
     public SetWhitelistCmd() {
         super("setwhitelist");
         setRank(Rank.MOD);
+        setPlayerOnly(true);
         setDescription("Sets the minimum rank required to join");
         setArgsUsage("<Rank>");
         setMinimumArgs(1);

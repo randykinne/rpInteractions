@@ -13,12 +13,15 @@ import RandomPvP.Core.Game.GameManager;
 import RandomPvP.Core.Listener.*;
 import RandomPvP.Core.Player.PlayerManager;
 import RandomPvP.Core.Player.RPlayer;
+import RandomPvP.Core.Util.Shop.Items.BoosterItem;
+import RandomPvP.Core.Util.Shop.ShopManager;
 import RandomPvP.Core.Punish.PunishmentManager;
 import RandomPvP.Core.Util.Broadcasts;
 import RandomPvP.Core.Util.Tab.HidePlayerList;
+import RandomPvP.Core.Util.Vote.Votifier;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
-import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.PreparedStatement;
@@ -37,9 +40,9 @@ import java.sql.SQLException;
  */
 public class RPICore extends JavaPlugin {
 
-    public static boolean pEnabled = false;
+    public static boolean pEnabled = true;
 
-    public static boolean debugEnabled = true;
+    public static boolean debugEnabled = false;
 
     public static long serverStart;
 
@@ -58,6 +61,7 @@ public class RPICore extends JavaPlugin {
         addListener(new RPlayerQuitListener());
         addListener(new BlockedCmds());
         addListener(new ServerUpdateListener());
+        addListener(new VoteEvent());
 
         // Admin Commands
         addCommand(new BroadcastAdminCmd());
@@ -75,6 +79,15 @@ public class RPICore extends JavaPlugin {
         addCommand(new STFUCmd());
         addCommand(new TeleportBringCmd());
         addCommand(new TeleportCmd());
+        addCommand(new BanCmd());
+        addCommand(new TempBanCmd());
+        addCommand(new MuteCmd());
+        addCommand(new TempMuteCmd());
+        addCommand(new KickCmd());
+        addCommand(new WarnCmd());
+        addCommand(new UnbanCmd());
+        addCommand(new UnmuteCmd());
+        addCommand(new LookupCmd());
 
         // VIP Commands
         addCommand(new GoToCmd());
@@ -85,14 +98,23 @@ public class RPICore extends JavaPlugin {
         addCommand(new RPICoreInfoCommand());
         addCommand(new TeamCommand());
         addCommand(new WhereAmICommand());
+        addCommand(new UngroundCmd());
 
         // Server Commands
         addCommand(new HubCmd());
         addCommand(new MessageCmd());
         addCommand(new ReportCmd());
+        addCommand(new ListCmd());
+        addCommand(new RulesCmd());
+        addCommand(new ShopCmd());
+        addCommand(new PollCmd());
 
         Bukkit.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         Bukkit.getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new Broadcasts());
+
+        getConfig().addDefault("voteEnabled", false);
+        getConfig().options().copyDefaults(true);
+        saveConfig();
 
         String sqlCreate =
                 "CREATE TABLE IF NOT EXISTS `accounts` (" +
@@ -146,6 +168,13 @@ public class RPICore extends JavaPlugin {
             System.out.println("RPICore Initialize successful");
         }
 
+        if(voteEnabled()) {
+            getVote();
+        }
+
+        ShopManager.getInstance().addItem(new BoosterItem());
+
+        GameManager.loadServerProfile();
     }
 
 
@@ -158,22 +187,34 @@ public class RPICore extends JavaPlugin {
 
     @Override
     public void onDisable() {
-
-        for (RPlayer pl : PlayerManager.getInstance().getOnlinePlayers()) {
-            pl.getPlayer().kickPlayer("§4Server is restarting!");
-        }
+        //sleeping to remove it from the DB
+        Thread t = new Thread() {
+            public void run() {
+                try {
+                    {
+                        for (RPlayer pl : PlayerManager.getInstance().getOnlinePlayers()) {
+                            PreparedStatement stmt = MySQL.getConnection().prepareStatement("DELETE FROM `online_players` WHERE `id`=?");
+                            {
+                                stmt.setInt(1, pl.getRPID());
+                            }
+                            stmt.executeUpdate();
+                        }
+                    }
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        };
+        t.start();
+        try{Thread.sleep(1000);}catch(Exception ignored){}
 
         list.cleanupAll();
 
-        try {
-            GameManager.unloadGame();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        if(voteEnabled()) {
+            getVote().onDisable();
         }
 
-
         instance = null;
-
     }
 
     public void addCommand(RCommand cmd) {
@@ -191,4 +232,23 @@ public class RPICore extends JavaPlugin {
     public static RPICore getInstance() {
         return instance;
     }
+
+    public static Plugin getPlugin() { return instance; }
+
+    private static Votifier v;
+
+    public Votifier getVote() {
+        if(voteEnabled()) {
+            if(v == null) {
+                v = new Votifier(getInstance());
+                v.onEnable();
+            }
+        }
+        return v;
+    }
+
+    public static boolean voteEnabled() {
+        return getInstance().getConfig().getBoolean("voteEnabled");
+    }
+
 }

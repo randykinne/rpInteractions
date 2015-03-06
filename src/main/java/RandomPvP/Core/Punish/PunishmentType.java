@@ -11,7 +11,14 @@ package RandomPvP.Core.Punish;
  * ***************************************************************************************
  */
 public enum PunishmentType {
-    PERMANENT_BAN("Permanent Ban", "Banned"), TEMPORARY_BAN("Temporary Ban", "Banned"), PERMANENT_MUTE("Permanent Mute", "Muted"), TEMPORARY_MUTE("Temporary Mute", "Muted"), KICK("Kick", "Kicked"), WARN("Warning", "Warned");
+    IP_BAN("IP Ban", "Banned"),
+    PERMANENT_BAN("Permanent Ban", "Banned"),
+    TEMPORARY_BAN("Temporary Ban", "Banned"),
+    IP_MUTE("IP Mute", "Muted"),
+    PERMANENT_MUTE("Permanent Mute", "Muted"),
+    TEMPORARY_MUTE("Temporary Mute", "Muted"),
+    KICK("Kick", "Kicked"),
+    WARN("Warning", "Warned");
 
     private String name;
     private String verb;
