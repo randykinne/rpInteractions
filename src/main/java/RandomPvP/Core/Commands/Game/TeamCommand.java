@@ -33,7 +33,7 @@ public class TeamCommand extends RCommand {
                 player.message(MsgType.GAME, "Your current team: " + player.getTeam().getColor() + player.getTeam().getName());
             }
         } else {
-            player.message("Teams are not enabled for " + GameManager.getGame().getPrimaryColor() + GameManager.getGame().getName());
+            player.message(MsgType.ERROR, "Teams are not enabled for " + GameManager.getGame().getPrimaryColor() + GameManager.getGame().getName());
         }
     }
 }

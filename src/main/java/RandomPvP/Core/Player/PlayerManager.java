@@ -25,11 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class PlayerManager {
 
     private static PlayerManager instance;
-<<<<<<< HEAD
     private ConcurrentHashMap<UUID, RPlayer> players = new ConcurrentHashMap<>();
-=======
-    ConcurrentHashMap<String, RPlayer> players = new ConcurrentHashMap<>(8, 0.7F, 1);
->>>>>>> 2f5d0082aeb2df55a72e7f0f4a19dbb5a2ad5155
 
     public static PlayerManager getInstance() {
         if (instance == null) {
@@ -39,9 +35,6 @@ public class PlayerManager {
     }
 
     public void getInMap() {
-
-
-
         if (players.values().size() > 0) {
             StringBuilder s = new StringBuilder("");
             for (RPlayer pl : players.values()) {
@@ -55,17 +48,13 @@ public class PlayerManager {
 
     }
 
-<<<<<<< HEAD
     public RPlayer getConsole() {
         return new RPlayer("CONSOLE", null, false);
     }
 
-    public void addPlayer(RPlayer pl, UUID id) {
-=======
-    public void addPlayer(RPlayer pl) {
->>>>>>> 2f5d0082aeb2df55a72e7f0f4a19dbb5a2ad5155
+    public void addPlayer(RPlayer pl, UUID uuid) {
         if (pl != null) {
-            players.putIfAbsent(pl.getName(), pl);
+            players.putIfAbsent(uuid, pl);
         }
     }
 
@@ -73,15 +62,9 @@ public class PlayerManager {
         if (RPICore.debugEnabled) {
             getInMap();
         }
-<<<<<<< HEAD
         for (UUID id : players.keySet()) {
             if (id == p.getUniqueId()) {
                 return players.get(id);
-=======
-        for (String name : players.keySet()) {
-            if (name.equalsIgnoreCase(p.getName())) {
-                return players.get(name);
->>>>>>> 2f5d0082aeb2df55a72e7f0f4a19dbb5a2ad5155
             }
         }
 
@@ -93,9 +76,9 @@ public class PlayerManager {
             getInMap();
         }
 
-        for (String n : players.keySet()) {
-            if (name.equalsIgnoreCase(n)) {
-                return players.get(name);
+        for (UUID n : players.keySet()) {
+            if (name.equalsIgnoreCase(Bukkit.getPlayer(n).getName())) {
+                return players.get(n);
             }
         }
 
@@ -106,17 +89,16 @@ public class PlayerManager {
         if (RPICore.debugEnabled) {
             getInMap();
         }
-<<<<<<< HEAD
+
         for (UUID od: players.keySet()) {
             if (od == id) {
                 return players.get(id);
             }
-=======
+        }
         RPlayer player = null;
 
         if (Bukkit.getPlayer(id) != null) {
             player = getPlayer(Bukkit.getPlayer(id).getName());
->>>>>>> 2f5d0082aeb2df55a72e7f0f4a19dbb5a2ad5155
         }
 
         return null;
@@ -128,7 +110,7 @@ public class PlayerManager {
         }
         for (RPlayer pl : players.values()) {
             if (pl.getRPID() == rpid) {
-                return players.get(pl.getName());
+                return players.get(pl.getUUID());
             }
         }
 
@@ -139,9 +121,9 @@ public class PlayerManager {
         RPlayer value = getPl(p.getName());
         if (value != null) {
             removePlayerFromDatabase(value);
-            for (Iterator<String> i = players.keySet().iterator(); i.hasNext();) {
-                String next = i.next();
-                if (next.equals(p.getName())) {
+            for (Iterator<UUID> i = players.keySet().iterator(); i.hasNext();) {
+                UUID next = i.next();
+                if (next.equals(p.getUniqueId())) {
                     i.remove();
                 }
             }
@@ -149,9 +131,9 @@ public class PlayerManager {
     }
 
     private RPlayer getPl(String name) {
-        for (Iterator<String> i = players.keySet().iterator(); i.hasNext();) {
-            String next = i.next();
-            if (next.equalsIgnoreCase(name)) {
+        for (Iterator<UUID> i = players.keySet().iterator(); i.hasNext();) {
+            UUID next = i.next();
+            if (Bukkit.getPlayer(next).getName().equalsIgnoreCase(name)) {
                 return players.get(next);
             }
         }

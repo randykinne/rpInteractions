@@ -22,16 +22,16 @@ public class RPICoreInfoCommand extends RCommand {
 
     public RPICoreInfoCommand() {
         super("game");
+        setPlayerOnly(true);
         setDescription("Core RandomPvP Information");
         setAliases(Arrays.asList("ver", "version", "rpi", "rpicore", "core", "?", "pl"));
     }
 
     @Override
     public void onCommand(RPlayer pl, String string, String[] args) {
-        CommandSender con = (CommandSender) pl.getPlayer();
         PluginDescriptionFile pdf = new RPICoreInfoCommand().getDesc();
-        con.sendMessage("§8§l>> §cRunning §4§l" + pdf.getName() + " §cbuild " + pdf.getVersion());
-        con.sendMessage("§8§l>> §cDeveloped by §4Randomizer27§c.");
+        pl.message("§8§l>> §cRunning §4§l" + pdf.getName() + " §cbuild " + pdf.getVersion());
+        pl.message("§8§l>> §cDeveloped by §4RPDEV§c.");
     }
 
     public PluginDescriptionFile getDesc() {
