@@ -33,251 +33,52 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
+      <file leaf-file-name="MsgType.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/RandomPvP/Core/Player/MsgType.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="238" max-vertical-offset="663">
+              <caret line="15" column="12" selection-start-line="15" selection-start-column="12" selection-end-line="15" selection-end-column="12" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PlayerManager.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/RandomPvP/Core/Player/PlayerManager.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="510" max-vertical-offset="2924">
+              <caret line="40" column="18" selection-start-line="40" selection-start-column="18" selection-end-line="40" selection-end-column="18" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="PollManager.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/RandomPvP/Core/Util/Poll/PollManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="3179" max-vertical-offset="4522">
-              <caret line="226" column="81" selection-start-line="226" selection-start-column="81" selection-end-line="226" selection-end-column="81" />
-              <folding>
-                <element signature="e#9278#10307#0" expanded="true" />
-                <element signature="e#9753#9770#0" expanded="true" />
-                <element signature="e#10306#10307#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="RPlayerListener.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/RandomPvP/Core/Listener/RPlayerListener.java">
-          <provider selected="true" editor-type-id="text-editor">
-<<<<<<< HEAD
-            <state vertical-scroll-proportion="0.15578465" vertical-offset="731" max-vertical-offset="2703">
-              <caret line="74" column="8" selection-start-line="74" selection-start-column="8" selection-end-line="78" selection-end-column="50" />
-              <folding>
-                <element signature="e#2841#3063#0" expanded="true" />
-                <element signature="e#3062#3063#0" expanded="true" />
-=======
-            <state vertical-scroll-proportion="0.0" vertical-offset="671" max-vertical-offset="2400">
-              <caret line="71" column="0" selection-start-line="71" selection-start-column="0" selection-end-line="71" selection-end-column="0" />
-              <folding>
-                <element signature="e#2878#3100#0" expanded="true" />
-                <element signature="e#3089#3090#0" expanded="true" />
->>>>>>> 2f5d0082aeb2df55a72e7f0f4a19dbb5a2ad5155
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-<<<<<<< HEAD
-      <file leaf-file-name="config.yml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/resources/config.yml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="153">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="2" selection-end-column="29" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="3575" max-vertical-offset="4471">
+              <caret line="277" column="17" selection-start-line="277" selection-start-column="17" selection-end-line="277" selection-end-column="17" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="plugin.yml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/resources/plugin.yml">
+      <file leaf-file-name="GameGUI.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/RandomPvP/Core/Util/GUI/GameGUI.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-2.04" vertical-offset="0" max-vertical-offset="170">
-              <caret line="3" column="13" selection-start-line="3" selection-start-column="13" selection-end-line="3" selection-end-column="13" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="2058" max-vertical-offset="3145">
+              <caret line="169" column="21" selection-start-line="169" selection-start-column="21" selection-end-line="169" selection-end-column="21" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ListCmd.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/RandomPvP/Core/Commands/Server/ListCmd.java">
+      <file leaf-file-name="Broadcasts.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/RandomPvP/Core/Util/Broadcasts.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="204" max-vertical-offset="680">
-              <caret line="16" column="13" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="13" />
+            <state vertical-scroll-proportion="0.32254463" vertical-offset="0" max-vertical-offset="2890">
+              <caret line="31" column="68" selection-start-line="31" selection-start-column="68" selection-end-line="31" selection-end-column="68" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="RPlayerJoinListener.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/RandomPvP/Core/Listener/RPlayerJoinListener.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1647" max-vertical-offset="2533">
-              <caret line="154" column="70" selection-start-line="154" selection-start-column="70" selection-end-line="154" selection-end-column="70" />
-=======
-      <file leaf-file-name="RPlayerJoinListener.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/RandomPvP/Core/Listener/RPlayerJoinListener.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="1.8423913" vertical-offset="0" max-vertical-offset="2010">
-              <caret line="126" column="52" selection-start-line="126" selection-start-column="52" selection-end-line="126" selection-end-column="52" />
->>>>>>> 2f5d0082aeb2df55a72e7f0f4a19dbb5a2ad5155
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MySQL.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/RandomPvP/Core/Data/MySQL.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="15" max-vertical-offset="901">
-              <caret line="30" column="12" selection-start-line="30" selection-start-column="12" selection-end-line="30" selection-end-column="12" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MotdSetter.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/RandomPvP/Core/Util/MotdData/MotdSetter.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="323" max-vertical-offset="544">
-              <caret line="21" column="53" selection-start-line="21" selection-start-column="53" selection-end-line="21" selection-end-column="53" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-<<<<<<< HEAD
-      <file leaf-file-name="PollCmd.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/RandomPvP/Core/Commands/Server/PollCmd.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1766" max-vertical-offset="4182">
-              <caret line="155" column="75" selection-start-line="155" selection-start-column="75" selection-end-line="155" selection-end-column="75" />
-              <folding />
-=======
-      <file leaf-file-name="RPlayer.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/RandomPvP/Core/Player/RPlayer.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="715" max-vertical-offset="9180">
-              <caret line="73" column="70" selection-start-line="73" selection-start-column="70" selection-end-line="73" selection-end-column="70" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#5609#6402#0" expanded="true" />
-                <element signature="e#6391#6392#0" expanded="true" />
-                <element signature="e#7353#7354#0" expanded="true" />
-                <element signature="e#7382#7383#0" expanded="true" />
-                <element signature="e#7413#7414#0" expanded="true" />
-                <element signature="e#7440#7441#0" expanded="true" />
-                <element signature="e#8435#8436#0" expanded="true" />
-                <element signature="e#8465#8466#0" expanded="true" />
-                <element signature="e#8494#8495#0" expanded="true" />
-                <element signature="e#8521#8522#0" expanded="true" />
-                <element signature="e#8556#8557#0" expanded="true" />
-                <element signature="e#8586#8587#0" expanded="true" />
-                <element signature="e#8614#8615#0" expanded="true" />
-                <element signature="e#8641#8642#0" expanded="true" />
-                <element signature="e#8677#8678#0" expanded="true" />
-                <element signature="e#8705#8706#0" expanded="true" />
-                <element signature="e#8734#8735#0" expanded="true" />
-                <element signature="e#8759#8760#0" expanded="true" />
-                <element signature="e#9109#9263#0" expanded="true" />
-                <element signature="e#9248#9249#0" expanded="true" />
-                <element signature="e#9350#9351#0" expanded="true" />
-                <element signature="e#9377#9378#0" expanded="true" />
-                <element signature="e#9539#9540#0" expanded="true" />
-                <element signature="e#9581#9582#0" expanded="true" />
-                <element signature="e#9613#9614#0" expanded="true" />
-                <element signature="e#9644#9645#0" expanded="true" />
-                <element signature="e#9794#9795#0" expanded="true" />
-                <element signature="e#9872#9873#0" expanded="true" />
-                <element signature="e#9904#9905#0" expanded="true" />
-                <element signature="e#9983#9984#0" expanded="true" />
-                <element signature="e#10018#10019#0" expanded="true" />
-                <element signature="e#10097#10098#0" expanded="true" />
-                <element signature="e#10139#10140#0" expanded="true" />
-                <element signature="e#10179#10180#0" expanded="true" />
-                <element signature="e#10243#10244#0" expanded="true" />
-                <element signature="e#10298#10299#0" expanded="true" />
-                <element signature="e#11161#11162#0" expanded="true" />
-                <element signature="e#11220#11221#0" expanded="true" />
-                <element signature="e#11253#11254#0" expanded="true" />
-                <element signature="e#11282#11283#0" expanded="true" />
-                <element signature="e#11327#11328#0" expanded="true" />
-                <element signature="e#11358#11359#0" expanded="true" />
-                <element signature="e#13237#13238#0" expanded="true" />
-                <element signature="e#13275#13276#0" expanded="true" />
-                <element signature="e#13306#13307#0" expanded="true" />
-                <element signature="e#13336#13337#0" expanded="true" />
-                <element signature="e#13381#13382#0" expanded="true" />
-                <element signature="e#13417#13418#0" expanded="true" />
-                <element signature="e#13452#13453#0" expanded="true" />
-                <element signature="e#13482#13483#0" expanded="true" />
-                <element signature="e#13523#13524#0" expanded="true" />
-                <element signature="e#13566#13567#0" expanded="true" />
-                <element signature="e#13613#13614#0" expanded="true" />
-                <element signature="e#13669#13670#0" expanded="true" />
-                <element signature="e#13963#13964#0" expanded="true" />
-                <element signature="e#13994#13995#0" expanded="true" />
-                <element signature="e#14208#14209#0" expanded="true" />
-                <element signature="e#14261#14262#0" expanded="true" />
-                <element signature="e#14548#14549#0" expanded="true" />
-                <element signature="e#14578#14579#0" expanded="true" />
-                <element signature="e#14787#14788#0" expanded="true" />
-                <element signature="e#14827#14828#0" expanded="true" />
-                <element signature="e#14861#14862#0" expanded="true" />
-                <element signature="e#14894#14895#0" expanded="true" />
-                <element signature="e#14923#14924#0" expanded="true" />
-                <element signature="e#14973#14974#0" expanded="true" />
-                <element signature="e#15002#15003#0" expanded="true" />
-                <element signature="e#15029#15030#0" expanded="true" />
-                <element signature="e#15067#15068#0" expanded="true" />
-                <element signature="e#15099#15100#0" expanded="true" />
-                <element signature="e#15141#15142#0" expanded="true" />
-                <element signature="e#15169#15170#0" expanded="true" />
-                <element signature="e#15202#15203#0" expanded="true" />
-                <element signature="e#15231#15232#0" expanded="true" />
-                <element signature="e#15464#15465#0" expanded="true" />
-                <element signature="e#15507#15508#0" expanded="true" />
-                <element signature="e#15540#15541#0" expanded="true" />
-                <element signature="e#15623#15624#0" expanded="true" />
-                <element signature="e#15660#15661#0" expanded="true" />
-                <element signature="e#15708#15709#0" expanded="true" />
-                <element signature="e#15758#15759#0" expanded="true" />
-                <element signature="e#15808#15809#0" expanded="true" />
-                <element signature="e#15848#15849#0" expanded="true" />
-                <element signature="e#15899#15900#0" expanded="true" />
-                <element signature="e#15941#15942#0" expanded="true" />
-                <element signature="e#15982#15983#0" expanded="true" />
-                <element signature="e#16015#16016#0" expanded="true" />
-                <element signature="e#16060#16061#0" expanded="true" />
-                <element signature="e#16110#16111#0" expanded="true" />
-                <element signature="e#16159#16160#0" expanded="true" />
-                <element signature="e#16384#16385#0" expanded="true" />
-                <element signature="e#16437#16438#0" expanded="true" />
-                <element signature="e#16474#16475#0" expanded="true" />
-                <element signature="e#16522#16523#0" expanded="true" />
-                <element signature="e#16609#16610#0" expanded="true" />
-                <element signature="e#16645#16646#0" expanded="true" />
-                <element signature="e#16688#16689#0" expanded="true" />
-                <element signature="e#16722#16723#0" expanded="true" />
-                <element signature="e#16765#16766#0" expanded="true" />
-                <element signature="e#16808#16809#0" expanded="true" />
-                <element signature="e#16865#16866#0" expanded="true" />
-                <element signature="e#16927#16928#0" expanded="true" />
-                <element signature="e#16977#16978#0" expanded="true" />
-                <element signature="e#17005#17006#0" expanded="true" />
-                <element signature="e#17070#17071#0" expanded="true" />
-                <element signature="e#17104#17105#0" expanded="true" />
-              </folding>
->>>>>>> 2f5d0082aeb2df55a72e7f0f4a19dbb5a2ad5155
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="VoteEvent.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/RandomPvP/Core/Listener/VoteEvent.java">
-          <provider selected="true" editor-type-id="text-editor">
-<<<<<<< HEAD
-            <state vertical-scroll-proportion="0.0" vertical-offset="204" max-vertical-offset="561">
-              <caret line="15" column="13" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
-              <folding />
-=======
-            <state vertical-scroll-proportion="0.0" vertical-offset="517" max-vertical-offset="2505">
-              <caret line="90" column="36" selection-start-line="90" selection-start-column="36" selection-end-line="90" selection-end-column="36" />
-              <folding>
-                <element signature="e#3719#4104#0" expanded="true" />
-                <element signature="e#4093#4094#0" expanded="true" />
-              </folding>
->>>>>>> 2f5d0082aeb2df55a72e7f0f4a19dbb5a2ad5155
             </state>
           </provider>
         </entry>
@@ -292,21 +93,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/RandomPvP/Core/Commands/Mod/UnmuteCmd.java" />
-        <option value="$PROJECT_DIR$/src/main/java/RandomPvP/Core/Util/Tab/HidePlayerList.java" />
-        <option value="$PROJECT_DIR$/src/main/java/RandomPvP/Core/Player/Scoreboard/RandomPvPPackets.java" />
-        <option value="$PROJECT_DIR$/src/main/java/RandomPvP/Core/Util/Color/CC.java" />
-        <option value="$PROJECT_DIR$/src/main/java/RandomPvP/Core/Util/DateUtil.java" />
-        <option value="$PROJECT_DIR$/src/main/java/RandomPvP/Core/Player/Shop/ShopItem.java" />
-        <option value="$PROJECT_DIR$/src/main/java/RandomPvP/Core/Player/Shop/Items/BoosterItem.java" />
-        <option value="$PROJECT_DIR$/src/main/java/RandomPvP/Core/Player/Shop/GUI/TypeGUI/CreditGUI.java" />
-        <option value="$PROJECT_DIR$/src/main/java/RandomPvP/Core/Player/Shop/GUI/TypeGUI/RankGUI.java" />
-        <option value="$PROJECT_DIR$/src/main/java/RandomPvP/Core/Player/Shop/GUI/TypeGUI/MiscGUI.java" />
-        <option value="$PROJECT_DIR$/src/main/java/RandomPvP/Core/Player/Shop/GUI/TypeGUI/GizmoGUI.java" />
-        <option value="$PROJECT_DIR$/src/main/java/RandomPvP/Core/Player/PlayerManager.java" />
-        <option value="$PROJECT_DIR$/src/main/java/RandomPvP/Core/Player/Credit/Booster.java" />
-        <option value="$PROJECT_DIR$/src/main/java/RandomPvP/Core/Player/RPlayer.java" />
-        <option value="$PROJECT_DIR$/src/main/java/RandomPvP/Core/Commands/Mod/WarnCmd.java" />
         <option value="$PROJECT_DIR$/src/main/java/RandomPvP/Core/Util/Player/UUID/UUIDUtil.java" />
         <option value="$PROJECT_DIR$/src/main/java/RandomPvP/Core/Commands/Game/UngroundCmd.java" />
         <option value="$PROJECT_DIR$/src/main/java/RandomPvP/Core/Commands/Mod/BanCmd.java" />
@@ -320,7 +106,6 @@
         <option value="$PROJECT_DIR$/src/main/java/RandomPvP/Core/Util/MotdData/MotdFetcher.java" />
         <option value="$PROJECT_DIR$/src/main/java/RandomPvP/Core/Util/MotdData/MotdSetter.java" />
         <option value="$PROJECT_DIR$/src/main/java/RandomPvP/Core/Game/GameManager.java" />
-        <option value="$PROJECT_DIR$/src/main/java/RandomPvP/Core/Util/GUI/GameGUI.java" />
         <option value="$PROJECT_DIR$/src/main/java/RandomPvP/Core/Util/StringUtil.java" />
         <option value="$PROJECT_DIR$/src/main/java/RandomPvP/Core/Player/OfflineRPlayer.java" />
         <option value="$PROJECT_DIR$/src/main/java/RandomPvP/Core/Commands/Mod/SetWhitelistCmd.java" />
@@ -328,7 +113,6 @@
         <option value="$PROJECT_DIR$/src/main/java/RandomPvP/Core/Commands/Mod/SayCmd.java" />
         <option value="$PROJECT_DIR$/src/main/java/RandomPvP/Core/Commands/Mod/SilenceChatCmd.java" />
         <option value="$PROJECT_DIR$/src/main/java/RandomPvP/Core/Commands/Server/MessageCmd.java" />
-<<<<<<< HEAD
         <option value="$PROJECT_DIR$/src/main/java/RandomPvP/Core/Util/Vote/Votifier.java" />
         <option value="$PROJECT_DIR$/src/main/java/RandomPvP/Core/Player/Poll/Exception/PollException.java" />
         <option value="$PROJECT_DIR$/src/main/java/RandomPvP/Core/Punish/Punishment.java" />
@@ -341,10 +125,8 @@
         <option value="$PROJECT_DIR$/src/main/java/RandomPvP/Core/RPICore.java" />
         <option value="$PROJECT_DIR$/src/main/java/RandomPvP/Core/Data/MySQL.java" />
         <option value="$PROJECT_DIR$/src/main/java/RandomPvP/Core/Listener/RPlayerJoinListener.java" />
-        <option value="$PROJECT_DIR$/src/main/java/RandomPvP/Core/Util/Poll/PollManager.java" />
         <option value="$PROJECT_DIR$/src/main/java/RandomPvP/Core/Commands/Server/PollCmd.java" />
         <option value="$PROJECT_DIR$/src/main/resources/plugin.yml" />
-=======
         <option value="$PROJECT_DIR$/src/main/java/RandomPvP/Core/Commands/Server/ReplyMessageCmd.java" />
         <option value="$PROJECT_DIR$/src/main/java/RandomPvP/Core/Commands/Server/ReportCmd.java" />
         <option value="$PROJECT_DIR$/src/main/java/RandomPvP/Core/Commands/VIP/GoToCmd.java" />
@@ -359,7 +141,9 @@
         <option value="$PROJECT_DIR$/src/main/java/RandomPvP/Core/Player/PlayerManager.java" />
         <option value="$PROJECT_DIR$/src/main/java/RandomPvP/Core/Listener/RPlayerJoinListener.java" />
         <option value="$PROJECT_DIR$/src/main/java/RandomPvP/Core/Listener/RPlayerListener.java" />
->>>>>>> 2f5d0082aeb2df55a72e7f0f4a19dbb5a2ad5155
+        <option value="$PROJECT_DIR$/src/main/java/RandomPvP/Core/Util/Poll/PollManager.java" />
+        <option value="$PROJECT_DIR$/src/main/java/RandomPvP/Core/Util/GUI/GameGUI.java" />
+        <option value="$PROJECT_DIR$/src/main/java/RandomPvP/Core/Util/Broadcasts.java" />
       </list>
     </option>
   </component>
@@ -371,10 +155,10 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="3" />
-    <option name="y" value="49" />
-    <option name="width" value="1909" />
-    <option name="height" value="1030" />
+    <option name="x" value="-4" />
+    <option name="y" value="44" />
+    <option name="width" value="1928" />
+    <option name="height" value="1040" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -409,6 +193,7 @@
     </navigator>
     <panes>
       <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -423,7 +208,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="rpi" />
+              <option name="myItemId" value="RPI" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -433,7 +218,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="rpi" />
+              <option name="myItemId" value="RPI" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -444,10 +229,6 @@
               <option name="myItemId" value="main" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -455,7 +236,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="rpi" />
+              <option name="myItemId" value="RPI" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -481,7 +262,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="rpi" />
+              <option name="myItemId" value="RPI" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -511,7 +292,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="rpi" />
+              <option name="myItemId" value="RPI" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -535,115 +316,12 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Poll" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="RPI" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="rpi" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Core" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Util" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Poll" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Exception" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="RPI" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="rpi" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Core" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Commands" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="RPI" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="rpi" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Core" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Commands" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Server" />
+              <option name="myItemId" value="GUI" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -653,7 +331,7 @@
     <property name="MemberChooser.sorted" value="false" />
     <property name="MemberChooser.showClasses" value="true" />
     <property name="MemberChooser.copyJavadoc" value="false" />
-    <property name="options.lastSelected" value="copyright.profiles" />
+    <property name="options.lastSelected" value="preferences.lookFeel" />
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
@@ -863,7 +541,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="3" y="49" width="1909" height="1030" extended-state="0" />
+    <frame x="-4" y="44" width="1928" height="1040" extended-state="1" />
     <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -877,7 +555,7 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2514466" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24895833" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -933,84 +611,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/RandomPvP/Core/Commands/Game/TeamCommand.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="680">
-          <caret line="19" column="13" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/RandomPvP/Core/Commands/Game/UngroundCmd.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="578">
-          <caret line="16" column="13" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/RandomPvP/Core/Commands/Game/WhereAmICommand.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="646">
-          <caret line="18" column="13" selection-start-line="18" selection-start-column="13" selection-end-line="18" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/RandomPvP/Core/Commands/Server/ShopCmd.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="629">
-          <caret line="17" column="13" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/RandomPvP/Core/Commands/Server/RulesCmd.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="986">
-          <caret line="23" column="13" selection-start-line="23" selection-start-column="13" selection-end-line="23" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/RandomPvP/Core/Commands/Server/ReportCmd.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="850">
-          <caret line="25" column="13" selection-start-line="25" selection-start-column="13" selection-end-line="25" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/RandomPvP/Core/Commands/Server/ReplyMessageCmd.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="799">
-          <caret line="19" column="13" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/RandomPvP/Core/Commands/VIP/GoToCmd.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="663">
-          <caret line="18" column="13" selection-start-line="18" selection-start-column="13" selection-end-line="18" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/RandomPvP/Core/Commands/Server/MessageCmd.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="32" max-vertical-offset="1003">
-          <caret line="37" column="74" selection-start-line="37" selection-start-column="74" selection-end-line="37" selection-end-column="74" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/RandomPvP/Core/Util/StringUtil.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="799">
-          <caret line="39" column="42" selection-start-line="39" selection-start-column="42" selection-end-line="39" selection-end-column="42" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/RandomPvP/Core/Util/TimeUtil.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="408" max-vertical-offset="2057">
-          <caret line="21" column="13" selection-start-line="21" selection-start-column="13" selection-end-line="21" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/RandomPvP/Core/Util/Hologram.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="797" max-vertical-offset="1989">
@@ -1119,13 +719,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/RandomPvP/Core/Util/GUI/GameGUI.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3145">
-          <caret line="35" column="13" selection-start-line="35" selection-start-column="13" selection-end-line="35" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="595" max-vertical-offset="2618">
@@ -1167,7 +760,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="663">
           <caret line="17" column="17" selection-start-line="17" selection-start-column="17" selection-end-line="17" selection-end-column="17" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1175,7 +767,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1411">
           <caret line="31" column="13" selection-start-line="31" selection-start-column="13" selection-end-line="31" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1183,7 +774,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1411">
           <caret line="31" column="13" selection-start-line="31" selection-start-column="13" selection-end-line="31" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1191,7 +781,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1411">
           <caret line="31" column="13" selection-start-line="31" selection-start-column="13" selection-end-line="31" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1199,7 +788,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="102" max-vertical-offset="1071">
           <caret line="27" column="13" selection-start-line="27" selection-start-column="13" selection-end-line="27" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1207,7 +795,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1411">
           <caret line="31" column="13" selection-start-line="31" selection-start-column="13" selection-end-line="31" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1215,7 +802,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="304" max-vertical-offset="1190">
           <caret line="73" column="33" selection-start-line="73" selection-start-column="33" selection-end-line="73" selection-end-column="33" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1223,11 +809,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="102" max-vertical-offset="1003">
           <caret line="23" column="13" selection-start-line="23" selection-start-column="13" selection-end-line="23" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
-<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/src/main/java/RandomPvP/Core/Util/MotdData/MotdFetcher.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="236" max-vertical-offset="1377">
@@ -1235,14 +819,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/RandomPvP/Core/Util/MotdData/MotdSetter.java">
-=======
+    <entry file="file://$PROJECT_DIR$/src/main/java/RandomPvP/Core/Util/MotdData/MotdSetter.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/RandomPvP/Core/Game/Team/Team.java">
->>>>>>> 2f5d0082aeb2df55a72e7f0f4a19dbb5a2ad5155
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="578">
           <caret line="21" column="53" selection-start-line="21" selection-start-column="53" selection-end-line="21" selection-end-column="53" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1250,7 +831,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="15" max-vertical-offset="901">
           <caret line="30" column="12" selection-start-line="30" selection-start-column="12" selection-end-line="30" selection-end-column="12" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1258,59 +838,41 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="561">
           <caret line="15" column="13" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
-<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/src/main/java/RandomPvP/Core/Commands/Server/ListCmd.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="680">
+        <state vertical-scroll-proportion="0.0" vertical-offset="204" max-vertical-offset="680">
           <caret line="16" column="13" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="13" />
-=======
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/RandomPvP/Core/Event/Player/RPlayerDeathEvent.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.22826087" vertical-offset="0" max-vertical-offset="920">
           <caret line="18" column="13" selection-start-line="18" selection-start-column="13" selection-end-line="18" selection-end-column="13" />
->>>>>>> 2f5d0082aeb2df55a72e7f0f4a19dbb5a2ad5155
-          <folding />
         </state>
       </provider>
     </entry>
-<<<<<<< HEAD
-    <entry file="file://$PROJECT_DIR$/src/main/java/RandomPvP/Core/Util/Poll/PollManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="2941" max-vertical-offset="4522">
-          <caret line="226" column="81" selection-start-line="226" selection-start-column="81" selection-end-line="226" selection-end-column="81" />
-          <folding>
-            <element signature="e#9278#10307#0" expanded="true" />
-            <element signature="e#9753#9770#0" expanded="true" />
-            <element signature="e#10306#10307#0" expanded="true" />
-          </folding>
-=======
     <entry file="file://$PROJECT_DIR$/src/main/java/RandomPvP/Core/Event/Player/RPlayerChatEvent.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.22826087" vertical-offset="0" max-vertical-offset="920">
           <caret line="17" column="13" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
-          <folding />
->>>>>>> 2f5d0082aeb2df55a72e7f0f4a19dbb5a2ad5155
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/config.yml">
       <provider selected="true" editor-type-id="text-editor">
-<<<<<<< HEAD
         <state vertical-scroll-proportion="-0.0" vertical-offset="0" max-vertical-offset="153">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="2" selection-end-column="29" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/plugin.yml">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-2.04" vertical-offset="0" max-vertical-offset="170">
+        <state vertical-scroll-proportion="0.0" vertical-offset="51" max-vertical-offset="170">
           <caret line="3" column="13" selection-start-line="3" selection-start-column="13" selection-end-line="3" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1318,22 +880,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="1766" max-vertical-offset="4182">
           <caret line="155" column="75" selection-start-line="155" selection-start-column="75" selection-end-line="155" selection-end-column="75" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/RandomPvP/Core/Listener/RPlayerJoinListener.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="1681" max-vertical-offset="2567">
-          <caret line="154" column="70" selection-start-line="154" selection-start-column="70" selection-end-line="154" selection-end-column="70" />
-          <folding />
-=======
-        <state vertical-scroll-proportion="0.0" vertical-offset="517" max-vertical-offset="2505">
-          <caret line="90" column="36" selection-start-line="90" selection-start-column="36" selection-end-line="90" selection-end-column="36" />
-          <folding>
-            <element signature="e#3719#4104#0" expanded="true" />
-            <element signature="e#4093#4094#0" expanded="true" />
-          </folding>
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -1341,27 +894,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="671" max-vertical-offset="2400">
           <caret line="71" column="0" selection-start-line="71" selection-start-column="0" selection-end-line="71" selection-end-column="0" />
-          <folding>
-            <element signature="e#2878#3100#0" expanded="true" />
-            <element signature="e#3089#3090#0" expanded="true" />
-          </folding>
->>>>>>> 2f5d0082aeb2df55a72e7f0f4a19dbb5a2ad5155
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/RandomPvP/Core/Listener/RPlayerListener.java">
       <provider selected="true" editor-type-id="text-editor">
-<<<<<<< HEAD
         <state vertical-scroll-proportion="0.15578465" vertical-offset="731" max-vertical-offset="2703">
-          <caret line="74" column="8" selection-start-line="74" selection-start-column="8" selection-end-line="78" selection-end-column="50" />
-=======
-        <state vertical-scroll-proportion="0.0" vertical-offset="715" max-vertical-offset="9180">
-          <caret line="73" column="70" selection-start-line="73" selection-start-column="70" selection-end-line="73" selection-end-column="70" />
->>>>>>> 2f5d0082aeb2df55a72e7f0f4a19dbb5a2ad5155
-          <folding>
-            <element signature="e#2841#3063#0" expanded="true" />
-            <element signature="e#3062#3063#0" expanded="true" />
-          </folding>
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -1369,7 +908,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="70" max-vertical-offset="1545">
           <caret line="38" column="31" selection-start-line="38" selection-start-column="31" selection-end-line="38" selection-end-column="31" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1377,10 +915,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="825">
           <caret line="35" column="12" selection-start-line="35" selection-start-column="12" selection-end-line="35" selection-end-column="12" />
-          <folding>
-            <element signature="e#1378#1503#0" expanded="true" />
-            <element signature="e#1488#1489#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1388,6 +922,52 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="1.8423913" vertical-offset="0" max-vertical-offset="2010">
           <caret line="126" column="52" selection-start-line="126" selection-start-column="52" selection-end-line="126" selection-end-column="52" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/RandomPvP/Core/Player/OfflineRPlayer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="238" max-vertical-offset="2380">
+          <caret line="26" column="13" selection-start-line="26" selection-start-column="13" selection-end-line="26" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/RandomPvP/Core/Player/MsgType.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="663">
+          <caret line="15" column="12" selection-start-line="15" selection-start-column="12" selection-end-line="15" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/RandomPvP/Core/Player/PlayerManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="510" max-vertical-offset="2924">
+          <caret line="40" column="18" selection-start-line="40" selection-start-column="18" selection-end-line="40" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/RandomPvP/Core/Util/Poll/PollManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="3575" max-vertical-offset="4471">
+          <caret line="277" column="17" selection-start-line="277" selection-start-column="17" selection-end-line="277" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/RandomPvP/Core/Util/GUI/GameGUI.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="2058" max-vertical-offset="3145">
+          <caret line="169" column="21" selection-start-line="169" selection-start-column="21" selection-end-line="169" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/RandomPvP/Core/Util/Broadcasts.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.32254463" vertical-offset="0" max-vertical-offset="2890">
+          <caret line="31" column="68" selection-start-line="31" selection-start-column="68" selection-end-line="31" selection-end-column="68" />
           <folding />
         </state>
       </provider>

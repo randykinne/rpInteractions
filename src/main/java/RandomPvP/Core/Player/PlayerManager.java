@@ -52,9 +52,9 @@ public class PlayerManager {
         return new RPlayer("CONSOLE", null, false);
     }
 
-    public void addPlayer(RPlayer pl, UUID uuid) {
+    public void addPlayer(RPlayer pl) {
         if (pl != null) {
-            players.putIfAbsent(uuid, pl);
+            players.putIfAbsent(pl.getUUID(), pl);
         }
     }
 

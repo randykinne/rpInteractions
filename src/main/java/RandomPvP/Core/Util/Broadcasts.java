@@ -1,6 +1,7 @@
 package RandomPvP.Core.Util;
 
 import RandomPvP.Core.Game.Team.Team;
+import RandomPvP.Core.Player.MsgType;
 import RandomPvP.Core.Player.OfflineRPlayer;
 import RandomPvP.Core.Player.PlayerManager;
 import RandomPvP.Core.Player.RPlayer;
@@ -26,6 +27,10 @@ import java.io.DataOutputStream;
  * ***************************************************************************************
  */
 public class Broadcasts implements PluginMessageListener {
+
+    public void broadcastMessage(MsgType type, String msg) {
+        Bukkit.getServer().broadcastMessage(type.getPrefix() + msg);
+    }
 
     public static void sendRankedBroadcast(Rank rank, boolean specific, boolean global, String message) {
 

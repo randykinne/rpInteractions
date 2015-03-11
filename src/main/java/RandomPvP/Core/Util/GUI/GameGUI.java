@@ -139,17 +139,17 @@ public class GameGUI implements Listener {
 
         new BukkitRunnable() {
             public void run() {
-                for(int i=1; i < 37; i++) {
-                    if(PlayerManager.getInstance().getOnlinePlayers().size() > 0) {
+                for (int i = 1; i < 37; i++) {
+                    if (PlayerManager.getInstance().getOnlinePlayers().size() > 0) {
                         try {
                             ResultSet res = NetworkUtil.getServerAddress(gametype, i);
-                            if(res.next()) {
+                            if (res.next()) {
                                 MotdFetcher fetcher = new MotdFetcher(res.getString("ip"), res.getInt("port"));
                                 fetcher.fetch();
                                 List<String> lore = getLore(fetcher);
                                 GameState state;
                                 {
-                                    if(lore.contains(ChatColor.RED + "The server is full!")) {
+                                    if (lore.contains(ChatColor.RED + "The server is full!")) {
                                         state = GameState.STARTING;
                                     } else if (fetcher.getMotd() != null) {
                                         state = getState(NetworkUtil.convertServerData(fetcher)[1]);
@@ -158,14 +158,14 @@ public class GameGUI implements Listener {
                                     }
                                 }
 
-                                inv.setItem(i+8, ItemBuilder.build(getIconForState(state), getColorForState(state).toString() + ChatColor.BOLD + "SERVER " + i, 1, lore));
+                                inv.setItem(i + 8, ItemBuilder.build(getIconForState(state), getColorForState(state).toString() + ChatColor.BOLD + "SERVER " + i, 1, lore));
                             } else {
-                                inv.setItem(i+8, ItemBuilder.build(Material.BEDROCK, ChatColor.DARK_GRAY.toString() + ChatColor.BOLD + "SERVER ?", 1, Arrays.asList(ChatColor.GRAY + "Nulled server")));
+                                inv.setItem(i + 8, ItemBuilder.build(Material.BEDROCK, ChatColor.DARK_GRAY.toString() + ChatColor.BOLD + "SERVER ?", 1, Arrays.asList(ChatColor.GRAY + "Nulled server")));
                             }
                             res.close();
                         } catch (SQLException ex) {
                             ex.printStackTrace();
-                            inv.setItem(i+8, ItemBuilder.build(Material.BEDROCK, ChatColor.DARK_GRAY.toString() + ChatColor.BOLD + "SERVER ?", 1, Arrays.asList(ChatColor.GRAY + "Nulled server")));
+                            inv.setItem(i + 8, ItemBuilder.build(Material.BEDROCK, ChatColor.DARK_GRAY.toString() + ChatColor.BOLD + "SERVER ?", 1, Arrays.asList(ChatColor.GRAY + "Nulled server")));
                         }
                     }
                 }
