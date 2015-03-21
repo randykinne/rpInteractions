@@ -5,12 +5,16 @@ import RandomPvP.Core.Player.OfflineRPlayer;
 import RandomPvP.Core.Player.Rank.Rank;
 import RandomPvP.Core.RPICore;
 import RandomPvP.Core.Util.MotdData.MotdFetcher;
+import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.io.File;
+import java.lang.management.ManagementFactory;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -107,15 +111,40 @@ public class NetworkUtil {
                 @Override
                 public ResultSet call() throws Exception {
                     PreparedStatement stmt = MySQL.getConnection().prepareStatement("SELECT * FROM `servers_" + gamemode + "` WHERE `server_id`=?");
-                    stmt.setString(1, num + "");
+                    stmt.setInt(1, num);
                     return stmt.executeQuery();
                 }
             });
             return task.get();
         } catch (Exception ex) {
             ex.printStackTrace();
-            return  null;
+            return null;
         }
+    }
+
+    public static void restart() {
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            public void run() {
+                List<String> args = ManagementFactory.getRuntimeMXBean()
+                        .getInputArguments();
+                List<String> command = new ArrayList<String>();
+                command.add(System.getProperty("java.home") + File.separator
+                        + "bin" + File.separator + "java.exe");
+                for (int i = 0; i < args.size(); i++) {
+                    command.add(args.get(i));
+                }
+                command.add("-jar");
+                command.add(new File(Bukkit.class.getProtectionDomain()
+                        .getCodeSource().getLocation().getFile())
+                        .getAbsolutePath());
+                try {
+                    new ProcessBuilder(command).start();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        Bukkit.shutdown();
     }
 
 }

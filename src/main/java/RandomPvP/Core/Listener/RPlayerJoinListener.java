@@ -150,9 +150,9 @@ public class RPlayerJoinListener implements Listener {
                     PollManager manager = new PollManager();
                     RPlayer pl = PlayerManager.getInstance().getPlayer(e.getPlayer());
                     List<String> polls = manager.getOpenPolls();
-                    for (int i=0; i < polls.size(); i++) {
-                        if (!manager.hasVoted(polls.get(i), pl)) {
-                            manager.sendPollMessage(pl, polls.get(i));
+                    for (String poll : polls) {
+                        if (!manager.hasVoted(poll, pl)) {
+                            manager.sendPollMessage(pl, poll);
                             break;
                         }
                     }

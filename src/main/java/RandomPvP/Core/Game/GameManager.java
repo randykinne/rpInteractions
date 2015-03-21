@@ -107,20 +107,20 @@ public class GameManager {
                         stmt.executeUpdate();
                     }
                     {
-                        PreparedStatement stmt = MySQL.getConnection().prepareStatement("SELECT * FROM `servers_" + getGame().getName().toLowerCase() + "` WHERE server_id=?;");
+                        PreparedStatement stmt = MySQL.getConnection().prepareStatement("SELECT * FROM `servers_" + getGame().getName().toLowerCase() + "` WHERE server_id=?");
                         stmt.setInt(1, getGame().getID());
                         ResultSet res = stmt.executeQuery();
                         if(res.next()) {
-                            PreparedStatement update = MySQL.getConnection().prepareStatement("UPDATE `servers_" + getGame().getName().toLowerCase() + "` SET ip=?, port=? WHERE server_id=?;");
-                            stmt.setString(1, Bukkit.getServer().getIp());
-                            stmt.setInt(2, Bukkit.getServer().getPort());
+                            PreparedStatement update = MySQL.getConnection().prepareStatement("UPDATE `servers_" + getGame().getName().toLowerCase() + "` SET ip=?, port=? WHERE server_id=?");
+                            update.setString(1, Bukkit.getServer().getIp());
+                            update.setInt(2, Bukkit.getServer().getPort());
                             update.setInt(3, getGame().getID());
                             update.executeUpdate();
                             return;
                         }
                     }
                     {
-                        PreparedStatement stmt = MySQL.getConnection().prepareStatement("INSERT INTO `servers_" + getGame().getName().toLowerCase() + "` VALUES (?, ?, ?);");
+                        PreparedStatement stmt = MySQL.getConnection().prepareStatement("INSERT INTO `servers_" + getGame().getName().toLowerCase() + "` VALUES (?, ?, ?)");
                         stmt.setInt(1, getGame().getID());
                         stmt.setString(2, Bukkit.getServer().getIp());
                         stmt.setInt(3, Bukkit.getServer().getPort());

@@ -58,12 +58,12 @@ public class MotdFetcher {
                     onlinePlayers, maxPlayers));
                     */
         } catch (UnknownHostException e) {
-            System.out.println("[INFO] [MOTDFETCHER] You tried to catch the MOTD of server " + ip + ":" + port + " but got an UnknownHostException!!");
+            System.out.println("[INFO] [MOTDFETCHER] You tried to catch the MOTD of server " + ip + ":" + port + " but got an UnknownHostException!! (" + e.getMessage() + ")");
             maxPlayers = 0;
             maxPlayers = 0;
             motd = null;
         } catch (IOException e) {
-            System.out.println("[ERROR] [MOTDFETCHER] IOException occurred while trying to fetch the data of server " + ip + ":" + port + "!!");
+            System.out.println("[ERROR] [MOTDFETCHER] IOException occurred while trying to fetch the data of server " + ip + ":" + port + "!! (" + e.getMessage() + ")");
             maxPlayers = 0;
             maxPlayers = 0;
             motd = null;

@@ -31,7 +31,6 @@ public class GoToCmd extends RCommand {
     @Override
     public void onCommand(RPlayer player, String string, String[] args) {
         player.send(args[0]);
-
     }
 
 }

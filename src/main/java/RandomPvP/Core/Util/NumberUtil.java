@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
 import java.text.DecimalFormat;
+import java.util.Date;
 
 /**
  * ***************************************************************************************
@@ -68,7 +69,9 @@ public class NumberUtil {
     public static String translateDuration(long duration) {
         long diff = duration;
         if (duration != -1L) {
-            StringBuilder builder = new StringBuilder("");
+            return TimeUtil.everythingFormat.format(new Date(duration));
+            /*
+            StringBuilder builder = new StringBuilder();
             if ((int) (diff / 86400000L) > 0) {
                 builder.append((int) (diff / 86400000L) + "d");
             }
@@ -86,6 +89,7 @@ public class NumberUtil {
             }
 
             return builder.toString();
+            */
         } else {
             return "(Permanent)";
         }

@@ -15,6 +15,7 @@ import RandomPvP.Core.Util.Module.IModule;
 import RandomPvP.Core.Util.NumberUtil;
 import RandomPvP.Core.Util.TimeUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -85,37 +86,38 @@ public class RPlayer {
                         setRank(Rank.valueOf(set.getString("rank").toUpperCase()), false);
                     }
                 } else {
-                    PreparedStatement stmt = MySQL.getConnection().prepareStatement("SELECT * FROM `accounts` WHERE `accounts`.`uuid` = ?;");
-                    stmt.setString(1, getUUID().toString());
-                    ResultSet set = stmt.executeQuery();
+                    {
+                        PreparedStatement stmt = MySQL.getConnection().prepareStatement("SELECT * FROM `accounts` WHERE `accounts`.`uuid` = ?;");
+                        stmt.setString(1, getUUID().toString());
+                        ResultSet set = stmt.executeQuery();
 
-                    if (set.next()) {
-                        setRank(Rank.valueOf(set.getString("rank").toUpperCase()), false);
-                        rank_updated = System.currentTimeMillis();
-                        setCredits(set.getInt("credits"));
-                        setRPID(set.getInt("rpid"));
-                    } else {
-                        String sqlGetNextId = "SELECT MAX(rpid) AS max FROM accounts";
-                        PreparedStatement statement;
-                        statement = MySQL.getConnection().prepareStatement(sqlGetNextId);
-                        ResultSet rs = statement.executeQuery();
-                        while (rs.next()) {
-                            nextId = rs.getInt("max") + 1;
+                        if (set.next()) {
+                            setRank(Rank.valueOf(set.getString("rank").toUpperCase()), false);
+                            rank_updated = System.currentTimeMillis();
+                            setCredits(set.getInt("credits"));
+                            setRPID(set.getInt("rpid"));
+                        } else {
+                            String sqlGetNextId = "SELECT MAX(rpid) AS max FROM accounts";
+                            PreparedStatement statement;
+                            statement = MySQL.getConnection().prepareStatement(sqlGetNextId);
+                            ResultSet rs = statement.executeQuery();
+                            while (rs.next()) {
+                                nextId = rs.getInt("max") + 1;
+                            }
+
+                            PreparedStatement stmt2 = MySQL.getConnection().prepareStatement("INSERT INTO `accounts` VALUES (?, ?, ?, ?, ?, ?, ?, ?);");
+                            stmt2.setString(1, getUUID().toString());
+                            stmt2.setString(2, getName());
+                            stmt2.setInt(3, 0);
+                            stmt2.setString(4, getRank().getRank());
+                            stmt2.setLong(5, rank_updated);
+                            stmt2.setInt(6, getCredits());
+                            stmt2.setString(7, getIP().replace(".", "-"));
+                            stmt2.setString(8, null);
+
+                            stmt2.executeUpdate();
                         }
-
-                        PreparedStatement stmt2 = MySQL.getConnection().prepareStatement("INSERT INTO `accounts` VALUES (?, ?, ?, ?, ?, ?, ?, ?);");
-                        stmt2.setString(1, getUUID().toString());
-                        stmt2.setString(2, getName());
-                        stmt2.setInt(3, 0);
-                        stmt2.setString(4, getRank().getRank());
-                        stmt2.setLong(5, rank_updated);
-                        stmt2.setInt(6, getCredits());
-                        stmt2.setString(7, getIP().replace(".", "-"));
-                        stmt2.setString(8, null);
-
-                        stmt2.executeUpdate();
                     }
-
                     {
                         //to slow down the time so the removal in between switching servers doesn't overlap
                         new BukkitRunnable() {
@@ -149,8 +151,7 @@ public class RPlayer {
     }
 
     public synchronized void saveData() {
-        new BukkitRunnable() {
-            @Override
+        new Thread() {
             public void run() {
                 try {
                     PreparedStatement stmt = MySQL.getConnection().prepareStatement("UPDATE `accounts` SET `username`=?, `rank`=?, `rank_updated`=?, `credits`=?, `ip` =? WHERE `uuid`=?;");
@@ -165,7 +166,7 @@ public class RPlayer {
                     e.printStackTrace();
                 }
             }
-        }.runTaskAsynchronously(RPICore.getInstance());
+        }.start();
     }
 
     public void setPlayer(Player player) {
@@ -598,18 +599,18 @@ public class RPlayer {
         board = scoreboard;
     }
 
-    private static ByteArrayOutputStream b = new ByteArrayOutputStream();
-    private static DataOutputStream out = new DataOutputStream(b);
-
     public void send(String server) {
         message(MsgType.NETWORK, "§aConnecting you to §b" + server.toUpperCase() + "§a...");
 
+        ByteArrayOutputStream b = new ByteArrayOutputStream();
+        DataOutputStream out = new DataOutputStream(b);
         try {
             out.writeUTF("Connect");
             out.writeUTF(server.toUpperCase());
             getPlayer().sendPluginMessage(RPICore.getInstance(), "BungeeCord", b.toByteArray());
         } catch (IOException e) {
             e.printStackTrace();
+            message(ChatColor.RED + "Cannot connect you to the specified server at this time");
         }
     }
 

@@ -43,9 +43,7 @@ public class OfflineRPlayer {
         if (uuid == null) {
             isnull = true;
         } else {
-
             try {
-
                 PreparedStatement stmt = MySQL.getConnection().prepareStatement("SELECT * FROM `accounts` WHERE `accounts`.`uuid` = ?;");
                 stmt.setString(1, getUUID().toString());
                 ResultSet set = stmt.executeQuery();

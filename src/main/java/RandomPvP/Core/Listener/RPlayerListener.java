@@ -87,91 +87,113 @@ public class RPlayerListener implements Listener {
 
         Random rand = new Random();
 
-        if (pl.getPlayerLastHitBy() != null && pl.getPlayerLastHitBy().getPlayer() != null) {
-            killer = pl.getPlayerLastHitBy().getPlayer();
-        }
+        if(pl.getPlayer() != null) {
 
-        if (entityEvent instanceof EntityDamageByEntityEvent) {
-            EntityDamageByEntityEvent damageEvent = (EntityDamageByEntityEvent) entityEvent;
+            if (pl.getPlayerLastHitBy() != null && pl.getPlayerLastHitBy().getPlayer() != null) {
+                killer = pl.getPlayerLastHitBy().getPlayer();
+            }
 
-            if (damageEvent.getDamager() instanceof Player) {
-                killer = p.getKiller();
+            if (entityEvent instanceof EntityDamageByEntityEvent) {
+                EntityDamageByEntityEvent damageEvent = (EntityDamageByEntityEvent) entityEvent;
 
-                switch (rand.nextInt(5) + 1) {
+                if (damageEvent.getDamager() instanceof Player) {
+                    killer = p.getKiller();
+
+                    switch (rand.nextInt(5) + 1) {
+                        case 1:
+                            e.setDeathMessage("§8§l>> " + PlayerManager.getInstance().getPlayer(killer).getRankedName(false) + " §7stabbed " +
+                                    pl.getRankedName(false) + " §7to death!");
+                            break;
+                        case 2:
+                            e.setDeathMessage("§8§l>> " + PlayerManager.getInstance().getPlayer(killer).getRankedName(false) + " §7slaughtered " +
+                                    pl.getRankedName(false) + "§7!");
+                            break;
+                        case 3:
+                            e.setDeathMessage("§8§l>> " + PlayerManager.getInstance().getPlayer(killer).getRankedName(false) + " §7killed " +
+                                    pl.getRankedName(false) + "§7!");
+                            break;
+                        case 4:
+                            e.setDeathMessage("§8§l>> " + PlayerManager.getInstance().getPlayer(killer).getRankedName(false) + " §7obliterated " +
+                                    pl.getRankedName(false) + "§7!");
+                            break;
+                        case 5:
+                            e.setDeathMessage("§8§l>> " + PlayerManager.getInstance().getPlayer(killer).getRankedName(false) + " §7murdered " +
+                                    pl.getRankedName(false) + "§7!");
+                            break;
+                    }
+
+                } else if (damageEvent.getDamager() instanceof TNTPrimed) {
+
+                    e.setDeathMessage("§8§l>> " + pl.getRankedName(false) + (pl.getPlayerLastHitBy() != null ? " §7was knocked into TNT by " + pl.getPlayerLastHitBy().getRankedName(false) + "§7." : " §7was blown up by TNT!"));
+                } else if (damageEvent.getDamager() instanceof Projectile) {
+                    Projectile projectile = (Projectile) damageEvent.getDamager();
+                    if (projectile.getShooter() instanceof Player) {
+                        killer = (Player) projectile.getShooter();
+                        e.setDeathMessage("§8§l>> " + PlayerManager.getInstance().getPlayer(killer).getRankedName(false) + " §7shot " +
+                                pl.getRankedName(false) + "§7! §b(" + NumberUtil.getDistanceBetween(p.getLocation(), killer.getLocation()) + " blocks)");
+                    }
+                } else if (EntityUtils.isCreature(damageEvent.getDamager())) {
+                    if (damageEvent.getDamager() instanceof LivingEntity) {
+                        e.setDeathMessage("§8§l>> " + pl.getRankedName(false) + " §7was mobbed by a mob!");
+                    }
+
+                } else if (damageEvent.getDamager() instanceof FallingBlock) {
+                    e.setDeathMessage("§8§l>> " + pl.getRankedName(false) + " §7was rekt by a falling anvil!");
+                } else {
+                    e.setDeathMessage(null);
+                }
+            } else if (entityEvent.getCause() == EntityDamageEvent.DamageCause.DROWNING) {
+                e.setDeathMessage("§8§l>> " + pl.getRankedName(false) + " §7drowned!");
+            } else if (entityEvent.getCause() == EntityDamageEvent.DamageCause.FALL) {
+                switch (rand.nextInt(3) + 1) {
                     case 1:
-                        e.setDeathMessage("§8§l>> " + PlayerManager.getInstance().getPlayer(killer).getRankedName(false) + " §7stabbed " +
-                                pl.getRankedName(false) + " §7to death!");
+                        e.setDeathMessage("§8§l>> " + pl.getRankedName(false) + " §7learned that what goes up must come down! §e(" + new DecimalFormat("##.#").format(entityEvent.getEntity().getFallDistance()) + " blocks!)");
                         break;
                     case 2:
-                        e.setDeathMessage("§8§l>> " + PlayerManager.getInstance().getPlayer(killer).getRankedName(false) + " §7slaughtered " +
-                                pl.getRankedName(false) + "§7!");
+                        e.setDeathMessage("§8§l>> " + pl.getRankedName(false) + " §7fell to their death! §e(" + new DecimalFormat("##.#").format(entityEvent.getEntity().getFallDistance()) + " blocks!)");
                         break;
                     case 3:
-                        e.setDeathMessage("§8§l>> " + PlayerManager.getInstance().getPlayer(killer).getRankedName(false) + " §7killed " +
-                                pl.getRankedName(false) + "§7!");
+                        e.setDeathMessage("§8§l>> " + pl.getRankedName(false) + " §7tried to fly! §e(" + new DecimalFormat("##.#").format(entityEvent.getEntity().getFallDistance()) + " blocks!)");
                         break;
                     case 4:
-                        e.setDeathMessage("§8§l>> " + PlayerManager.getInstance().getPlayer(killer).getRankedName(false) + " §7obliterated " +
-                                pl.getRankedName(false) + "§7!");
-                        break;
-                    case 5:
-                        e.setDeathMessage("§8§l>> " + PlayerManager.getInstance().getPlayer(killer).getRankedName(false) + " §7murdered " +
-                                pl.getRankedName(false) + "§7!");
+                        e.setDeathMessage("§8§l>> " + pl.getRankedName(false) + " §7attempted to become a bird! §e(" + new DecimalFormat("##.#").format(entityEvent.getEntity().getFallDistance()) + " blocks!)");
                         break;
                 }
-
-            } else if (damageEvent.getDamager() instanceof TNTPrimed) {
-
-                e.setDeathMessage("§8§l>> " + pl.getRankedName(false) + (pl.getPlayerLastHitBy() != null ? " §7was knocked into TNT by " + pl.getPlayerLastHitBy().getRankedName(false) + "§7." : " §7was blown up by TNT!"));
-            } else if (damageEvent.getDamager() instanceof Projectile) {
-                Projectile projectile = (Projectile) damageEvent.getDamager();
-                if (projectile.getShooter() instanceof Player) {
-                    killer = (Player) projectile.getShooter();
-                    e.setDeathMessage("§8§l>> " + PlayerManager.getInstance().getPlayer(killer).getRankedName(false) + " §7shot " +
-                            pl.getRankedName(false) + "§7! §b(" + NumberUtil.getDistanceBetween(p.getLocation(), killer.getLocation()) + " blocks)");
+            } else if (entityEvent.getCause() == EntityDamageEvent.DamageCause.FIRE || entityEvent.getCause() == EntityDamageEvent.DamageCause.LAVA) {
+                if (entityEvent.getEntity().getLastDamageCause() instanceof Player) {
+                    killer = (Player) entityEvent.getEntity().getLastDamageCause();
+                    switch (rand.nextInt(3) + 1) {
+                        case 1:
+                            e.setDeathMessage("§8§l>> " + pl.getRankedName(false) + " §7burnt to a crisp while fighting " + PlayerManager.getInstance().getPlayer(killer).getRankedName(false) + "!");
+                            break;
+                        case 2:
+                            e.setDeathMessage("§8§l>> " + pl.getRankedName(false) + " §7stepped into fire!");
+                            break;
+                        case 3:
+                            e.setDeathMessage("§8§l>> " + pl.getRankedName(false) + " §7melted!");
+                            break;
+                    }
                 }
-            } else if (EntityUtils.isCreature(damageEvent.getDamager())) {
-                if (damageEvent.getDamager() instanceof LivingEntity) {
-                    e.setDeathMessage("§8§l>> " + pl.getRankedName(false) + " §7was mobbed by a mob!");
+                switch (rand.nextInt(3) + 1) {
+                    case 1:
+                        e.setDeathMessage("§8§l>> " + pl.getRankedName(false) + " §7burnt to a crisp!");
+                        break;
+                    case 2:
+                        e.setDeathMessage("§8§l>> " + pl.getRankedName(false) + " §7stepped into fire!");
+                        break;
+                    case 3:
+                        e.setDeathMessage("§8§l>> " + pl.getRankedName(false) + " §7melted!");
+                        break;
                 }
-
-            } else if (damageEvent.getDamager() instanceof FallingBlock) {
-                e.setDeathMessage("§8§l>> " + pl.getRankedName(false) + " §7was rekt by a falling anvil!");
+            } else if (entityEvent.getCause() == EntityDamageEvent.DamageCause.LIGHTNING) {
+                e.setDeathMessage("§8§l>> " + pl.getRankedName(false) + " §7was struck by lightning!");
+            } else if (entityEvent.getCause() == EntityDamageEvent.DamageCause.VOID) {
+                e.setDeathMessage("§8§l>> " + pl.getRankedName(false) + " §7fell out of the world!");
             } else {
                 e.setDeathMessage(null);
             }
-        } else if (entityEvent.getCause() == EntityDamageEvent.DamageCause.DROWNING) {
-            e.setDeathMessage("§8§l>> " + pl.getRankedName(false) + " §7drowned!");
-        } else if (entityEvent.getCause() == EntityDamageEvent.DamageCause.FALL) {
-            switch (rand.nextInt(3) + 1) {
-                case 1: e.setDeathMessage("§8§l>> " + pl.getRankedName(false) + " §7learned that what goes up must come down! §e(" + new DecimalFormat("##.#").format(entityEvent.getEntity().getFallDistance()) + " blocks!)"); break;
-                case 2: e.setDeathMessage("§8§l>> " + pl.getRankedName(false) + " §7fell to their death! §e(" + new DecimalFormat("##.#").format(entityEvent.getEntity().getFallDistance()) + " blocks!)"); break;
-                case 3: e.setDeathMessage("§8§l>> " + pl.getRankedName(false) + " §7tried to fly! §e(" + new DecimalFormat("##.#").format(entityEvent.getEntity().getFallDistance()) + " blocks!)"); break;
-                case 4: e.setDeathMessage("§8§l>> " + pl.getRankedName(false) + " §7attempted to become a bird! §e(" + new DecimalFormat("##.#").format(entityEvent.getEntity().getFallDistance()) + " blocks!)"); break;
-            }
-        } else if (entityEvent.getCause() == EntityDamageEvent.DamageCause.FIRE || entityEvent.getCause() == EntityDamageEvent.DamageCause.LAVA) {
-            if (entityEvent.getEntity().getLastDamageCause() instanceof Player) {
-                killer = (Player) entityEvent.getEntity().getLastDamageCause();
-                switch (rand.nextInt(3) + 1) {
-                    case 1: e.setDeathMessage("§8§l>> " + pl.getRankedName(false) + " §7burnt to a crisp while fighting " + PlayerManager.getInstance().getPlayer(killer).getRankedName(false) + "!"); break;
-                    case 2: e.setDeathMessage("§8§l>> " + pl.getRankedName(false) + " §7stepped into fire!"); break;
-                    case 3: e.setDeathMessage("§8§l>> " + pl.getRankedName(false) + " §7melted!"); break;
-                }
-            }
-            switch (rand.nextInt(3) + 1) {
-                case 1: e.setDeathMessage("§8§l>> " + pl.getRankedName(false) + " §7burnt to a crisp!"); break;
-                case 2: e.setDeathMessage("§8§l>> " + pl.getRankedName(false) + " §7stepped into fire!"); break;
-                case 3: e.setDeathMessage("§8§l>> " + pl.getRankedName(false) + " §7melted!"); break;
-            }
-        } else if (entityEvent.getCause() == EntityDamageEvent.DamageCause.LIGHTNING) {
-            e.setDeathMessage("§8§l>> " + pl.getRankedName(false) + " §7was struck by lightning!");
-        } else if (entityEvent.getCause() == EntityDamageEvent.DamageCause.VOID) {
-            e.setDeathMessage("§8§l>> " + pl.getRankedName(false) + " §7fell out of the world!");
-        } else {
-            e.setDeathMessage(null);
+
+            Bukkit.getPluginManager().callEvent(new RPlayerDeathEvent(pl, killer != null ? PlayerManager.getInstance().getPlayer(killer) : null, entityEvent.getCause(), e.getDeathMessage()));
         }
-
-        Bukkit.getPluginManager().callEvent(new RPlayerDeathEvent(pl, killer != null ? PlayerManager.getInstance().getPlayer(killer) : null, entityEvent.getCause(), e.getDeathMessage()));
-
     }
 }

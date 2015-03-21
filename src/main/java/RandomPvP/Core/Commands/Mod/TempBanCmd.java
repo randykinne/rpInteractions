@@ -9,6 +9,7 @@ import RandomPvP.Core.Punish.Punishment;
 import RandomPvP.Core.Punish.PunishmentManager;
 import RandomPvP.Core.Punish.PunishmentType;
 import RandomPvP.Core.Util.Broadcasts;
+import RandomPvP.Core.Util.NumberUtil;
 import RandomPvP.Core.Util.TimeUtil;
 import net.minecraft.util.org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
@@ -36,7 +37,6 @@ public class TempBanCmd extends RCommand {
 
     @Override
     public void onCommand(RPlayer pl, String string, String[] args) {
-        if(pl == pl) { pl.message(MsgType.ERROR, "This command is currently disabled."); return; }
         final RPlayer punished = PlayerManager.getInstance().getPlayer(args[0]);
         if(!punished.isBanned()) {
             final String reason = StringUtils.join(args, " ", 2, args.length);

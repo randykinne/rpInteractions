@@ -64,6 +64,7 @@ public class RankGUI implements Listener {
                                 if(item.strictRank()) {
                                     if (pl.getRank() == item.getRankNeeded()) {
                                         if (pl.getCredits() >= item.getPrice()) {
+                                            pl.removeCredits(item.getPrice());
                                             item.purcahse(pl);
                                         } else {
                                             pl.message(MsgType.ERROR, "You don't have enough credits to purchase this item!");
@@ -74,6 +75,7 @@ public class RankGUI implements Listener {
                                 } else {
                                     if (pl.has(item.getRankNeeded())) {
                                         if (pl.getCredits() >= item.getPrice()) {
+                                            pl.removeCredits(item.getPrice());
                                             item.purcahse(pl);
                                         } else {
                                             pl.message(MsgType.ERROR, "You don't have enough credits to purchase this item!");

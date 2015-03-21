@@ -24,7 +24,7 @@ public class RPlayerDeathEvent extends Event implements Cancellable {
     String message;
 
     private boolean cancelled = false;
-    private static HandlerList handlers = new HandlerList();
+    private static final HandlerList handlers = new HandlerList();
 
     public RPlayerDeathEvent(RPlayer killee, RPlayer killer, EntityDamageEvent.DamageCause cause, String message) {
         killed = killee;
@@ -76,6 +76,10 @@ public class RPlayerDeathEvent extends Event implements Cancellable {
 
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

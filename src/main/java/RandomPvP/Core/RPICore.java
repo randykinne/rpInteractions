@@ -14,6 +14,7 @@ import RandomPvP.Core.Listener.*;
 import RandomPvP.Core.Player.PlayerManager;
 import RandomPvP.Core.Player.RPlayer;
 import RandomPvP.Core.Util.Shop.Items.BoosterItem;
+import RandomPvP.Core.Util.Shop.Items.PrimeRankItem;
 import RandomPvP.Core.Util.Shop.ShopManager;
 import RandomPvP.Core.Punish.PunishmentManager;
 import RandomPvP.Core.Util.Broadcasts;
@@ -69,6 +70,7 @@ public class RPICore extends JavaPlugin {
         addCommand(new OpCmd());
         addCommand(new RankAdminCmd());
         addCommand(new TestCommand());
+        addCommand(new RestartCmd());
 
         // Mod Commands
         addCommand(new GameModeCmd());
@@ -99,6 +101,7 @@ public class RPICore extends JavaPlugin {
         addCommand(new TeamCommand());
         addCommand(new WhereAmICommand());
         addCommand(new UngroundCmd());
+        addCommand(new ReplyMessageCmd());
 
         // Server Commands
         addCommand(new HubCmd());
@@ -173,6 +176,7 @@ public class RPICore extends JavaPlugin {
         }
 
         ShopManager.getInstance().addItem(new BoosterItem());
+        ShopManager.getInstance().addItem(new PrimeRankItem());
 
         GameManager.loadServerProfile();
     }
@@ -190,18 +194,9 @@ public class RPICore extends JavaPlugin {
         //sleeping to remove it from the DB
         Thread t = new Thread() {
             public void run() {
-                try {
-                    {
-                        for (RPlayer pl : PlayerManager.getInstance().getOnlinePlayers()) {
-                            PreparedStatement stmt = MySQL.getConnection().prepareStatement("DELETE FROM `online_players` WHERE `id`=?");
-                            {
-                                stmt.setInt(1, pl.getRPID());
-                            }
-                            stmt.executeUpdate();
-                        }
-                    }
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
+                for (RPlayer pl : PlayerManager.getInstance().getOnlinePlayers()) {
+                    pl.saveData();
+                    PlayerManager.getInstance().removePlayer(pl.getPlayer());
                 }
             }
         };

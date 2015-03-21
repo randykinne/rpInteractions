@@ -3,7 +3,6 @@ package RandomPvP.Core.Commands.Mod;
 import RandomPvP.Core.Commands.Command.RCommand;
 import RandomPvP.Core.Player.MsgType;
 import RandomPvP.Core.Player.OfflineRPlayer;
-import RandomPvP.Core.Player.PlayerManager;
 import RandomPvP.Core.Player.RPlayer;
 import RandomPvP.Core.Player.Rank.Rank;
 import RandomPvP.Core.Punish.Punishment;
@@ -37,7 +36,6 @@ public class TempMuteCmd extends RCommand {
 
     @Override
     public void onCommand(RPlayer pl, String string, String[] args) {
-        if(pl == pl) { pl.message(MsgType.ERROR, "This command is currently disabled."); return; }
         final OfflineRPlayer punished = new OfflineRPlayer(args[0]);
         if(!punished.isBanned()) {
             final String reason = StringUtils.join(args, " ", 2, args.length);

@@ -33,14 +33,14 @@ public class Team {
     private Map<String, Integer> members = new HashMap<>();
 
     public void addPlayer(RPlayer player) {
-        if (!members.containsValue(player)) {
+        if (!members.containsValue(player.getRPID())) {
             members.put(player.getName(), player.getRPID());
             player.setTeam(this);
         }
     }
 
     public void removePlayer(RPlayer player) {
-        if (members.containsValue(player)) {
+        if (members.containsValue(player.getRPID())) {
             members.remove(player.getName());
             player.setTeam(null);
         }

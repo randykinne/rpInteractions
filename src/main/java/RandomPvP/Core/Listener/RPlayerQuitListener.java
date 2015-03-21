@@ -1,11 +1,13 @@
 package RandomPvP.Core.Listener;
 
+import RandomPvP.Core.Event.Player.RPlayerQuitEvent;
 import RandomPvP.Core.Game.Team.TeamManager;
 import RandomPvP.Core.Player.PlayerManager;
 import RandomPvP.Core.Player.RPlayer;
 import RandomPvP.Core.Player.Rank.Rank;
 import RandomPvP.Core.RPICore;
 import RandomPvP.Core.Util.Broadcasts;
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerKickEvent;
@@ -28,6 +30,8 @@ public class RPlayerQuitListener implements Listener {
     public void onQuit(PlayerQuitEvent e) {
             final RPlayer pl = PlayerManager.getInstance().getPlayer(e.getPlayer());
             if(pl != null) {
+                Bukkit.getServer().getPluginManager().callEvent(new RPlayerQuitEvent(pl));
+
                 if (pl.getTeam() != null) {
                     TeamManager.leaveTeam(pl, pl.getTeam());
                 }

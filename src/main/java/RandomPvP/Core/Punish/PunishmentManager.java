@@ -224,9 +224,4 @@ public class PunishmentManager extends PunishmentDatabaseConnection {
         return punishments[punishments.length - 1];
     }
 
-
-    /* TODO: SQL query that connects with PermissionsAPI + makes sure the player being punished isn't a staff. (Also used to message all staff when player is banned?)
-    public boolean isStaff(ProxiedPlayer player) {
-    }
-    */
 }

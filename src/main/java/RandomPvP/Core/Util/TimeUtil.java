@@ -33,6 +33,7 @@ public class TimeUtil {
     }
 
     public static SimpleDateFormat dateFormat = new SimpleDateFormat("h:mm a - MMM d, yyyy");
+    public static SimpleDateFormat everythingFormat = new SimpleDateFormat("MMMM dd yyyy h:mm:ss a z");
 
     private final static Pattern timePattern = Pattern.compile("(?:([0-9]+)\\s*y[a-z]*[,\\s]*)?"
             + "(?:([0-9]+)\\s*mo[a-z]*[,\\s]*)?" + "(?:([0-9]+)\\s*w[a-z]*[,\\s]*)?"
@@ -91,7 +92,7 @@ public class TimeUtil {
             }
         }
         if (!found) {
-            throw new IllegalArgumentException(ChatColor.RED + "Invalid duration !");
+            throw new IllegalArgumentException(ChatColor.RED + "Invalid duration!");
         }
         final Calendar c = new GregorianCalendar();
         if (years > 0) {
