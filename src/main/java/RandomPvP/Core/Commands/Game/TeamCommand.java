@@ -1,9 +1,10 @@
 package RandomPvP.Core.Commands.Game;
 
 import RandomPvP.Core.Commands.Command.RCommand;
-import RandomPvP.Core.Game.GameManager;
+import RandomPvP.Core.Server.Game.GameManager;
 import RandomPvP.Core.Player.MsgType;
 import RandomPvP.Core.Player.RPlayer;
+import org.bukkit.ChatColor;
 
 import java.util.Arrays;
 
@@ -33,7 +34,7 @@ public class TeamCommand extends RCommand {
                 player.message(MsgType.GAME, "Your current team: " + player.getTeam().getColor() + player.getTeam().getName());
             }
         } else {
-            player.message(MsgType.ERROR, "Teams are not enabled for " + GameManager.getGame().getPrimaryColor() + GameManager.getGame().getName());
+            player.message(MsgType.ERROR, "Teams are not enabled for " + GameManager.getGame().getPrimaryColor() + GameManager.getGame().getName() + ChatColor.GRAY + ".");
         }
     }
 }

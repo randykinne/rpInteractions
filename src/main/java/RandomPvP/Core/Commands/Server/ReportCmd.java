@@ -5,9 +5,8 @@ import RandomPvP.Core.Player.MsgType;
 import RandomPvP.Core.Player.PlayerManager;
 import RandomPvP.Core.Player.RPlayer;
 import RandomPvP.Core.Player.Rank.Rank;
-import RandomPvP.Core.Util.Broadcasts;
+import RandomPvP.Core.Server.General.Messages;
 import RandomPvP.Core.Util.StringUtil;
-import net.minecraft.util.org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 
@@ -39,15 +38,20 @@ public class ReportCmd extends RCommand {
         if (Bukkit.getPlayer(args[0]) != null) {
             RPlayer target = PlayerManager.getInstance().getPlayer(Bukkit.getPlayer(args[0]));
 
-            String reason = StringUtils.join(args, "", 1, args.length);
-            if(!(reason.equals(""))) {
-                Broadcasts.sendRankedBroadcast(Rank.MOD, false, true, "§f§l[R] §8(§a§l" + Bukkit.getServerName() + "§8) " + pl.getRankedName(false) + " §7> " + target.getRankedName(false) + "§8: §f" + StringUtils.join(args, " ", 1, args.length));
-            } else {
-                pl.message(MsgType.ERROR, "You must supply a reason!");
-            }
+            if(pl.getName() != target.getName()) {
 
-            pl.message(MsgType.CREDIT, "Your report has been sent to all online staff members.");
-            pl.getPlayer().playSound(pl.getLocation(), Sound.ANVIL_BREAK, 1F, 1F);
+                String reason = StringUtil.join(args, "", 1, args.length);
+                if (!(reason.equals(""))) {
+                    Messages.sendRankedBroadcast(Rank.MOD, false, true, "§f§l[R] §8(§a§l" + Bukkit.getServerName() + "§8) " + pl.getRankedName(false) + " §7> " + target.getRankedName(false) + "§8: §f" + StringUtil.join(args, " ", 1, args.length));
+                } else {
+                    pl.message(MsgType.ERROR, "You must supply a reason!");
+                }
+
+                pl.message(MsgType.CREDIT, "Your report has been sent to all online staff members.");
+                pl.getPlayer().playSound(pl.getLocation(), Sound.ANVIL_BREAK, 1F, 1F);
+            } else {
+                pl.message(MsgType.ERROR, "You cannot report yourself!");
+            }
         } else {
             pl.message(MsgType.ERROR, "Player not found!");
         }

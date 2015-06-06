@@ -5,6 +5,7 @@ import org.bukkit.Location;
 
 import java.text.DecimalFormat;
 import java.util.Date;
+import java.util.Random;
 
 /**
  * ***************************************************************************************
@@ -19,15 +20,65 @@ import java.util.Date;
 public class NumberUtil {
 
     public static Location getRandomLocation(int xmax, int xmin, int zmax, int zmin) {
+        /*
+        Random r = new Random();
+
+        int x;
+        {
+            if(xmax > -1) {
+                int tX = r.nextInt(xmax);
+                while (tX < xmin) {
+                    tX++;
+                }
+                x = tX;
+            } else {
+                int xMax = xmax;
+                int added = 0;
+                while (xMax < 0) {
+                    xMax++;
+                    added++;
+                }
+
+                int tX = r.nextInt(xmax + added);
+                while (tX < xmin) {
+                    tX++;
+                }
+                x = (tX - added);
+            }
+        }
+        int y = 100;
+        int z;
+        {
+            if(zmax > -1) {
+                int tZ = r.nextInt(zmax);
+                while (tZ < zmin) {
+                    tZ++;
+                }
+                z = tZ;
+            } else {
+                int tZ = r.nextInt(zmax + zmax);
+                while (tZ < zmin) {
+                    tZ++;
+                }
+                z = (tZ - added);
+            }
+        }
+        */
+
+        /*
+        int x = r.nextInt(Math.abs(xmax - xmin) + 1) + xmin;
+        int y = 100;
+        int z = r.nextInt(Math.abs(zmax - zmin) + 1) + xmin;
+        */
+
+
         final float loc = xmin + (int)(Math.random() * ((xmax - xmin) + 1));
         final int x = (int) loc;
-
-        final int y = 100;
 
         final float loc2 = zmin + (int)(Math.random() * ((zmax - zmin) + 1));
         final int z = (int) loc2;
 
-        return new Location(Bukkit.getWorld("world"), x, y, z);
+        return new Location(Bukkit.getWorld("world"), x, 100, z);
     }
 
     public static int getSlotsNeeded(int size) {

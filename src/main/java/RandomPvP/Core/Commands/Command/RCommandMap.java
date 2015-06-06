@@ -4,6 +4,7 @@ import RandomPvP.Core.RPICore;
 import org.bukkit.command.CommandMap;
 
 import java.lang.reflect.Field;
+import java.util.Collection;
 import java.util.HashMap;
 
 /**
@@ -38,7 +39,7 @@ public class RCommandMap {
         return null;
     }
 
-    public static RCommand[] getCommands() {
-        return (RCommand[]) commands.values().toArray();
+    public static Collection<RCommand> getCommands() {
+        return commands.values();
     }
 }

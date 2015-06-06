@@ -3,7 +3,7 @@ package RandomPvP.Core.Commands.Server;
 import RandomPvP.Core.Commands.Command.RCommand;
 import RandomPvP.Core.Player.MsgType;
 import RandomPvP.Core.Player.RPlayer;
-import net.minecraft.util.org.apache.commons.lang3.StringUtils;
+import RandomPvP.Core.Util.StringUtil;
 
 import java.util.Arrays;
 
@@ -32,8 +32,8 @@ public class ReplyMessageCmd extends RCommand {
     public void onCommand(RPlayer pl, String string, String[] args) {
         if (pl.getModule("LastMessage") != null) {
             RPlayer target = (RPlayer) pl.getModule("LastMessage").getData();
-            pl.message("§9§l>> §7[" + pl.getRank().getColor() + "You§7] §9--> §7[" + target.getDisplayName(false) + "§7]§8: §2" + StringUtils.join(args, " "));
-            target.message("§9§l>> §7[" + pl.getDisplayName(false) +  "§7] §9--> §7[" + target.getRank().getColor() + "You§7]§8: §2" + StringUtils.join(args, " "));
+            pl.message("§9§l>> §7[" + pl.getRank().getColor() + "You§7] §9--> §7[" + target.getDisplayName(false) + "§7]§8: §2" + StringUtil.join(args, " "));
+            target.message("§9§l>> §7[" + pl.getDisplayName(false) +  "§7] §9--> §7[" + target.getRank().getColor() + "You§7]§8: §2" + StringUtil.join(args, " "));
 
             if (target.getModule("LastMessage") != null) {
                 target.getModule("LastMessage").setData(pl);

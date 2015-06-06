@@ -5,7 +5,7 @@ import RandomPvP.Core.Event.Server.RankWhitelistChangeEvent;
 import RandomPvP.Core.Player.MsgType;
 import RandomPvP.Core.Player.RPlayer;
 import RandomPvP.Core.Player.Rank.Rank;
-import RandomPvP.Core.Util.ServerToggles;
+import RandomPvP.Core.Server.General.ServerToggles;
 import org.bukkit.Bukkit;
 
 import java.util.ArrayList;

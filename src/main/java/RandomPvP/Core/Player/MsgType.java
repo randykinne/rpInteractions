@@ -1,6 +1,6 @@
 package RandomPvP.Core.Player;
 
-import RandomPvP.Core.Game.GameManager;
+import RandomPvP.Core.Server.Game.GameManager;
 import org.bukkit.ChatColor;
 
 /**
@@ -19,10 +19,11 @@ public enum MsgType {
     INFO("§8§l>> §7", ChatColor.GRAY),
     GAME(GameManager.getGame().getPrimaryColor() + "§l>> §7", GameManager.getGame().getPrimaryColor()),
     NETWORK("§9§l>> §7", ChatColor.AQUA),
-    ERROR("§4§l** §7§o", ChatColor.RED);
+    ERROR("§4§l>> §7", ChatColor.RED);
 
-    String prefix;
-    ChatColor color;
+    private String prefix;
+    private ChatColor color;
+
     MsgType(String prefix, ChatColor color) {
         this.prefix = prefix;
         this.color = color;

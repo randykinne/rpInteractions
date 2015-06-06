@@ -1,6 +1,6 @@
 package RandomPvP.Core.Event.Game;
 
-import RandomPvP.Core.Game.Map.RMap;
+import RandomPvP.Core.Server.Game.Map.RMap;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 

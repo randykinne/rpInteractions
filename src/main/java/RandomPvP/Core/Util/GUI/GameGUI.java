@@ -1,6 +1,9 @@
 package RandomPvP.Core.Util.GUI;
 
-import RandomPvP.Core.Game.GameState.GameState;
+import RandomPvP.Core.Player.Inventory.Button;
+import RandomPvP.Core.Player.Inventory.InventoryType;
+import RandomPvP.Core.Player.Inventory.RInventory;
+import RandomPvP.Core.Server.Game.GameState.GameState;
 import RandomPvP.Core.Player.PlayerManager;
 import RandomPvP.Core.Player.RPlayer;
 import RandomPvP.Core.Player.Rank.Rank;
@@ -8,14 +11,8 @@ import RandomPvP.Core.RPICore;
 import RandomPvP.Core.Util.ItemBuilder;
 import RandomPvP.Core.Util.MotdData.MotdFetcher;
 import RandomPvP.Core.Util.NetworkUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -33,23 +30,21 @@ import java.util.List;
  * Enjoy.                                                                                 *
  * ****************************************************************************************
  */
-public class GameGUI implements Listener {
+public class GameGUI {
 
-    private Inventory inv;
+    private RInventory inv;
     private String name;
     private String gametype;
     private String sid;
     private ItemStack icon;
-    private Inventory mainMenu;
+    private RInventory mainMenu;
 
-    public GameGUI(String name, String gametype, String sid, ItemStack icon, Inventory mainMenu) {
+    public GameGUI(String name, String gametype, String sid, ItemStack icon, RInventory mainMenu) {
         this.name = name;
         this.gametype = gametype;
         this.sid = sid;
         this.icon = icon;
         this.mainMenu = mainMenu;
-
-        Bukkit.getServer().getPluginManager().registerEvents(this, RPICore.getInstance());
     }
 
     public ChatColor getColorForState(GameState s) {
@@ -74,12 +69,12 @@ public class GameGUI implements Listener {
         switch(s) {
             case NONE: return Material.BEDROCK;
             case LOBBY: return Material.EMERALD_BLOCK;
-            case STARTING: return Material.REDSTONE_BLOCK;
+            case STARTING: return Material.GOLD_BLOCK;
             case LOADING: return Material.REDSTONE_BLOCK;
             case WARMUP: return Material.REDSTONE_BLOCK;
             case GRACE: return Material.REDSTONE_BLOCK;
-            case BATTLE: return Material.REDSTONE_BLOCK;
-            case BUILD: return Material.REDSTONE_BLOCK;
+            case BATTLE: return Material.GOLD_BLOCK;
+            case BUILD: return Material.GOLD_BLOCK;
             case RUNNING: return Material.GOLD_BLOCK;
             case INGAME: return Material.GOLD_BLOCK;
             case DEATHMATCH: return Material.REDSTONE_BLOCK;
@@ -132,74 +127,139 @@ public class GameGUI implements Listener {
     }
 
     public void build() {
-        inv = Bukkit.getServer().createInventory(null, 54, name);
+        inv = new RInventory(54, InventoryType.MENU, name);
+        {
+            inv.addButton(new Button() {
+                @Override
+                public String getName() {
+                    return ChatColor.DARK_GRAY + "< Go Back <";
+                }
 
-        inv.setItem(0, ItemBuilder.build(Material.ARROW, ChatColor.DARK_GRAY + "< Go Back <", 1));
-        inv.setItem(4, icon);
+                @Override
+                public Material getMaterial() {
+                    return Material.ARROW;
+                }
 
-        new BukkitRunnable() {
-            public void run() {
-                for (int i = 1; i < 37; i++) {
-                    if (PlayerManager.getInstance().getOnlinePlayers().size() > 0) {
-                        try {
-                            ResultSet res = NetworkUtil.getServerAddress(gametype, i);
-                            if (res.next()) {
-                                MotdFetcher fetcher = new MotdFetcher(res.getString("ip"), res.getInt("port"));
-                                fetcher.fetch();
-                                List<String> lore = getLore(fetcher);
-                                GameState state;
-                                {
-                                    if (lore.contains(ChatColor.RED + "The server is full!")) {
-                                        state = GameState.STARTING;
-                                    } else if (fetcher.getMotd() != null) {
-                                        state = getState(NetworkUtil.convertServerData(fetcher)[1]);
-                                    } else {
-                                        state = GameState.NONE;
+                @Override
+                public int getAmount() {
+                    return 1;
+                }
+
+                @Override
+                public int getLocation() {
+                    return 0;
+                }
+
+                @Override
+                public boolean closeOnClick() {
+                    return false;
+                }
+
+                @Override
+                public List<String> getDescription() {
+                    return null;
+                }
+
+                @Override
+                public void click(RPlayer pl) {
+                    pl.openInventory(mainMenu);
+                }
+            });
+
+            inv.setItem(4, icon);
+
+            new BukkitRunnable() {
+                public void run() {
+                    for (int i = 1; i < 37; i++) {
+                        if (PlayerManager.getInstance().getOnlinePlayers().size() > 0) {
+                            try {
+                                ResultSet res = NetworkUtil.getServerAddress(gametype, i);
+                                if (res.next()) {
+                                    final MotdFetcher fetcher = new MotdFetcher(res.getString("ip"), res.getInt("port"));
+                                    {
+                                        fetcher.fetch();
                                     }
-                                }
+                                    final List<String> lore = getLore(fetcher);
+                                    final int i2 = i;
+                                    final GameState state;
+                                    {
+                                        if (lore.contains(ChatColor.RED + "The server is full!")) {
+                                            state = GameState.STARTING;
+                                        } else if (fetcher.getMotd() != null) {
+                                            state = getState(NetworkUtil.convertServerData(fetcher)[1]);
+                                        } else {
+                                            state = GameState.NONE;
+                                        }
+                                    }
 
-                                inv.setItem(i + 8, ItemBuilder.build(getIconForState(state), getColorForState(state).toString() + ChatColor.BOLD + "SERVER " + i, 1, lore));
-                            } else {
+                                    List<Button> toRemove = new ArrayList<Button>();
+                                    {
+                                        for (Button b : inv.getButtons()) {
+                                            if (b.getName().equals(getColorForState(state).toString() + ChatColor.BOLD + "SERVER " + i2)) {
+                                                toRemove.add(b);
+                                            }
+                                        }
+                                    }
+                                    for(Button b : toRemove) {
+                                        inv.removeButton(b);
+                                    }
+
+                                    inv.addButton(new Button() {
+                                        @Override
+                                        public String getName() {
+                                            return getColorForState(state).toString() + ChatColor.BOLD + "SERVER " + i2;
+                                        }
+
+                                        @Override
+                                        public Material getMaterial() {
+                                            return getIconForState(state);
+                                        }
+
+                                        @Override
+                                        public int getAmount() {
+                                            return fetcher.getOnlinePlayers() > 0 ? fetcher.getOnlinePlayers() : 1;
+                                        }
+
+                                        @Override
+                                        public int getLocation() {
+                                            return i2 + 8;
+                                        }
+
+                                        @Override
+                                        public boolean closeOnClick() {
+                                            return state.isJoinable();
+                                        }
+
+                                        @Override
+                                        public List<String> getDescription() {
+                                            return lore;
+                                        }
+
+                                        @Override
+                                        public void click(RPlayer pl) {
+                                            if (getIconForState(state) == Material.EMERALD_BLOCK || getIconForState(state) == Material.GOLD_BLOCK) {
+                                                String s = sid.toUpperCase() + i2;
+                                                pl.send(s);
+                                            }
+                                        }
+                                    });
+                                } else {
+                                    inv.setItem(i + 8, ItemBuilder.build(Material.BEDROCK, ChatColor.DARK_GRAY.toString() + ChatColor.BOLD + "SERVER ?", 1, Arrays.asList(ChatColor.GRAY + "Unknown server")));
+                                }
+                                res.close();
+                            } catch (Exception ex) {
+                                //ex.printStackTrace();
+                                //NetworkUtil.handleError(ex);
                                 inv.setItem(i + 8, ItemBuilder.build(Material.BEDROCK, ChatColor.DARK_GRAY.toString() + ChatColor.BOLD + "SERVER ?", 1, Arrays.asList(ChatColor.GRAY + "Nulled server")));
                             }
-                            res.close();
-                        } catch (SQLException ex) {
-                            ex.printStackTrace();
-                            inv.setItem(i + 8, ItemBuilder.build(Material.BEDROCK, ChatColor.DARK_GRAY.toString() + ChatColor.BOLD + "SERVER ?", 1, Arrays.asList(ChatColor.GRAY + "Nulled server")));
                         }
                     }
                 }
-            }
-        }.runTaskTimerAsynchronously(RPICore.getInstance(), 70L, 70L);
-    }
-
-    @EventHandler
-    public void onClick(InventoryClickEvent e) {
-        if(e.getInventory().equals(getInventory())) {
-            if(e.getCurrentItem() != null) {
-                e.setCancelled(true);
-                if(e.getCurrentItem().hasItemMeta()) {
-                    if(e.getCurrentItem().getItemMeta().hasDisplayName()) {
-                        ItemStack item = e.getCurrentItem();
-                        RPlayer pl = PlayerManager.getInstance().getPlayer((Player) e.getWhoClicked());
-                        String name = ChatColor.stripColor(item.getItemMeta().getDisplayName());
-                        if(name.equals("< Go Back <")) {
-                            pl.getPlayer().closeInventory();
-                            pl.getPlayer().openInventory(mainMenu);
-                        } else if(name.startsWith("SERVER")) {
-                            if(item.getType() == Material.EMERALD_BLOCK || item.getType() == Material.GOLD_BLOCK) {
-                                String s = sid.toUpperCase() + name.replace("SERVER ", "");
-                                pl.getPlayer().closeInventory();
-                                pl.send(s);
-                            }
-                        }
-                    }
-                }
-            }
+            }.runTaskTimer(RPICore.getInstance(), 70L, 70L);
         }
     }
 
-    public Inventory getInventory() {
+    public RInventory getInventory() {
         return inv;
     }
 

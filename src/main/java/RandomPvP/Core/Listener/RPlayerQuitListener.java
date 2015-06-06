@@ -1,18 +1,16 @@
 package RandomPvP.Core.Listener;
 
 import RandomPvP.Core.Event.Player.RPlayerQuitEvent;
-import RandomPvP.Core.Game.Team.TeamManager;
 import RandomPvP.Core.Player.PlayerManager;
 import RandomPvP.Core.Player.RPlayer;
 import RandomPvP.Core.Player.Rank.Rank;
-import RandomPvP.Core.RPICore;
-import RandomPvP.Core.Util.Broadcasts;
+import RandomPvP.Core.Player.Scoreboard.ScoreboardManager;
+import RandomPvP.Core.Server.Game.Team.TeamManager;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * ***************************************************************************************
@@ -28,49 +26,41 @@ public class RPlayerQuitListener implements Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
-            final RPlayer pl = PlayerManager.getInstance().getPlayer(e.getPlayer());
-            if(pl != null) {
-                Bukkit.getServer().getPluginManager().callEvent(new RPlayerQuitEvent(pl));
+        final RPlayer pl = PlayerManager.getInstance().getPlayer(e.getPlayer());
+        ScoreboardManager.getInstance().removePlayer(pl);
+        if(pl != null) {
+            Bukkit.getServer().getPluginManager().callEvent(new RPlayerQuitEvent(pl));
 
-                if (pl.getTeam() != null) {
-                    TeamManager.leaveTeam(pl, pl.getTeam());
-                }
-
-                new BukkitRunnable() {
-                    public void run() {
-                        pl.saveData();
-                    }
-                }.runTaskAsynchronously(RPICore.getInstance());
-
-
-                if (pl.has(Rank.VIP)) {
-                    e.setQuitMessage(null);
-                    Broadcasts.sendRankedBroadcast(Rank.MOD, false, true, pl.getRankedName(false) + " §9left§7.");
-                } else {
-                    e.setQuitMessage("§c§l<< " + pl.getRankedName(false) + " §9left.");
-                }
-
-                PlayerManager.getInstance().removePlayer(e.getPlayer());
-            } else {
-                e.setQuitMessage("§c§l<< " + e.getPlayer().getName() + " §9left.");
+            if (pl.getTeam() != null) {
+                TeamManager.leaveTeam(pl, pl.getTeam());
             }
+
+            pl.saveData();
+
+            if (pl.has(Rank.VIP)) {
+                e.setQuitMessage(null); //proxy handles message
+            } else {
+                e.setQuitMessage("§c§l<< " + pl.getDisplayName(false) + " §9left.");
+            }
+
+            PlayerManager.getInstance().removePlayer(e.getPlayer());
+        } else {
+            e.setQuitMessage("§c§l<< §9" + e.getPlayer().getName() + " left.");
+        }
     }
 
     @EventHandler
     public void onKick(PlayerKickEvent e) {
         final RPlayer pl = PlayerManager.getInstance().getPlayer(e.getPlayer());
+        ScoreboardManager.getInstance().removePlayer(pl);
         if(pl != null) {
             if (pl.getTeam() != null) {
                 TeamManager.leaveTeam(pl, pl.getTeam());
             }
 
-            new BukkitRunnable() {
-                public void run() {
-                    pl.saveData();
-                }
-            }.runTaskAsynchronously(RPICore.getInstance());
+            pl.saveData();
 
-            e.setLeaveMessage("§4§l<< " + pl.getRankedName(false) + " §cwas kicked.");
+            e.setLeaveMessage("§4§l<< " + pl.getDisplayName(false) + " §cwas kicked.");
 
             PlayerManager.getInstance().removePlayer(e.getPlayer());
         } else {

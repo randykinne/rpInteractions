@@ -25,8 +25,8 @@ public class Giveaway extends RCommand {
     public Giveaway() {
         super("giveaway");
         setRank(Rank.ADMIN);
-        setAliases(Arrays.asList("givearank", "winnerwinner"));
-        setDescription("Someone gets lucky and wins Premium!");
+        setAliases(Arrays.asList("givearank", "winner"));
+        setDescription("Someone gets lucky and wins PRIME!");
         setArgsUsage("");
         setPlayerOnly(true);
     }
@@ -35,15 +35,24 @@ public class Giveaway extends RCommand {
     public void onCommand(RPlayer pl, String string, String[] args) {
         RPlayer winner = PlayerManager.getInstance().getRandomPlayer();
 
-        while (winner.has(Rank.PREMIUM)) {
-            winner = PlayerManager.getInstance().getRandomPlayer();
+        boolean available = false;
+        for(RPlayer p : PlayerManager.getInstance().getOnlinePlayers()) {
+            if(p.getRank() == Rank.PLAYER) {
+                available = true;
+            }
         }
 
-        if (!winner.has(Rank.PREMIUM)) {
-            winner.setRank(Rank.PREMIUM, true);
-            winner.message(MsgType.INFO, "Congratulations! You were the lucky winner of the " + Rank.PREMIUM.getName() + " §7giveaway!");
+        if(available) {
+            while (winner.has(Rank.PRIME)) {
+                winner = PlayerManager.getInstance().getRandomPlayer();
+            }
+
+            winner.setRank(Rank.PRIME, true);
+            winner.message(MsgType.INFO, "Congratulations! You were the lucky winner of the " + Rank.PRIME.getName() + " §7giveaway!");
             winner.message(MsgType.INFO, "Enjoy your free rank ;)");
             Bukkit.broadcastMessage("§8§l>> " + winner.getRankedName(false) + "§7 has won the giveaway!");
+        } else {
+            pl.message(MsgType.ERROR, "There is no one to giveaway to.");
         }
     }
 }

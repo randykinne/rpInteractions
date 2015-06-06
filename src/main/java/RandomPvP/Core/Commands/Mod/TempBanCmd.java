@@ -2,16 +2,16 @@ package RandomPvP.Core.Commands.Mod;
 
 import RandomPvP.Core.Commands.Command.RCommand;
 import RandomPvP.Core.Player.MsgType;
+import RandomPvP.Core.Player.OfflineRPlayer;
 import RandomPvP.Core.Player.PlayerManager;
 import RandomPvP.Core.Player.RPlayer;
 import RandomPvP.Core.Player.Rank.Rank;
-import RandomPvP.Core.Punish.Punishment;
-import RandomPvP.Core.Punish.PunishmentManager;
-import RandomPvP.Core.Punish.PunishmentType;
-import RandomPvP.Core.Util.Broadcasts;
-import RandomPvP.Core.Util.NumberUtil;
+import RandomPvP.Core.Server.General.Messages;
+import RandomPvP.Core.Server.Punish.Punishment;
+import RandomPvP.Core.Server.Punish.PunishmentManager;
+import RandomPvP.Core.Server.Punish.PunishmentType;
+import RandomPvP.Core.Util.StringUtil;
 import RandomPvP.Core.Util.TimeUtil;
-import net.minecraft.util.org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
@@ -37,17 +37,17 @@ public class TempBanCmd extends RCommand {
 
     @Override
     public void onCommand(RPlayer pl, String string, String[] args) {
-        final RPlayer punished = PlayerManager.getInstance().getPlayer(args[0]);
+        final OfflineRPlayer punished = new OfflineRPlayer(args[0]);
         if(!punished.isBanned()) {
-            final String reason = StringUtils.join(args, " ", 2, args.length);
+            final String reason = StringUtil.join(args, " ", 2, args.length);
             Punishment pm = new Punishment(punished.getUUID(), pl.getUUID(), PunishmentType.TEMPORARY_BAN, reason, TimeUtil.dateFormat.format(new Date()), TimeUtil.parseDuration(args[1]));
             {
                 pm.save();
             }
-            Broadcasts.sendRankedBroadcast(Rank.MOD, false, true, pl.getRankedName(false) + ChatColor.GRAY + " tempbanned "
-                    + punished.getDisplayName(false) + ChatColor.GRAY + " for " + ChatColor.BLUE + pm.getReason() + ChatColor.GRAY + ". (" + ChatColor.BLUE + args[1] + ChatColor.GRAY + ")");
+            Messages.sendRankedBroadcast(Rank.MOD, false, true, pl.getRankedName(false) + ChatColor.GRAY + " tempbanned "
+                    + punished.getRankedName(false) + ChatColor.GRAY + " for " + ChatColor.BLUE + pm.getReason() + ChatColor.GRAY + ". (" + ChatColor.BLUE + args[1] + ChatColor.GRAY + ")");
             if(Bukkit.getPlayer(args[0]).isOnline()) {
-                Broadcasts.kickPlayerFromNetwork(PlayerManager.getInstance().getPlayer(Bukkit.getPlayer(punished.getUUID())), PunishmentManager.getInstance().generateMessage(pm));
+                Messages.kickPlayerFromNetwork(PlayerManager.getInstance().getPlayer(Bukkit.getPlayer(punished.getUUID())), PunishmentManager.getInstance().generateMessage(pm));
             }
         } else {
             pl.message(MsgType.ERROR, punished.getRankedName(false) + ChatColor.GRAY + " is already banned.");

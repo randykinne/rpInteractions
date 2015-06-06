@@ -3,6 +3,7 @@ package RandomPvP.Core.Player.Credit;
 import RandomPvP.Core.Data.MySQL;
 import RandomPvP.Core.Player.RPlayer;
 import RandomPvP.Core.RPICore;
+import RandomPvP.Core.Util.NetworkUtil;
 import RandomPvP.Core.Util.NumberUtil;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -48,8 +49,8 @@ public class Booster {
                     stmt.setBoolean(5, isActive());
 
                     stmt.executeUpdate();
-                } catch (SQLException e) {
-                    e.printStackTrace();
+                } catch (SQLException ex) {
+                    NetworkUtil.handleError(ex);
                 }
             }
         }.runTaskAsynchronously(RPICore.getInstance());
@@ -64,8 +65,8 @@ public class Booster {
                     stmt.setInt(2, getID());
 
                     stmt.executeUpdate();
-                } catch (SQLException e) {
-                    e.printStackTrace();
+                } catch (SQLException ex) {
+                    NetworkUtil.handleError(ex);
                 }
             }
         }.runTaskAsynchronously(RPICore.getInstance());

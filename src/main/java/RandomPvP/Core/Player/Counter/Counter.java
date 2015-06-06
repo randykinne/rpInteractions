@@ -23,6 +23,10 @@ public class Counter {
         return name;
     }
 
+    public void removeLevel() {
+        level = level - 1;
+    }
+
     public void addLevel() {
         level = level + 1;
     }

@@ -4,7 +4,8 @@ import RandomPvP.Core.Player.MsgType;
 import RandomPvP.Core.Player.PlayerManager;
 import RandomPvP.Core.Player.RPlayer;
 import RandomPvP.Core.Player.Rank.Rank;
-import net.minecraft.util.org.apache.commons.lang3.StringUtils;
+import RandomPvP.Core.Util.NetworkUtil;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -21,13 +22,12 @@ import org.bukkit.entity.Player;
  */
 public abstract class RCommand extends Command {
 
-    String name;
-    String[] args;
-    SubCommand[] subCommands;
-    Rank needed = Rank.PLAYER;
-    boolean playerOnly = false;
-    int minimumArgs = 0;
-    int maximumArgs = -1;
+    private String name;
+    private String[] args;
+    private Rank needed = Rank.PLAYER;
+    private boolean playerOnly = false;
+    private int minimumArgs = 0;
+    private int maximumArgs = -1;
 
     public RCommand(String name) {
         super(name);
@@ -69,10 +69,15 @@ public abstract class RCommand extends Command {
             throw new CommandException(getUsage());
         }
 
-        if(playerOnly) {
-            onCommand(PlayerManager.getInstance().getPlayer((Player) sender), s, args);
+        if (playerOnly) {
+            try {
+                onCommand(PlayerManager.getInstance().getPlayer((Player) sender), s, args);
+            } catch (Exception ex) {
+                NetworkUtil.handleErrorMessage(PlayerManager.getInstance().getPlayer((Player) sender), ex);
+            }
         } else {
-            onCommand(PlayerManager.getInstance().getConsole(), s, args);
+            sender.sendMessage(ChatColor.RED + "I'm sorry, but there is not console/player access yet.");
+            //onCommand(PlayerManager.getInstance().getConsole(), s, args);
         }
     }
 
@@ -90,10 +95,6 @@ public abstract class RCommand extends Command {
         }
 
         return buffer.toString();
-    }
-
-    public String getJoinedStrings2(int where) {
-        return StringUtils.join(args, " ", where);
     }
 
     public void setName(String name) {
@@ -118,5 +119,13 @@ public abstract class RCommand extends Command {
 
     public void setArgsUsage(String msg) {
         setUsage("" + "/" + getName() + " " + msg + " - " + (getDescription() != null ? getDescription() : "No description."));
+    }
+
+    public boolean isPlayerOnly() {
+        return playerOnly;
+    }
+
+    public Rank getRankNeeded() {
+        return needed;
     }
 }

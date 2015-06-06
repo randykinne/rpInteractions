@@ -4,7 +4,7 @@ import RandomPvP.Core.Event.Game.GameStateChangeEvent;
 import RandomPvP.Core.Event.Game.GamemodeChangeEvent;
 import RandomPvP.Core.Event.Game.MapChangeEvent;
 import RandomPvP.Core.Event.Server.RankWhitelistChangeEvent;
-import RandomPvP.Core.Game.GameManager;
+import RandomPvP.Core.Server.Game.GameManager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 

@@ -1,11 +1,14 @@
 package RandomPvP.Core.Commands.Server;
 
 import RandomPvP.Core.Commands.Command.RCommand;
-import RandomPvP.Core.Game.GameManager;
-import RandomPvP.Core.Game.GameState.GameState;
+import RandomPvP.Core.Server.Game.GameManager;
+import RandomPvP.Core.Server.Game.GameState.GameState;
 import RandomPvP.Core.Player.MsgType;
 import RandomPvP.Core.Player.RPlayer;
-import RandomPvP.Core.Util.Shop.GUI.MainGUI;
+import RandomPvP.Core.Util.GUI.ShopGUI;
+import RandomPvP.Core.Util.ItemBuilder;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
 
 /**
  * ****************************************************************************************
@@ -17,17 +20,17 @@ import RandomPvP.Core.Util.Shop.GUI.MainGUI;
  */
 public class ShopCmd extends RCommand {
 
+    private ShopGUI gui = new ShopGUI("Global Shop", "global", ItemBuilder.build(Material.BEACON, ChatColor.GREEN.toString() + ChatColor.BOLD + "GLOBAL SHOP", 1));
+
     public ShopCmd() {
         super("shop");
         setPlayerOnly(true);
-        setMaximumArgs(0);
-        setMinimumArgs(0);
     }
 
     @Override
     public void onCommand(RPlayer pl, String string, String[] args) {
         if(GameManager.getState() == GameState.LOBBY) {
-            MainGUI.openGUI(pl);
+            gui.open(pl);
         } else {
             pl.message(MsgType.ERROR, "The game must be in lobby to use this command.");
         }

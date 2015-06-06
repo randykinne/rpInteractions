@@ -12,76 +12,6 @@
     <description>RandomPvP Engine</description>
     <url>http://www.randompvp.com</url>
 
-    <!--distributionManagement>
-        <repository>
-            <id>overcast-deployment</id>
-            <url>https://repo.oc.tc/content/repositories/releases-private</url>
-        </repository>
-        <snapshotRepository>
-            <id>overcast-deployment</id>
-            <url>https://repo.oc.tc/content/repositories/snapshots-private</url>
-        </snapshotRepository>
-    </distributionManagement-->
-
-    <repositories>
-        <repository>
-            <id>shadowvolt-repo</id>
-            <url>http://ci.shadowvolt.com/plugin/repository/everything/</url>
-        </repository>
-        <repository>
-            <id>overcast-private</id>
-            <url>https://repo.oc.tc/content/groups/private</url>
-        </repository>
-        <!--repository>
-            <id>everything</id>
-            <url>http://repo.citizensnpcs.co</url>
-        </repository-->
-        <repository>
-            <id>greatman-repo</id>
-            <url>http://repo.greatmancode.com/content/groups/public/</url>
-        </repository>
-        <repository>
-            <id>cybermaxkes-repo</id>
-            <url>http://dl.dropbox.com/u/104060836/mvn-repo</url>
-        </repository>
-    </repositories>
-
-    <dependencies>
-        <dependency>
-            <groupId>com.comphenix.protocol</groupId>
-            <artifactId>ProtocolLib</artifactId>
-            <version>3.6.3-SNAPSHOT</version>
-        </dependency>
-        <!--dependency>
-            <groupId>tc.oc</groupId>
-            <artifactId>sportbukkit-api</artifactId>
-            <version>1.7.10-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency-->
-        <dependency>
-            <groupId>ninja.amp</groupId>
-            <artifactId>ampmenus</artifactId>
-            <version>1.4-SNAPSHOT</version> <!-- Use LATEST for latest dev build -->
-            <scope>compile</scope>
-        </dependency>
-        <!--dependency>
-            <groupId>net.citizensnpcs</groupId>
-            <artifactId>citizensapi</artifactId>
-            <version>LATEST</version>
-            <scope>provided</scope>
-        </dependency-->
-        <!--dependency>
-            <groupId>me.confuser</groupId>
-            <artifactId>BarAPI</artifactId>
-            <version>3.0</version>
-        </dependency-->
-        <dependency>
-            <groupId>cybermaxke</groupId>
-            <artifactId>inputgui</artifactId>
-            <version>dev-SNAPSHOT</version>
-        </dependency>
-    </dependencies>
-
     <build>
         <finalName>${project.name}</finalName>
         <defaultGoal>clean install</defaultGoal>
@@ -121,9 +51,6 @@
                         <configuration>
                             <artifactSet>
                                 <includes>
-                                    <include>org.ocpsoft.prettytime:prettytime</include>
-                                    <include>ninja.amp:ampmenus</include>
-                                    <include>net.citizensnpcs:citizensapi</include>
                                     <include>**/*.properties</include>
                                     <include>**/*.yml</include>
                                 </includes>
@@ -132,8 +59,6 @@
                     </execution>
                 </executions>
             </plugin>
-
-
         </plugins>
     </build>
 

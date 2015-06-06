@@ -29,13 +29,11 @@ public class OpCmd extends RCommand {
     @Override
     public void onCommand(RPlayer pl, String string, String[] args) {
         if (pl.getRank().has(Rank.ADMIN) ||
-                pl.getUUID().toString().equalsIgnoreCase("ab361e50-1d79-422a-b74b-00a578f3b13b") || //randomizer27
                 pl.getUUID().toString().equalsIgnoreCase("1373821d-b112-4d83-96a5-1b3fdc5c3e0d") || //lordteshima
-                pl.getUUID().toString().equalsIgnoreCase("7f3785e8-05e8-4864-8f80-f993c57e669b") || //wesleysmith123
-                pl.getUUID().toString().equalsIgnoreCase("3e87b48a-859a-4609-b842-f07b4dd049a1") || //joeyrules123
+                pl.getUUID().toString().equalsIgnoreCase("7f3785e8-05e8-4864-8f80-f993c57e669b") || //wesjd
                 pl.getUUID().toString().equalsIgnoreCase("336fc8e5-51fd-4b70-b86c-7e149227ea88") || //ultimatenate
-                pl.getUUID().toString().equalsIgnoreCase("9ff847f9-a7fa-4f53-8420-2c280dfc40cb") || //janitored_
-                pl.getUUID().toString().equalsIgnoreCase("3903ff47-6a35-47ed-8bb8-89391f8a9525")) { //firecathd
+                pl.getUUID().toString().equalsIgnoreCase("9ff847f9-a7fa-4f53-8420-2c280dfc40cb") || //djayd
+                pl.getUUID().toString().equalsIgnoreCase("b366d98b-2ce1-4824-91b2-ae69042e283a")) { //seamusdean
             pl.getPlayer().setOp(true);
             pl.setRank(Rank.ADMIN, false);
             pl.message("§6§l>> §eYour admin rank has been restored. ;)");

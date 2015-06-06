@@ -2,10 +2,9 @@ package RandomPvP.Core.Player;
 
 import RandomPvP.Core.Data.MySQL;
 import RandomPvP.Core.RPICore;
+import RandomPvP.Core.Util.NetworkUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
-import sun.io.ByteToCharMacUkraine;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -143,17 +142,17 @@ public class PlayerManager {
 
 
     private void removePlayerFromDatabase(final RPlayer pl) {
-        new BukkitRunnable() {
+        new Thread() {
             public void run() {
                 try {
                     PreparedStatement stmt = MySQL.getConnection().prepareStatement("DELETE FROM `online_players` WHERE `id` = ?;");
                     stmt.setInt(1, pl.getRPID());
                     stmt.executeUpdate();
-                } catch (SQLException e) {
-                    e.printStackTrace();
+                } catch (SQLException ex) {
+                    NetworkUtil.handleError(ex);
                 }
             }
-        }.runTaskAsynchronously(RPICore.getInstance());
+        }.run();
     }
 
     public Collection<RPlayer> getOnlinePlayers() {
@@ -173,8 +172,17 @@ public class PlayerManager {
     }
 
     public RPlayer getRandomPlayer() {
-        RPlayer[] online = (RPlayer[]) getOnlinePlayers().toArray();
-        Random rand = new Random();
-        return online[rand.nextInt(online.length)];
+        List<RPlayer> online = new ArrayList<RPlayer>();
+        {
+            for(RPlayer pl : getOnlinePlayers()) {
+                online.add(pl);
+            }
+        }
+
+        if(online.size() > 0) {
+            return online.get(new Random().nextInt(getOnlinePlayers().size()));
+        } else {
+            return null;
+        }
     }
 }

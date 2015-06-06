@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import RandomPvP.Core.Util.NetworkUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -67,7 +68,7 @@ public class DamageUtil {
                 armorRatings.put(material, armorField.getInt(armor));
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            NetworkUtil.handleError(ex);
         }
     }
 

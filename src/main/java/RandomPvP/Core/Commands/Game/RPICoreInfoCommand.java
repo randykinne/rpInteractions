@@ -3,7 +3,6 @@ package RandomPvP.Core.Commands.Game;
 import RandomPvP.Core.Commands.Command.RCommand;
 import RandomPvP.Core.Player.RPlayer;
 import RandomPvP.Core.RPICore;
-import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.PluginDescriptionFile;
 
 import java.util.Arrays;

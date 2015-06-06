@@ -1,7 +1,7 @@
 package RandomPvP.Core.Commands.Game;
 
 import RandomPvP.Core.Commands.Command.RCommand;
-import RandomPvP.Core.Game.GameManager;
+import RandomPvP.Core.Server.Game.GameManager;
 import RandomPvP.Core.Player.MsgType;
 import RandomPvP.Core.Player.RPlayer;
 import org.bukkit.Bukkit;

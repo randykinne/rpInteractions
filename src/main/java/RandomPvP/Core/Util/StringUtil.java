@@ -28,6 +28,34 @@ public class StringUtil {
         return str.toString();
     }
 
+    //from apache commons
+    public static String join(Object[] array, String separator, int startIndex, int endIndex)
+    {
+        if (array == null) {
+            return null;
+        }
+        if (separator == null) {
+            separator = "";
+        }
+
+        int noOfItems = endIndex - startIndex;
+        if (noOfItems <= 0) {
+            return "";
+        }
+
+        StringBuilder buf = new StringBuilder(noOfItems * 16);
+
+        for (int i = startIndex; i < endIndex; i++) {
+            if (i > startIndex) {
+                buf.append(separator);
+            }
+            if (array[i] != null) {
+                buf.append(array[i]);
+            }
+        }
+        return buf.toString();
+    }
+
     public String formatLongMessage(MsgType type, String msg) {
         return null;
     }
@@ -40,6 +68,26 @@ public class StringUtil {
             } catch (Exception ignored) {}
         }
         return a;
+    }
+
+    public static String booleanToString(boolean b) {
+        String bool;
+        {
+            if(b) bool = "TRUE";
+            else bool = "FALSE";
+        }
+        return bool;
+    }
+
+    public static String removeDisallowedCharacters(char[] allowed, String input) {
+        char[] charArray = input.toCharArray();
+        StringBuilder result = new StringBuilder();
+        for (char c : charArray) {
+            for (char a : allowed) {
+                if(c==a) result.append(a);
+            }
+        }
+        return result.toString();
     }
 
 }

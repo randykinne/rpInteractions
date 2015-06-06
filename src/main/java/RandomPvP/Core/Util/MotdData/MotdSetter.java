@@ -16,8 +16,7 @@ public class MotdSetter {
 
     public void setMotd(String motd) {
         try {
-            Class<?> clazz = MinecraftServer.class;
-            Field f = clazz.getDeclaredField("motd");
+            Field f = MinecraftServer.class.getDeclaredField("motd");
             f.setAccessible(true);
             f.set(MinecraftServer.getServer(), motd);
         } catch (Exception ex) {

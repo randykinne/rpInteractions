@@ -3,16 +3,14 @@ package RandomPvP.Core.Commands.Mod;
 import RandomPvP.Core.Commands.Command.RCommand;
 import RandomPvP.Core.Player.MsgType;
 import RandomPvP.Core.Player.OfflineRPlayer;
-import RandomPvP.Core.Player.PlayerManager;
 import RandomPvP.Core.Player.RPlayer;
 import RandomPvP.Core.Player.Rank.Rank;
-import RandomPvP.Core.Punish.Punishment;
-import RandomPvP.Core.Punish.PunishmentManager;
-import RandomPvP.Core.Punish.PunishmentType;
-import RandomPvP.Core.Util.Broadcasts;
+import RandomPvP.Core.Server.General.Messages;
+import RandomPvP.Core.Server.Punish.Punishment;
+import RandomPvP.Core.Server.Punish.PunishmentManager;
+import RandomPvP.Core.Server.Punish.PunishmentType;
 import RandomPvP.Core.Util.StringUtil;
 import RandomPvP.Core.Util.TimeUtil;
-import net.minecraft.util.org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
@@ -40,12 +38,12 @@ public class MuteCmd extends RCommand {
     public void onCommand(RPlayer pl, String string, String[] args) {
         final OfflineRPlayer punished = new OfflineRPlayer(args[0]);
         if(!punished.isMuted()) {
-            final String reason = StringUtils.join(args, " ", 1, args.length);
+            final String reason = StringUtil.join(args, " ", 1, args.length);
             Punishment pm = new Punishment(punished.getUUID(), pl.getUUID(), PunishmentType.PERMANENT_MUTE, reason, TimeUtil.dateFormat.format(new Date()), -1);
             {
                 pm.save();
             }
-            Broadcasts.sendRankedBroadcast(Rank.MOD, false, true, pl.getRankedName(false) + ChatColor.GRAY + " muted "
+            Messages.sendRankedBroadcast(Rank.MOD, false, true, pl.getRankedName(false) + ChatColor.GRAY + " muted "
                     + punished.getRankedName(false) + ChatColor.GRAY + " for " + ChatColor.BLUE + pm.getReason() + ChatColor.GRAY + ".");
             if(Bukkit.getOfflinePlayer(punished.getUUID()).isOnline()) {
                 Bukkit.getPlayer(args[0]).sendMessage(PunishmentManager.getInstance().generateMessage(pm));

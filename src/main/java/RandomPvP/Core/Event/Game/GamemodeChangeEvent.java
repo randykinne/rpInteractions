@@ -1,6 +1,6 @@
 package RandomPvP.Core.Event.Game;
 
-import RandomPvP.Core.Game.Mode.Gamemode;
+import RandomPvP.Core.Server.Game.Mode.Gamemode;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 

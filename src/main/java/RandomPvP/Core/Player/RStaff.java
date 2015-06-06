@@ -17,9 +17,9 @@ import org.bukkit.scheduler.BukkitRunnable;
  */
 public class RStaff {
 
-    RPlayer pl;
-    boolean hasSTFUEnabled = false;
-    boolean hasStaffChatToggled = false;
+    private RPlayer pl;
+    private boolean hasSTFUEnabled = false;
+    private boolean hasStaffChatToggled = false;
 
     public RStaff(RPlayer pl) {
         this.pl = pl;
@@ -31,23 +31,23 @@ public class RStaff {
 
     public void toggleStaffChat() {
         if (hasStaffChatToggled) {
-            pl.message("§6§l>> §eTurned §c§lOFF §etoggle staff chat!");
+            pl.message("§6§l>> §Toggled staff chat §c§lOFF§e.");
             hasStaffChatToggled = false;
         } else {
-            pl.message("§6§l>> §eTurned §a§lON §etoggle staff chat!");
+            pl.message("§6§l>> §Toggled staff chat §a§lON§e.");
             hasStaffChatToggled = true;
         }
     }
 
     public void toggleSTFU() {
         if (hasSTFUEnabled) {
-            pl.message("§6§l>> §eTurned §c§lOFF §estfu mode!");
+            pl.message("§6§l>> §eTurned §c§lOFF §estfu mode.");
             pl.message("§6§l>> §6You can now see all staff messages.");
             getPlayer().playSound(getPlayer().getLocation(), Sound.NOTE_PLING, 2L, 1L);
             hasSTFUEnabled = false;
         } else {
-            pl.message("§6§l>> §eTurned §a§lON §estfu mode!");
-            pl.message("§6§l>> §6It'll automatically disable when you log off.");
+            pl.message("§6§l>> §eTurned §a§lON §estfu mode.");
+            pl.message("§6§l>> §6It'll automatically disable when you switch servers.");
             getPlayer().playSound(getPlayer().getLocation(), Sound.NOTE_PLING, 2L, 1L);
             hasSTFUEnabled = true;
             new BukkitRunnable() {

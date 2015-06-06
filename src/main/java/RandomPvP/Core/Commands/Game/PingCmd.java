@@ -4,10 +4,9 @@ import RandomPvP.Core.Commands.Command.RCommand;
 import RandomPvP.Core.Player.MsgType;
 import RandomPvP.Core.Player.PlayerManager;
 import RandomPvP.Core.Player.RPlayer;
-import RandomPvP.Core.RPICore;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 
 /**
  * ***************************************************************************************
@@ -32,28 +31,21 @@ public class PingCmd extends RCommand {
     public void onCommand(RPlayer player, String string, String[] args) {
         if (args.length > 0) {
             if (Bukkit.getPlayer(args[0]) != null) {
-
-                try {
-                    int ping = RPICore.getInstance().list.getPlayerPing(Bukkit.getPlayer(args[0]));
-                    player.message("§9§l>> " +
-                            PlayerManager.getInstance().getPlayer(Bukkit.getPlayer(args[0])).getRankedName(false) +
-                            "§b's current ping is " +
-                            getColor(ping) +
-                            ping +
-                            "ms");
-                } catch (IllegalAccessException e) {
-                    player.message(MsgType.ERROR, "Unable to retrieve player's ping. Ping OP! :(");
-                }
+                player.message("§9§l>> " +
+                        PlayerManager.getInstance().getPlayer(Bukkit.getPlayer(args[0])).getRankedName(false) +
+                        "§b's current ping is " +
+                        getColor(((CraftPlayer)Bukkit.getPlayer(args[0])).getHandle().ping) +
+                        ((CraftPlayer)Bukkit.getPlayer(args[0])).getHandle().ping +
+                        "ms");
             } else {
                 player.message(MsgType.ERROR, args[0] + " is not online! Did you spell it correctly?");
             }
         } else {
-            try {
-                int ping = RPICore.getInstance().list.getPlayerPing(player.getPlayer());
-                player.message("§9§l>> §bYour current ping is " + getColor(ping) + ping + "ms");
-            } catch (IllegalAccessException e) {
-                player.message(MsgType.ERROR, "Unable to retrieve your ping. Ping OP! :(");
-            }
+            player.message("§9§l>> " +
+                    "§bYour current ping is " +
+                    getColor(((CraftPlayer)player.getPlayer()).getHandle().ping) +
+                    ((CraftPlayer)player.getPlayer()).getHandle().ping +
+                    "ms");
         }
     }
 

@@ -6,9 +6,9 @@ import RandomPvP.Core.Player.OfflineRPlayer;
 import RandomPvP.Core.Player.PlayerManager;
 import RandomPvP.Core.Player.RPlayer;
 import RandomPvP.Core.Player.Rank.Rank;
-import RandomPvP.Core.Punish.Punishment;
-import RandomPvP.Core.Punish.PunishmentManager;
-import RandomPvP.Core.Util.Broadcasts;
+import RandomPvP.Core.Server.General.Messages;
+import RandomPvP.Core.Server.Punish.Punishment;
+import RandomPvP.Core.Server.Punish.PunishmentManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
@@ -40,7 +40,7 @@ public class UnmuteCmd extends RCommand {
                 pm.setActive(false);
                 pm.save();
             }
-            Broadcasts.sendRankedBroadcast(Rank.MOD, false, true, pl.getRankedName(false) + ChatColor.GRAY + " unmuted "
+            Messages.sendRankedBroadcast(Rank.MOD, false, true, pl.getRankedName(false) + ChatColor.GRAY + " unmuted "
                     + target.getRankedName(false) + ChatColor.GRAY + ".");
             if(Bukkit.getOfflinePlayer(target.getUUID()).isOnline()) {
                 PlayerManager.getInstance().getPlayer(args[0]).message(MsgType.INFO, "You have been unmuted!");

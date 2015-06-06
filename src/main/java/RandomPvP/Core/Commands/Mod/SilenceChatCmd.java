@@ -5,7 +5,7 @@ import RandomPvP.Core.Player.PlayerManager;
 import RandomPvP.Core.Player.RPlayer;
 import RandomPvP.Core.Player.Rank.Rank;
 import RandomPvP.Core.RPICore;
-import RandomPvP.Core.Util.ServerToggles;
+import RandomPvP.Core.Server.General.ServerToggles;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -43,8 +43,8 @@ public class SilenceChatCmd extends RCommand {
             Bukkit.broadcastMessage("§4§l>> §c§lSILENCE!");
             new BukkitRunnable() {
                 public void run() {
-                    Bukkit.broadcastMessage("§4§l>> §8(§7§oGlobal Mute §c§oEnabled§8)");
-                    Bukkit.broadcastMessage("§4§l>> §8(§7§oAll non-staff members have been silenced§8)");
+                    Bukkit.broadcastMessage("§4§l>> §8(§7§oChat Mute §c§oEnabled§8)");
+                    Bukkit.broadcastMessage("§4§l>> §8(§7§oAll non-vip members have been silenced§8)");
                 }
             }.runTaskLater(RPICore.getInstance(), 15L);
         } else {
@@ -52,7 +52,7 @@ public class SilenceChatCmd extends RCommand {
             Bukkit.broadcastMessage("§2§l>> §a§lYOU MAY SPEAK AGAIN!");
             new BukkitRunnable() {
                 public void run() {
-                    Bukkit.broadcastMessage("§2§l>> §8(§7§oGlobal Mute §a§oDisabled§8)");
+                    Bukkit.broadcastMessage("§2§l>> §8(§7§oChat Mute §a§oDisabled§8)");
                     Bukkit.broadcastMessage("§2§l>> §8(§7§oChat has been returned to normal state§8)");
                 }
             }.runTaskLater(RPICore.getInstance(), 15L);

@@ -27,7 +27,7 @@ public class GameModeCmd extends RCommand {
         setDescription("Changes your gamemode");
         setArgsUsage("<0|1|2>");
         setAliases(Arrays.asList("gm"));
-        setMaximumArgs(1);
+        setMinimumArgs(1);
     }
 
     @Override
@@ -41,6 +41,7 @@ public class GameModeCmd extends RCommand {
             pl.getPlayer().setGameMode(GameMode.ADVENTURE);
         } else {
             pl.message(MsgType.ERROR, "Gamemode not found!");
+            return;
         }
 
         pl.message("§6§l>> §eGameMode set to §a" + pl.getPlayer().getGameMode().name() + "§7.");

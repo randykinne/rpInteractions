@@ -1,5 +1,7 @@
 package RandomPvP.Core.Util.MotdData;
 
+import RandomPvP.Core.Util.NetworkUtil;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -19,55 +21,37 @@ public class MotdFetcher {
     private String ip;
     private int port;
 
-    private int maxPlayers;
-    private int onlinePlayers;
-    private String motd;
+    private int maxPlayers = 0;
+    private int onlinePlayers = 0;
+    private String motd = "";
 
     public MotdFetcher(String ip, int port) {
         this.ip = ip;
         this.port = port;
     }
 
-    public void fetch() {
+    public void fetch() throws Exception {
         //credit to skore87(bukkit forums)
-        try {
-            Socket sock = new Socket(ip, port);
+        Socket sock = new Socket(ip, port);
 
-            DataOutputStream out = new DataOutputStream(sock.getOutputStream());
-            DataInputStream in = new DataInputStream(sock.getInputStream());
+        DataOutputStream out = new DataOutputStream(sock.getOutputStream());
+        DataInputStream in = new DataInputStream(sock.getInputStream());
 
-            out.write(0xFE);
+        out.write(0xFE);
 
-            int b;
-            StringBuffer str = new StringBuffer();
-            while ((b = in.read()) != -1) {
-                if (b != 0 && b > 16 && b != 255 && b != 23 && b != 24) {
-                    // Not sure what use the two characters are so I omit them
-                    str.append((char) b);
-                    //System.out.println(b + ":" + ((char) b));
-                }
+        int b;
+        StringBuffer str = new StringBuffer();
+        while ((b = in.read()) != -1) {
+            if (b != 0 && b > 16 && b != 255 && b != 23 && b != 24) {
+                // Not sure what use the two characters are so I omit them
+                str.append((char) b);
             }
-
-            String[] data = str.toString().split("§");
-            motd = data[0];
-            onlinePlayers = Integer.parseInt(data[1]);
-            maxPlayers = Integer.parseInt(data[2]);
-
-            /*System.out.println(String.format(
-                    ">>>>>>>>>>>>>>>>>>>>>> MOTD: \"%s\"\nOnline Players: %d/%d <<<<<<<<<<<<<<<<<<", motd,
-                    onlinePlayers, maxPlayers));
-                    */
-        } catch (UnknownHostException e) {
-            System.out.println("[INFO] [MOTDFETCHER] You tried to catch the MOTD of server " + ip + ":" + port + " but got an UnknownHostException!! (" + e.getMessage() + ")");
-            maxPlayers = 0;
-            maxPlayers = 0;
-            motd = null;
-        } catch (IOException e) {
-            System.out.println("[ERROR] [MOTDFETCHER] IOException occurred while trying to fetch the data of server " + ip + ":" + port + "!! (" + e.getMessage() + ")");
-            maxPlayers = 0;
-            maxPlayers = 0;
-            motd = null;
         }
+
+        String[] data = str.toString().split("§");
+        motd = data[0];
+        onlinePlayers = Integer.parseInt(data[1]);
+        maxPlayers = Integer.parseInt(data[2]);
     }
 
     public int getMaxPlayers() {

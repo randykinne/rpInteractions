@@ -5,7 +5,7 @@ import RandomPvP.Core.Player.MsgType;
 import RandomPvP.Core.Player.PlayerManager;
 import RandomPvP.Core.Player.RPlayer;
 import RandomPvP.Core.Util.Module.IModule;
-import net.minecraft.util.org.apache.commons.lang3.StringUtils;
+import RandomPvP.Core.Util.StringUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -38,11 +38,26 @@ public class MessageCmd extends RCommand {
             pl.message(MsgType.ERROR, "You cannot use message while muted.");
             return;
         }
+        if(!pl.getToggles().isPlayerMessages()) {
+            pl.message(MsgType.ERROR, "You must toggle player messages on to use this.");
+            return;
+        }
+
         Player player= Bukkit.getPlayer(args[0]);
         if (player != null) {
             RPlayer target = PlayerManager.getInstance().getPlayer(player);
-            pl.message("§9§l>> §7[" + pl.getRank().getColor() + "You§7] §9--> §7[" + target.getDisplayName(false) + "§7]§8: §2" + StringUtils.join(args, " ", 1, args.length));
-            target.message("§9§l>> §7[" + pl.getDisplayName(false) +  "§7] §9--> §7[" + target.getRank().getColor() + "You§7]§8: §2" + StringUtils.join(args, " ", 1, args.length));
+
+            if(!target.getToggles().isPlayerMessages()) {
+                pl.message(MsgType.ERROR, "That player doesn't have player messages enabled.");
+                return;
+            }
+            if(target.isMuted()) {
+                pl.message(MsgType.ERROR, "That player is currently muted.");
+                return;
+            }
+
+            pl.message("§9§l>> §7[" + pl.getRank().getColor() + "You§7] §9--> §7[" + target.getDisplayName(false) + "§7]§8: §2" + StringUtil.join(args, " ", 1, args.length));
+            target.message("§9§l>> §7[" + pl.getDisplayName(false) +  "§7] §9--> §7[" + target.getRank().getColor() + "You§7]§8: §2" + StringUtil.join(args, " ", 1, args.length));
 
             if (pl.getModule("LastMessage") != null) {
                 pl.getModule("LastMessage").setData(target);

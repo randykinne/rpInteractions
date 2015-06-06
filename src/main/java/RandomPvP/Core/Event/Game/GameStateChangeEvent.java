@@ -1,6 +1,6 @@
 package RandomPvP.Core.Event.Game;
 
-import RandomPvP.Core.Game.GameState.GameState;
+import RandomPvP.Core.Server.Game.GameState.GameState;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;

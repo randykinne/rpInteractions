@@ -1,20 +1,17 @@
 package RandomPvP.Core.Util.Entity.Villager.GameVillager;
 
+import RandomPvP.Core.Player.Inventory.RInventory;
 import RandomPvP.Core.RPICore;
-import RandomPvP.Core.Util.Entity.Registration.RegisterEntity;
-import RandomPvP.Core.Util.Entity.Villager.CustomEntityVillager;
-import net.minecraft.server.v1_7_R4.EntityHuman;
+import RandomPvP.Core.Util.Entity.Registration.EntityRegistration;
+import RandomPvP.Core.Util.Entity.Villager.DisabledEntityVillager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
 
-import org.bukkit.entity.Player;
+import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.inventory.Inventory;
 
 /**
  * ****************************************************************************************
@@ -24,53 +21,39 @@ import org.bukkit.inventory.Inventory;
  * Enjoy.                                                                                 *
  * ****************************************************************************************
  */
-public class GameVillager extends CustomEntityVillager implements Listener {
+public class GameVillager extends DisabledEntityVillager implements Listener {
 
-    protected CustomEntityVillager v;
-    private Inventory inv;
+    private RInventory inv;
     private String name;
-    private Location loc;
     private String gamename;
 
-    public GameVillager(Location loc, String gamename, Inventory inv) {
+    public GameVillager(Location loc, String gamename, RInventory inv) {
         super(((CraftWorld) loc.getWorld()).getHandle());
-        v = this;
-        setLocation(loc);
         setGamename(gamename);
         setName(getDefaultName());
         setInventory(inv);
 
         Bukkit.getServer().getPluginManager().registerEvents(this, RPICore.getInstance());
 
-        new RegisterEntity().addCustomEntity(this.getClass(), getName(), 120);
-        ((CraftWorld) loc.getWorld()).getHandle().addEntity(this, CreatureSpawnEvent.SpawnReason.CUSTOM);
+        EntityRegistration.spawnEntity(this, loc);
     }
 
     public String getDefaultName() {
         if(gamename != null) {
-            return "§2§lGAME NPC §7| " + gamename;
+            return "§2§lGAME NPC §7|| §4§l" + gamename.toUpperCase();
         } else {
-            return "§2§lGAME NPC §7| §6UNKNOWN";
+            return "§2§lGAME NPC §7|| §4§lUNKNOWN";
         }
     }
 
     public void setName(String n) {
         name = n;
-        v.setCustomName(name);
-        v.setCustomNameVisible(true);
+        setCustomName(name);
+        setCustomNameVisible(true);
     }
 
     public String getName() {
         return name;
-    }
-
-    public void setLocation(Location l) {
-        loc = l;
-        v.setLocation(l.getX(), l.getY(), l.getZ(), l.getPitch(), l.getYaw());
-    }
-
-    public Location getLocation() {
-        return loc;
     }
 
     public String getGamename() {
@@ -81,11 +64,11 @@ public class GameVillager extends CustomEntityVillager implements Listener {
         this.gamename = gamename;
     }
 
-    public Inventory getInventory() {
+    public RInventory getInventory() {
         return inv;
     }
 
-    public void setInventory(Inventory inv) {
+    public void setInventory(RInventory inv) {
         this.inv = inv;
     }
 
@@ -93,9 +76,9 @@ public class GameVillager extends CustomEntityVillager implements Listener {
     public void onInteract(PlayerInteractEntityEvent e) {
         if(e.getRightClicked() instanceof Villager) {
             Villager vil = (Villager) e.getRightClicked();
-            if(vil.getCustomName().equals(getName())) {
+            if(vil == getBukkitEntity()) {
                 e.setCancelled(true);
-                e.getPlayer().openInventory(inv);
+                e.getPlayer().openInventory(inv.getInventory());
             }
         }
     }

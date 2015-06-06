@@ -3,7 +3,7 @@ package RandomPvP.Core.Commands.Mod;
 import RandomPvP.Core.Commands.Command.RCommand;
 import RandomPvP.Core.Player.RPlayer;
 import RandomPvP.Core.Player.Rank.Rank;
-import net.minecraft.util.org.apache.commons.lang3.StringUtils;
+import RandomPvP.Core.Util.StringUtil;
 import org.bukkit.Bukkit;
 
 /**
@@ -29,6 +29,6 @@ public class SayCmd extends RCommand {
 
     @Override
     public void onCommand(RPlayer pl, String string, String[] args) {
-        Bukkit.broadcastMessage("§5§l<§8Say§5§l> " + pl.getRankedName(false) + " §d" + StringUtils.join(args, " ", 0, args.length));
+        Bukkit.broadcastMessage("§5§l<§8Say§5§l> " + pl.getRankedName(false) + " §d" + StringUtil.join(args, " ", 0, args.length));
     }
 }

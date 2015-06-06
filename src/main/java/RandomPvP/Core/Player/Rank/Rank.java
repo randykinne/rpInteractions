@@ -1,6 +1,5 @@
 package RandomPvP.Core.Player.Rank;
 
-import org.apache.commons.lang.WordUtils;
 import org.bukkit.ChatColor;
 
 /**
@@ -15,36 +14,36 @@ import org.bukkit.ChatColor;
  */
 public enum Rank {
 
-    PLAYER(0, "PLAYER", "", ChatColor.BLUE),
-    PRIME(1, "PRIME", "PRIME ", ChatColor.GOLD),
-    PREMIUM(2, "PREMIUM", "PREMIUM ", ChatColor.AQUA),
-    VIP(3, "VIP", "VIP ", ChatColor.YELLOW),
-    BUILDER(4, "BUILDER", "BUILDER ", ChatColor.DARK_GREEN),
-    MOD(5, "MOD", "MOD ", ChatColor.DARK_PURPLE),
-    ADMIN(6, "ADMIN", "ADMIN ", ChatColor.RED),
-    OWNER(7, "OWNER", "OWNER ", ChatColor.DARK_RED);
+    PLAYER("PLAYER", "", ChatColor.BLUE),
+    PRIME("PRIME", "PRIME ", ChatColor.GOLD),
+    PREMIUM("PREMIUM", "PREMIUM ", ChatColor.AQUA),
+    VIP("VIP", "VIP ", ChatColor.YELLOW),
+    BUILDER("BUILDER", "BUILDER ",ChatColor.DARK_GREEN),
+    MOD("MOD", "MOD ", ChatColor.DARK_PURPLE),
+    ADMIN("ADMIN", "ADMIN ", ChatColor.RED),
+    DEV("DEV", "DEV ", ChatColor.DARK_AQUA),
+    OWNER("OWNER", "OWNER ", ChatColor.DARK_RED);
 
-    String rank;
-    String name;
-    ChatColor color;
-    int weight;
+    private String name;
+    private String rank;
+    private ChatColor color;
 
-    Rank(int weight, String rank, String name, ChatColor color) {
-        this.rank = rank;
+    Rank(String name, String rank, ChatColor color) {
         this.name = name;
+        this.rank = rank;
         this.color = color;
     }
 
-    public int getWeight() {
-        return weight;
+    public String getFormattedName() {
+        return (name.equals("PLAYER") ? "" : getTag());
     }
 
-    public String getFormattedName() { return getName().toUpperCase(); }
-
-    public String getRank() { return rank; }
-
     public String getName() {
-        return color + rank;
+        return name;
+    }
+
+    public String getRank() {
+        return rank;
     }
 
     public ChatColor getColor() {
@@ -52,7 +51,7 @@ public enum Rank {
     }
 
     public String getTag() {
-            return color + ChatColor.BOLD.toString() + name + ChatColor.RESET;
+        return color + ChatColor.BOLD.toString() + getRank() + ChatColor.RESET;
     }
 
     public boolean has(Rank rank) {

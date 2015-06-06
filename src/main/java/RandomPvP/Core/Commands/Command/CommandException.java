@@ -14,11 +14,12 @@ public class CommandException extends Exception {
 
     private String message;
 
-    public CommandException(String message1) {
-        message = message1;
+    public CommandException(String message) {
+        this.message = message;
     }
 
     public String getMessage() {
         return message;
     }
+
 }

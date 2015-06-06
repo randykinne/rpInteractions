@@ -1,5 +1,4 @@
 main: RandomPvP.Core.RPICore
-version: 1.0
+version: 0.7.3
 name: RPI
-author: WesJD
-depend: [ProtocolLib]
+wauthor: [Randomizer27, WesJD, RandomPvP]

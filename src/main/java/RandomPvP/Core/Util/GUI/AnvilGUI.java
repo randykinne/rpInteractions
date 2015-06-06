@@ -1,10 +1,7 @@
 package RandomPvP.Core.Util.GUI;
 
 import RandomPvP.Core.RPICore;
-import net.minecraft.server.v1_7_R4.ContainerAnvil;
-import net.minecraft.server.v1_7_R4.EntityHuman;
-import net.minecraft.server.v1_7_R4.EntityPlayer;
-import net.minecraft.server.v1_7_R4.PacketPlayOutOpenWindow;
+import net.minecraft.server.v1_7_R4.*;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 import org.bukkit.entity.Player;

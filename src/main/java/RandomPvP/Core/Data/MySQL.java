@@ -1,5 +1,7 @@
 package RandomPvP.Core.Data;
 
+import RandomPvP.Core.Util.NetworkUtil;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -29,16 +31,16 @@ public class MySQL {
 
         try {
             Class.forName("com.mysql.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+        } catch (ClassNotFoundException ex) {
+            NetworkUtil.handleError(ex);
         }
 
-        connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/bhs112-67?autoReconnect=true", "bhs112-67", "29e771cddc");
+        connection = DriverManager.getConnection("jdbc:mysql://panel.minerack.org:3306/mc3663?autoReconnect=true", "mc3663", "c4298b2866");
         return connection;
     }
 
     public static String getAddress() {
-        return "jdbc:mysql://localhost:3306/bhs112-67?autoReconnect=true";
+        return "jdbc:mysql://panel.minerack.org:3306/mc3663?autoReconnect=true";
     }
 
     public static int getPort() {
@@ -46,14 +48,14 @@ public class MySQL {
     }
 
     public static String getDatabase() {
-        return "bhs112-67";
+        return "mc3663";
     }
 
     public static String getUsername() {
-        return "bhs112-67";
+        return "mc3663";
     }
 
     public static String getPassword() {
-        return "29e771cddc";
+        return "c4298b2866";
     }
 }

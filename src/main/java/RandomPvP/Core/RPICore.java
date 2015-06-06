@@ -6,28 +6,27 @@ import RandomPvP.Core.Commands.Command.RCommand;
 import RandomPvP.Core.Commands.Game.*;
 import RandomPvP.Core.Commands.Mod.*;
 import RandomPvP.Core.Commands.Command.RCommandMap;
+import RandomPvP.Core.Commands.Premium.ColorCmd;
+import RandomPvP.Core.Commands.Prime.FlyCmd;
 import RandomPvP.Core.Commands.Server.*;
 import RandomPvP.Core.Commands.VIP.GoToCmd;
 import RandomPvP.Core.Data.MySQL;
-import RandomPvP.Core.Game.GameManager;
 import RandomPvP.Core.Listener.*;
 import RandomPvP.Core.Player.PlayerManager;
 import RandomPvP.Core.Player.RPlayer;
-import RandomPvP.Core.Util.Shop.Items.BoosterItem;
-import RandomPvP.Core.Util.Shop.Items.PrimeRankItem;
-import RandomPvP.Core.Util.Shop.ShopManager;
-import RandomPvP.Core.Punish.PunishmentManager;
-import RandomPvP.Core.Util.Broadcasts;
-import RandomPvP.Core.Util.Tab.HidePlayerList;
-import RandomPvP.Core.Util.Vote.Votifier;
+import RandomPvP.Core.Server.Game.GameManager;
+import RandomPvP.Core.Server.Game.Team.TeamManager;
+import RandomPvP.Core.Server.General.Messages;
+import RandomPvP.Core.Server.General.Shop.ShopManager;
+import RandomPvP.Core.Server.Punish.PunishmentManager;
+import RandomPvP.Core.Util.Entity.Registration.EntityRegistration;
+import RandomPvP.Core.Util.IO.LibLoader;
+import RandomPvP.Core.Util.IO.PluginUpdateChecker;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * ***************************************************************************************
@@ -39,21 +38,13 @@ import java.sql.SQLException;
  * Thanks.
  * ***************************************************************************************
  */
-public class RPICore extends JavaPlugin {
+public final class RPICore extends JavaPlugin {
 
-    public static boolean pEnabled = true;
-
+    private static RPICore instance;
     public static boolean debugEnabled = false;
 
-    public static long serverStart;
-
-    private int nextId = 0;
-
-    public static HidePlayerList list;
-
-    void initialize() {
-
-        list = new HidePlayerList(this);
+    private void initialize() {
+        GameManager.loadServerProfile();
 
         // Listeners
         addListener(new RPlayerListener());
@@ -62,15 +53,17 @@ public class RPICore extends JavaPlugin {
         addListener(new RPlayerQuitListener());
         addListener(new BlockedCmds());
         addListener(new ServerUpdateListener());
-        addListener(new VoteEvent());
+        addListener(new WeatherChangeListener());
 
         // Admin Commands
         addCommand(new BroadcastAdminCmd());
         addCommand(new Giveaway());
         addCommand(new OpCmd());
-        addCommand(new RankAdminCmd());
-        addCommand(new TestCommand());
+        addCommand(new RankCmd());
         addCommand(new RestartCmd());
+        addCommand(new ErrorFixedCmd());
+        addCommand(new TweetCmd());
+        addCommand(new PollCmd());
 
         // Mod Commands
         addCommand(new GameModeCmd());
@@ -94,6 +87,9 @@ public class RPICore extends JavaPlugin {
         // VIP Commands
         addCommand(new GoToCmd());
 
+        //Premium Commands
+        addCommand(new ColorCmd());
+
         // Game Commands
         addCommand(new CreditsCommand());
         addCommand(new PingCmd());
@@ -102,6 +98,8 @@ public class RPICore extends JavaPlugin {
         addCommand(new WhereAmICommand());
         addCommand(new UngroundCmd());
         addCommand(new ReplyMessageCmd());
+        addCommand(new HelpCmd());
+
 
         // Server Commands
         addCommand(new HubCmd());
@@ -110,104 +108,70 @@ public class RPICore extends JavaPlugin {
         addCommand(new ListCmd());
         addCommand(new RulesCmd());
         addCommand(new ShopCmd());
-        addCommand(new PollCmd());
+        addCommand(new FlyCmd());
+        addCommand(new FriendCmd());
+        addCommand(new StatsCmd());
+        addCommand(new TogglesCmd());
 
         Bukkit.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-        Bukkit.getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new Broadcasts());
-
-        getConfig().addDefault("voteEnabled", false);
-        getConfig().options().copyDefaults(true);
-        saveConfig();
-
-        String sqlCreate =
-                "CREATE TABLE IF NOT EXISTS `accounts` (" +
-                        "  `uuid` VARCHAR(100) NOT NULL," +
-                        "  `username` VARCHAR(16) NOT NULL," +
-                        "  `rpid` INT NOT NULL  AUTO_INCREMENT," +
-                        "  `rank` VARCHAR(12) NULL," +
-                        "  `rank_updated` BIGINT(8) NULL," +
-                        "  `credits` INT NOT NULL," +
-                        "  `ip` VARCHAR(20) NULL," +
-                        "  `email` VARCHAR(100) NULL," +
-                        "  PRIMARY KEY (`rpid`))";
-
-        String sqlCreate2 = "CREATE TABLE IF NOT EXISTS `online_players` (" +
-                " `id` INT NOT NULL," +
-                " `username` VARCHAR(16) NOT NULL," +
-                " `server` VARCHAR(100) NOT NULL)";
-
-        String sqlCreate3 = "CREATE TABLE IF NOT EXISTS `credit_booster` (" +
-                " `id` INT NOT NULL AUTO_INCREMENT," +
-                " `rpid` INT NOT NULL," +
-                " `duration` BIGINT(8) NOT NULL," +
-                " `multiplier` INT NOT NULL," +
-                " PRIMARY KEY (`id`))";
-
-        String sqlGetNextId = "SELECT MAX(rpid) AS max FROM accounts";
+        Bukkit.getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new Messages());
 
         try {
-            PreparedStatement statement = MySQL.getConnection().prepareStatement(sqlCreate);
-            statement.executeUpdate();
+            MySQL.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS `accounts` (" +
+                    "  `uuid` VARCHAR(100) NOT NULL," +
+                    "  `username` VARCHAR(16) NOT NULL," +
+                    "  `rpid` INT NOT NULL  AUTO_INCREMENT," +
+                    "  `rank` VARCHAR(12) NULL," +
+                    "  `credits` INT NOT NULL," +
+                    "  `ip` VARCHAR(20) NULL," +
+                    "  PRIMARY KEY (`rpid`))").executeUpdate();
 
-            statement = MySQL.getConnection().prepareStatement(sqlCreate2);
-            statement.executeUpdate();
-
-            statement = MySQL.getConnection().prepareStatement(sqlCreate3);
-            statement.executeUpdate();
-
-            statement = MySQL.getConnection().prepareStatement(sqlGetNextId);
-            ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                nextId = rs.getInt("max") + 1;
-            }
-
+            MySQL.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS `online_players` (" +
+                    " `id` INT NOT NULL," +
+                    " `username` VARCHAR(16) NOT NULL," +
+                    " `server` VARCHAR(100) NOT NULL)").executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        if (pEnabled) PunishmentManager.getInstance().checkDatabase();
+        ShopManager.getInstance().loadGlobalItems();
+        PunishmentManager.getInstance().checkDatabase();
 
-        if (debugEnabled) {
-            System.out.println("RPICore Initialize successful");
-        }
+        checkDownloadables();
 
-        if(voteEnabled()) {
-            getVote();
-        }
-
-        ShopManager.getInstance().addItem(new BoosterItem());
-        ShopManager.getInstance().addItem(new PrimeRankItem());
-
-        GameManager.loadServerProfile();
+        if(debugEnabled) System.out.println("RPICore Initialize successful");
     }
 
+    private void checkDownloadables() {
+        new BukkitRunnable() { //task because it waits till the server is done starting
+            public void run() {
+                LibLoader.loadLib("twitter4j-core-4.0.3.jar", "http://gwnetworking.x10host.com/company/files/twitter4j-core-4.0.3.jar");
+
+                //PluginUpdateChecker.checkForUpdate("RPI", "https://www.dropbox.com/s/fyuoh6szwl0ykef/RPI.jar?dl=1");
+                //PluginUpdateChecker.checkForUpdate(GameManager.getGame().getName(), GameManager.getGame().getDownload());
+            }
+        }.runTask(getInstance());
+    }
 
     @Override
     public void onEnable() {
         instance = this;
-        serverStart = System.currentTimeMillis();
         initialize();
     }
 
     @Override
     public void onDisable() {
-        //sleeping to remove it from the DB
-        Thread t = new Thread() {
+        new Thread() {
             public void run() {
                 for (RPlayer pl : PlayerManager.getInstance().getOnlinePlayers()) {
                     pl.saveData();
                     PlayerManager.getInstance().removePlayer(pl.getPlayer());
                 }
             }
-        };
-        t.start();
-        try{Thread.sleep(1000);}catch(Exception ignored){}
+        }.start();
 
-        list.cleanupAll();
-
-        if(voteEnabled()) {
-            getVote().onDisable();
-        }
+        EntityRegistration.clearAll();
+        TeamManager.unregisterAllTeams();
 
         instance = null;
     }
@@ -222,28 +186,12 @@ public class RPICore extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(listener, this);
     }
 
-    private static RPICore instance;
-
     public static RPICore getInstance() {
         return instance;
     }
 
-    public static Plugin getPlugin() { return instance; }
-
-    private static Votifier v;
-
-    public Votifier getVote() {
-        if(voteEnabled()) {
-            if(v == null) {
-                v = new Votifier(getInstance());
-                v.onEnable();
-            }
-        }
-        return v;
-    }
-
-    public static boolean voteEnabled() {
-        return getInstance().getConfig().getBoolean("voteEnabled");
+    public static Plugin getPlugin() {
+        return instance;
     }
 
 }
